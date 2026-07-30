@@ -18,7 +18,7 @@ from evaluate_relview import load_universe
 def download_chart_close(
     universe: list[str], start: pd.Timestamp, end: pd.Timestamp
 ) -> pd.DataFrame:
-    """Download closes through Yahoo's stateless chart endpoint."""
+    """Download adjusted closes through Yahoo's stateless chart endpoint."""
 
     period1 = int(start.tz_localize("UTC").timestamp())
     period2 = int(end.tz_localize("UTC").timestamp())
@@ -37,7 +37,12 @@ def download_chart_close(
                     payload = json.load(response)
                 result = payload["chart"]["result"][0]
                 dates = pd.to_datetime(result["timestamp"], unit="s", utc=True).tz_convert(None).normalize()
-                closes = result["indicators"]["quote"][0]["close"]
+                adjusted = result["indicators"].get("adjclose", [])
+                closes = (
+                    adjusted[0].get("adjclose")
+                    if adjusted and adjusted[0].get("adjclose") is not None
+                    else result["indicators"]["quote"][0]["close"]
+                )
                 series.append(pd.Series(closes, index=dates, name=ticker, dtype=float))
                 last_error = None
                 break

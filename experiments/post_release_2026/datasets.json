@@ -1,0 +1,122 @@
+{
+  "experiment": {
+    "start_month": "2026-05",
+    "end_month": "2026-06",
+    "realized_end_month": "2026-07",
+    "evaluation_days": 10,
+    "repeats": 30,
+    "max_pairs": 30,
+    "calibration": "isotonic",
+    "abstention_threshold": 0.6,
+    "transaction_cost_bps": 10.0,
+    "prior": "equal_cap",
+    "notes": "Formation and realized windows begin after the 2026-04-24 DeepSeek V4 release. Prompts retain true tickers and asset names but omit dates and data-source labels."
+  },
+  "datasets": [
+    {
+      "id": "us_technology",
+      "description": "Large US technology and software equities",
+      "assets": [
+        {"ticker": "AAPL", "name": "Apple Inc.", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "MSFT", "name": "Microsoft Corporation", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "NVDA", "name": "NVIDIA Corporation", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "AMD", "name": "Advanced Micro Devices, Inc.", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "AVGO", "name": "Broadcom Inc.", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "ORCL", "name": "Oracle Corporation", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "CRM", "name": "Salesforce, Inc.", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "ADBE", "name": "Adobe Inc.", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "QCOM", "name": "QUALCOMM Incorporated", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "TXN", "name": "Texas Instruments Incorporated", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "AMAT", "name": "Applied Materials, Inc.", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "MU", "name": "Micron Technology, Inc.", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "IBM", "name": "International Business Machines Corporation", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "CSCO", "name": "Cisco Systems, Inc.", "sector": "Information Technology", "asset_type": "Equity"},
+        {"ticker": "INTU", "name": "Intuit Inc.", "sector": "Information Technology", "asset_type": "Equity"}
+      ]
+    },
+    {
+      "id": "us_financials",
+      "description": "Large US banks, insurers, and market infrastructure firms",
+      "assets": [
+        {"ticker": "JPM", "name": "JPMorgan Chase & Co.", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "BAC", "name": "Bank of America Corporation", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "GS", "name": "The Goldman Sachs Group, Inc.", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "MS", "name": "Morgan Stanley", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "WFC", "name": "Wells Fargo & Company", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "C", "name": "Citigroup Inc.", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "AXP", "name": "American Express Company", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "BLK", "name": "BlackRock, Inc.", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "SCHW", "name": "The Charles Schwab Corporation", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "PNC", "name": "The PNC Financial Services Group, Inc.", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "USB", "name": "U.S. Bancorp", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "COF", "name": "Capital One Financial Corporation", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "CME", "name": "CME Group Inc.", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "ICE", "name": "Intercontinental Exchange, Inc.", "sector": "Financials", "asset_type": "Equity"},
+        {"ticker": "CB", "name": "Chubb Limited", "sector": "Financials", "asset_type": "Equity"}
+      ]
+    },
+    {
+      "id": "us_healthcare",
+      "description": "Large US healthcare, pharmaceutical, and medical-device equities",
+      "assets": [
+        {"ticker": "JNJ", "name": "Johnson & Johnson", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "PFE", "name": "Pfizer Inc.", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "UNH", "name": "UnitedHealth Group Incorporated", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "LLY", "name": "Eli Lilly and Company", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "ABBV", "name": "AbbVie Inc.", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "MRK", "name": "Merck & Co., Inc.", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "TMO", "name": "Thermo Fisher Scientific Inc.", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "ABT", "name": "Abbott Laboratories", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "AMGN", "name": "Amgen Inc.", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "GILD", "name": "Gilead Sciences, Inc.", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "ISRG", "name": "Intuitive Surgical, Inc.", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "DHR", "name": "Danaher Corporation", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "BSX", "name": "Boston Scientific Corporation", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "MDT", "name": "Medtronic plc", "sector": "Health Care", "asset_type": "Equity"},
+        {"ticker": "ELV", "name": "Elevance Health, Inc.", "sector": "Health Care", "asset_type": "Equity"}
+      ]
+    },
+    {
+      "id": "us_industrial_energy",
+      "description": "US energy, industrial, aerospace, transport, and materials equities",
+      "assets": [
+        {"ticker": "XOM", "name": "Exxon Mobil Corporation", "sector": "Energy", "asset_type": "Equity"},
+        {"ticker": "CVX", "name": "Chevron Corporation", "sector": "Energy", "asset_type": "Equity"},
+        {"ticker": "COP", "name": "ConocoPhillips", "sector": "Energy", "asset_type": "Equity"},
+        {"ticker": "SLB", "name": "SLB", "sector": "Energy", "asset_type": "Equity"},
+        {"ticker": "CAT", "name": "Caterpillar Inc.", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "DE", "name": "Deere & Company", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "GE", "name": "GE Aerospace", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "RTX", "name": "RTX Corporation", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "LMT", "name": "Lockheed Martin Corporation", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "HON", "name": "Honeywell International Inc.", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "ETN", "name": "Eaton Corporation plc", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "UNP", "name": "Union Pacific Corporation", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "UPS", "name": "United Parcel Service, Inc.", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "BA", "name": "The Boeing Company", "sector": "Industrials", "asset_type": "Equity"},
+        {"ticker": "FCX", "name": "Freeport-McMoRan Inc.", "sector": "Materials", "asset_type": "Equity"}
+      ]
+    },
+    {
+      "id": "cross_asset_etfs",
+      "description": "US, international, real-estate, bond, and commodity ETFs",
+      "assets": [
+        {"ticker": "SPY", "name": "SPDR S&P 500 ETF Trust", "sector": "US Equity", "asset_type": "ETF"},
+        {"ticker": "QQQ", "name": "Invesco QQQ Trust", "sector": "US Equity", "asset_type": "ETF"},
+        {"ticker": "IWM", "name": "iShares Russell 2000 ETF", "sector": "US Equity", "asset_type": "ETF"},
+        {"ticker": "DIA", "name": "SPDR Dow Jones Industrial Average ETF Trust", "sector": "US Equity", "asset_type": "ETF"},
+        {"ticker": "EFA", "name": "iShares MSCI EAFE ETF", "sector": "International Equity", "asset_type": "ETF"},
+        {"ticker": "EEM", "name": "iShares MSCI Emerging Markets ETF", "sector": "International Equity", "asset_type": "ETF"},
+        {"ticker": "VNQ", "name": "Vanguard Real Estate ETF", "sector": "Real Estate", "asset_type": "ETF"},
+        {"ticker": "TLT", "name": "iShares 20+ Year Treasury Bond ETF", "sector": "Fixed Income", "asset_type": "ETF"},
+        {"ticker": "IEF", "name": "iShares 7-10 Year Treasury Bond ETF", "sector": "Fixed Income", "asset_type": "ETF"},
+        {"ticker": "HYG", "name": "iShares iBoxx High Yield Corporate Bond ETF", "sector": "Fixed Income", "asset_type": "ETF"},
+        {"ticker": "LQD", "name": "iShares iBoxx Investment Grade Corporate Bond ETF", "sector": "Fixed Income", "asset_type": "ETF"},
+        {"ticker": "GLD", "name": "SPDR Gold Shares", "sector": "Commodities", "asset_type": "ETF"},
+        {"ticker": "SLV", "name": "iShares Silver Trust", "sector": "Commodities", "asset_type": "ETF"},
+        {"ticker": "USO", "name": "United States Oil Fund", "sector": "Commodities", "asset_type": "ETF"},
+        {"ticker": "DBC", "name": "Invesco DB Commodity Index Tracking Fund", "sector": "Commodities", "asset_type": "ETF"}
+      ]
+    }
+  ]
+}

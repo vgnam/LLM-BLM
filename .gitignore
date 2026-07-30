@@ -17,3 +17,7 @@ results/walkforward_comparison*.json
 
 # Downloaded walk-forward return panels (reproducible via prepare_monthly_returns.py)
 yfinance/returns_2025-*.csv
+
+# Multi-dataset experiment artifacts (the manifest and runner stay tracked)
+experiments/post_release_2026/*/
+experiments/post_release_2026/summary/
