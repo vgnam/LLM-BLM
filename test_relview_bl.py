@@ -1,0 +1,131 @@
+import unittest
+
+import numpy as np
+import pandas as pd
+
+from collect_absolute_views import parse_absolute_response
+from collect_relative_views import aggregate_repeated_predictions, completion_request_options
+from portfolio_backtest import evaluate_realized_portfolio
+from relview_bl import (
+    PairwiseView,
+    ProbabilityCalibrator,
+    RelViewConfig,
+    build_relview_matrices,
+    calibration_observations_from_realized_returns,
+    run_relview_bl,
+    select_candidate_pairs,
+)
+
+
+class RelViewTests(unittest.TestCase):
+    def test_absolute_response_uses_decimal_daily_return(self):
+        self.assertAlmostEqual(parse_absolute_response('{"expected_return": 0.0025}'), 0.0025)
+        with self.assertRaises(ValueError):
+            parse_absolute_response('{"expected_return": 3.0}')
+
+    def test_realized_portfolio_metrics_and_transaction_cost(self):
+        realized = pd.DataFrame({"A": [0.01, 0.02], "B": [0.0, -0.01]}, index=["d1", "d2"])
+        daily, metrics = evaluate_realized_portfolio(
+            realized, {"A": 0.5, "B": 0.5}, turnover=1.0, transaction_cost_bps=10
+        )
+        self.assertAlmostEqual(daily.loc[0, "Portfolio_Return"], 0.004)
+        self.assertEqual(metrics["trading_days"], 2)
+        self.assertAlmostEqual(metrics["turnover"], 1.0)
+
+    def test_deepseek_request_explicitly_disables_thinking(self):
+        options = completion_request_options(
+            "deepseek-v4-flash", "system", "user", 0.3
+        )
+        self.assertEqual(options["extra_body"], {"thinking": {"type": "disabled"}})
+        self.assertNotIn("reasoning_effort", options)
+        self.assertEqual(options["response_format"], {"type": "json_object"})
+
+    def test_repeated_calls_average_oriented_probabilities(self):
+        predictions = [
+            {"preferred_asset": "A", "probability": 0.9, "evidence": ["first"]},
+            {"preferred_asset": "A", "probability": 0.6, "evidence": ["second"]},
+            {"preferred_asset": "B", "probability": 0.8, "evidence": ["third"]},
+        ]
+        result = aggregate_repeated_predictions(predictions, "A", "B")
+        self.assertAlmostEqual(result["probability_a"], (0.9 + 0.6 + 0.2) / 3)
+        self.assertEqual(result["votes"], {"A": 2, "B": 1})
+        np.testing.assert_allclose(result["probability_samples_a"], [0.9, 0.6, 0.2])
+        self.assertAlmostEqual(result["mean_reported_probability_a"], (0.9 + 0.6 + 0.2) / 3)
+
+    def test_preferred_asset_probability_is_normalized_to_asset_a(self):
+        view = PairwiseView.from_mapping({
+            "asset_a": "A",
+            "asset_b": "B",
+            "preferred_asset": "B",
+            "probability": 0.72,
+            "probability_samples": [0.70, 0.74],
+        })
+        self.assertAlmostEqual(view.probability_a, 0.28)
+        np.testing.assert_allclose(view.probability_samples_a, [0.30, 0.26])
+
+    def test_isotonic_predictions_are_monotone(self):
+        probabilities = [0.1, 0.2, 0.3, 0.4, 0.7, 0.8, 0.9]
+        outcomes = [0, 1, 0, 0, 1, 1, 1]
+        calibrator = ProbabilityCalibrator("isotonic", min_samples=1).fit(probabilities, outcomes)
+        predictions = calibrator.predict(np.linspace(0.05, 0.95, 50))
+        self.assertTrue(np.all(np.diff(predictions) >= -1e-12))
+
+    def test_abstention_and_cycle_projection_build_valid_matrices(self):
+        assets = ["A", "B", "C"]
+        views = [
+            {"asset_a": "A", "asset_b": "B", "preferred_asset": "A", "probability": 0.8, "evidence": ["a"]},
+            {"asset_a": "B", "asset_b": "C", "preferred_asset": "B", "probability": 0.75, "evidence": ["b"]},
+            {"asset_a": "C", "asset_b": "A", "preferred_asset": "C", "probability": 0.7, "evidence": ["c"]},
+            {"asset_a": "A", "asset_b": "D", "preferred_asset": "A", "probability": 0.55, "evidence": ["weak"]},
+        ]
+        config = RelViewConfig(calibration="none", abstention_threshold=0.65, max_weight=1.0)
+        matrices = build_relview_matrices(assets, views, 0.02, config=config)
+        self.assertEqual(matrices.P.shape, (3, 3))
+        self.assertEqual(matrices.q.shape, (3,))
+        self.assertEqual(matrices.omega.shape, (3, 3))
+        self.assertEqual(matrices.raw_cycle_count, 1)
+        self.assertEqual(len(matrices.rejected_views), 1)
+        self.assertTrue(np.all(np.diag(matrices.omega) > 0))
+        self.assertAlmostEqual(float(matrices.latent_scores.mean()), 0.0, places=10)
+
+    def test_end_to_end_portfolio_is_feasible(self):
+        rng = np.random.default_rng(7)
+        assets = ["A", "B", "C", "D"]
+        returns = pd.DataFrame(rng.normal(0.0005, 0.01, size=(80, 4)), columns=assets)
+        prior = pd.Series([0.001, 0.0005, 0.0, -0.0002], index=assets)
+        views = [
+            {"asset_a": "A", "asset_b": "D", "preferred_asset": "A", "probability": 0.8, "evidence": ["test"]}
+        ]
+        result = run_relview_bl(
+            returns,
+            prior,
+            views,
+            config=RelViewConfig(calibration="none", max_weight=0.6, risk_aversion=1.0),
+        )
+        self.assertAlmostEqual(float(result.weights.sum()), 1.0, places=8)
+        self.assertTrue((result.weights >= -1e-10).all())
+        self.assertTrue((result.weights <= 0.6 + 1e-10).all())
+        self.assertEqual(len(result.matrices.accepted_views), 1)
+
+    def test_realized_outcomes_are_compounded_and_oriented(self):
+        views = [{
+            "asset_a": "A", "asset_b": "B", "preferred_asset": "B", "probability": 0.7, "evidence": ["x"]
+        }]
+        realized = pd.DataFrame({"A": [0.10, -0.05], "B": [0.01, 0.01]})
+        observations = calibration_observations_from_realized_returns(views, realized)
+        self.assertEqual(observations[0]["outcome_a"], 1)
+        self.assertAlmostEqual(observations[0]["probability_a"], 0.3)
+
+    def test_sparse_pair_selection_prefers_sector_and_correlation(self):
+        frame = pd.DataFrame({
+            "A": [0.01, 0.02, -0.01, 0.03],
+            "B": [0.011, 0.019, -0.009, 0.031],
+            "C": [-0.02, 0.01, 0.03, -0.01],
+        })
+        metadata = pd.DataFrame({"Symbol": ["A", "B", "C"], "GICS Sector": ["Tech", "Tech", "Bank"]})
+        pairs = select_candidate_pairs(frame, metadata=metadata, max_pairs=1)
+        self.assertEqual(pairs, [("A", "B")])
+
+
+if __name__ == "__main__":
+    unittest.main()

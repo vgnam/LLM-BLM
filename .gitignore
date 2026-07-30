@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.env
+
+# Generated LLM responses and experiment outputs
+responses/deepseek-v4-flash_*.json
+responses_relative/
+results/absolute_*.json
+results/absolute_*_returns.csv
+results/absolute_*_weights.csv
+results/relview_*.json
+results/relview_*_returns.csv
+results/relview_*_weights.csv
+results/calibration_history.json
+results/walkforward_comparison*.csv
+results/walkforward_comparison*.json
+
+# Downloaded walk-forward return panels (reproducible via prepare_monthly_returns.py)
+yfinance/returns_2025-*.csv

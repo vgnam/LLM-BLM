@@ -12,6 +12,12 @@
 ```
 .
 ├── run.py                  # Main file to run LLMs and collect their views
+├── collect_relative_views.py # Collects sparse pairwise LLM views
+├── collect_absolute_views.py # Collects absolute views with the same LLM/provider
+├── relview_bl.py           # RelView-BL method implementation
+├── evaluate_relview.py     # Runs one leak-free RelView-BL period
+├── evaluate_absolute_bl.py # Runs comparable absolute-view LLM-BLM
+├── portfolio_backtest.py   # Shared realized-return metrics
 ├── baselines.py           # Implementation of baseline portfolio strategies
 ├── calculate_llm_returns.py # Calculates returns for LLM-based portfolios
 ├── evaluate_multiple.py    # Evaluates multiple portfolio strategies
@@ -50,6 +56,24 @@ The evaluation process is split into two main components:
 - Generates final performance metrics and comparisons
 - Stores final evaluation results in `results/` directory
 
+### 4. RelView-BL (relative LLM views)
+
+`relview_bl.py` adds the consistency-calibrated relative-view method without
+changing the original absolute-return baseline. The pipeline:
+
+1. selects a sparse set of pairs using return correlation, sector, and market-cap similarity;
+2. asks the LLM which asset is more likely to outperform and repeats each comparison;
+3. calibrates probabilities using only closed, earlier periods (isotonic or temperature scaling);
+4. rejects low-confidence or unsupported comparisons;
+5. projects pairwise logits onto global latent asset scores to remove cyclic contradictions;
+6. constructs relative Black--Litterman `P`, `q`, and `Omega`;
+7. solves a long-only portfolio with optional turnover cost and an asset-weight cap.
+
+The uncertainty diagonal combines normalized probability entropy, disagreement
+between repeated LLM calls, and rolling pairwise calibration error. If the
+calibration history is smaller than `--min-calibration-samples`, calibration
+falls back to the raw probability for that period.
+
 ![model](figure/cumulative_returns2.png)
 ![model](figure/boxplot_all2.png)
 ![model](figure/compare_weight2.png)
@@ -85,3 +109,90 @@ python baselines.py
 python calculate_llm_returns.py
 python evaluate_multiple.py
 ``` 
+
+### Run RelView-BL
+
+Set your OpenCode Go API key, then collect 30--50 pairwise views with DeepSeek
+V4 Flash. The collector uses `deepseek-v4-flash` through OpenCode Go and sends
+`thinking.type=disabled` by default. For the proposed 20-stock scope, pass the
+same `--universe universe.json` to both commands:
+
+```powershell
+$env:OPENCODE_GO_API_KEY = "..."
+py collect_relative_views.py --returns yfinance/returns_2024-06-01_2024-06-30.csv --universe universe.json --market-caps market_caps.json --max-pairs 50 --repeats 30 --probability-estimator mean --thinking disabled --horizon-days 10 --output responses_relative/deepseek-v4-flash_2024-06.json
+```
+
+With `--probability-estimator mean` (the default), every call returns one
+probability. Probabilities are first oriented as `P(asset_a > asset_b)` and
+then averaged. For example, `0.90`, `0.60`, and `0.20` produce a final
+probability of `0.5667`; their dispersion supplies the disagreement term in
+`Omega`. Use `--probability-estimator votes` only for a vote-frequency ablation.
+
+Use `--metadata companies.csv` and `--context context_2024-06.json` to include
+point-in-time company, news, macro, or earnings information. `context_*.json`
+is a JSON object keyed by ticker. To use curated competitor/shared-event pairs
+instead of automatic selection, pass `--pairs pairs.csv`, with `asset_a` and
+`asset_b` columns.
+
+Saved or hand-built views use this schema (repeated probabilities are optional):
+
+```json
+{
+  "views": [{
+    "asset_a": "NVDA",
+    "asset_b": "AMD",
+    "preferred_asset": "NVDA",
+    "probability": 0.72,
+    "probability_samples": [0.70, 0.74, 0.71],
+    "horizon_days": 10,
+    "evidence": ["stronger data-center guidance"]
+  }]
+}
+```
+
+Evaluate the views using calibration observations from earlier, already closed
+periods only:
+
+```powershell
+py evaluate_relview.py --returns yfinance/returns_2024-06-01_2024-06-30.csv --universe universe.json --views responses_relative/deepseek-v4-flash_2024-06.json --market-caps market_caps.json --history results/calibration_history.json --calibration isotonic --abstention-threshold 0.60 --max-weight 0.1 --output results/relview_2024-06.json
+```
+
+For an offline walk-forward backtest, add the realized next-window returns only
+after that window has closed. The evaluator first builds the portfolio from old
+history, then appends current outcomes for future periods:
+
+```powershell
+py evaluate_relview.py --returns yfinance/returns_2024-06-01_2024-06-30.csv --universe universe.json --views responses_relative/deepseek-v4-flash_2024-06.json --market-caps market_caps.json --history results/calibration_history.json --realized-returns yfinance/returns_2024-07-01_2024-07-31.csv --history-output results/calibration_history.json --output results/relview_2024-06.json
+```
+
+The diagnostics JSON contains accepted/rejected views, raw cycle count, latent
+scores, posterior returns, and portfolio weights. A companion weights CSV is
+created automatically. The reusable entry point for experiments and ablations
+is `run_relview_bl()` in `relview_bl.py`.
+
+### Same-model Absolute LLM-BLM comparison
+
+For a controlled comparison, collect absolute views with the same DeepSeek V4
+Flash model, 30 calls, universe, information set, and disabled thinking:
+
+```powershell
+py collect_absolute_views.py --returns yfinance/returns_2024-06-01_2024-06-30.csv --universe universe.json --repeats 30 --thinking disabled --horizon-days 10 --temperature 0.3 --output responses/deepseek-v4-flash_2024-06-01_2024-06-30.json
+```
+
+Evaluate Absolute LLM-BLM on July realized returns:
+
+```powershell
+py evaluate_absolute_bl.py --returns yfinance/returns_2024-06-01_2024-06-30.csv --views responses/deepseek-v4-flash_2024-06-01_2024-06-30.json --universe universe.json --market-caps market_caps.json --tau 0.025 --risk-aversion 0.1 --market-risk-aversion 2.5 --max-weight 0.1 --realized-returns yfinance/returns_2024-07-01_2024-07-31.csv --evaluation-days 10 --weights-output results/absolute_deepseek_2024-06_weights.csv --returns-output results/absolute_deepseek_2024-06_returns.csv --output results/absolute_deepseek_2024-06.json
+```
+
+Evaluate RelView-BL on the identical period. The operational default delta is
+`0.60`; keep it explicit in experiments and select it on a validation period,
+not the final test period:
+
+```powershell
+py evaluate_relview.py --returns yfinance/returns_2024-06-01_2024-06-30.csv --universe universe.json --views responses_relative/deepseek-v4-flash_2024-06.json --market-caps market_caps.json --calibration none --abstention-threshold 0.60 --tau 0.025 --risk-aversion 0.1 --market-risk-aversion 2.5 --max-weight 0.1 --realized-returns yfinance/returns_2024-07-01_2024-07-31.csv --evaluation-days 10 --history-output results/calibration_history.json --weights-output results/relview_deepseek_2024-06_weights.csv --returns-output results/relview_deepseek_2024-06_returns.csv --output results/relview_deepseek_2024-06.json
+```
+
+Both evaluator JSON files now include cumulative return, annualized return and
+volatility, Sharpe ratio, maximum drawdown, turnover, and transaction cost. The
+daily return paths are saved separately for plotting and multi-period analysis.
