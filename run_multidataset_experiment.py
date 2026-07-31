@@ -141,7 +141,7 @@ def main() -> None:
                 "--calibration", str(args.calibration or config.get("calibration", "isotonic")),
                 "--abstention-threshold", str(config["abstention_threshold"]),
                 "--transaction-cost-bps", str(config["transaction_cost_bps"]),
-                "--max-weight", "0.15",
+                "--max-weight", "1.0",
                 "--output-prefix", str(output_prefix),
             ])
 

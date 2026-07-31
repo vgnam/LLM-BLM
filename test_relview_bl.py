@@ -1,10 +1,16 @@
+import json
 import unittest
 
 import numpy as np
 import pandas as pd
 
-from collect_absolute_views import parse_absolute_response
-from collect_relative_views import aggregate_repeated_predictions, completion_request_options
+from collect_absolute_views import make_absolute_prompt, parse_absolute_response
+from collect_relative_views import (
+    aggregate_repeated_predictions,
+    completion_request_options,
+    make_pairwise_prompt,
+    parse_pairwise_response,
+)
 from portfolio_backtest import evaluate_realized_portfolio
 from prompt_ensemble import collect_repeated_calls, diversified_system_prompt, prompt_sha256
 from relview_bl import (
@@ -14,12 +20,27 @@ from relview_bl import (
     black_litterman_posterior,
     build_relview_matrices,
     calibration_observations_from_realized_returns,
+    optimize_portfolio,
     run_relview_bl,
     select_candidate_pairs,
 )
 
 
 class RelViewTests(unittest.TestCase):
+    def test_paper_optimizer_uses_variance_minus_point_one_return(self):
+        expected = np.array([0.2, 0.0])
+        covariance = np.diag([1.0, 0.0])
+        legacy, _ = optimize_portfolio(
+            expected, covariance, risk_aversion=0.1, max_weight=1.0,
+            objective_convention="legacy_utility",
+        )
+        paper, _ = optimize_portfolio(
+            expected, covariance, risk_aversion=0.1, max_weight=1.0,
+            objective_convention="paper_variance_minus_return",
+        )
+        self.assertGreater(legacy[0], 0.9)
+        self.assertAlmostEqual(paper[0], 0.01, places=3)
+
     def test_prompt_ensemble_has_unique_auditable_system_prompts(self):
         prompts = [
             diversified_system_prompt("return JSON only", call_id, "relative:A:B")
@@ -60,6 +81,49 @@ class RelViewTests(unittest.TestCase):
         self.assertAlmostEqual(parse_absolute_response('{"expected_return": 0.0025}'), 0.0025)
         with self.assertRaises(ValueError):
             parse_absolute_response('{"expected_return": 3.0}')
+
+    def test_paper_prompt_scales_inputs_and_parses_percentage_output(self):
+        system, user = make_absolute_prompt(
+            "AAPL",
+            [0.01, -0.002],
+            {
+                "Security": "Apple Inc.",
+                "GICS Sector": "Information Technology",
+                "GICS Sub-Industry": "Hardware",
+            },
+            {
+                "reference_date": "2024-08-30",
+                "sector_returns": [0.5, -0.1],
+                "market_returns": [0.2, -0.2],
+            },
+            10,
+            "paper_v2",
+        )
+        payload = json.loads(user)
+        self.assertEqual(payload["Daily Returns"], [1.0, -0.2])
+        self.assertIn("2024-08-30", system)
+        self.assertAlmostEqual(
+            parse_absolute_response('{"expected_return": 0.25}', percentage_units=True),
+            0.0025,
+        )
+
+    def test_decisive_prompt_enforces_minimum_ranking_score(self):
+        returns = pd.DataFrame({"A": [0.01, 0.02], "B": [-0.01, 0.0]})
+        context = {
+            "A": {"sector_returns": [1.0, 2.0], "market_returns": [0.5, 0.6]},
+            "B": {"sector_returns": [1.0, 2.0], "market_returns": [0.5, 0.6]},
+        }
+        system, user = make_pairwise_prompt(
+            "A", "B", returns, {}, context, 10, "decisive_v2"
+        )
+        self.assertIn("[0.55, 0.95]", system)
+        self.assertIn("fixed decision rule", system)
+        self.assertEqual(json.loads(user)["asset_a"]["daily_returns"], [1.0, 2.0])
+        with self.assertRaises(ValueError):
+            parse_pairwise_response(
+                '{"preferred_asset":"A","probability":0.54,"evidence":[]}',
+                "A", "B", 0.55,
+            )
 
     def test_realized_portfolio_metrics_and_transaction_cost(self):
         realized = pd.DataFrame({"A": [0.01, 0.02], "B": [0.0, -0.01]}, index=["d1", "d2"])

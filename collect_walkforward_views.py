@@ -83,6 +83,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--retry-calls", type=int, default=15)
     parser.add_argument("--horizon-days", type=int, default=10)
     parser.add_argument("--temperature", type=float, default=0.3)
+    parser.add_argument("--prompt-ensemble", action="store_true")
+    parser.add_argument("--absolute-prompt-mode", choices=["generic", "paper_v2"], default="generic")
+    parser.add_argument("--relative-prompt-mode", choices=["calibrated", "decisive_v1", "decisive_v2"], default="calibrated")
     parser.add_argument("--max-pairs", type=int, default=45)
     parser.add_argument("--probability-estimator", choices=["mean", "votes"], default="mean")
     parser.add_argument("--force", action="store_true")
@@ -147,6 +150,7 @@ def main() -> None:
                 returns, args.model, args.base_url, api_key, metadata, context,
                 args.repeats, args.horizon_days, args.temperature, args.thinking,
                 args.workers, args.retry_calls,
+                args.prompt_ensemble, args.absolute_prompt_mode,
             )
             incomplete = [
                 ticker for ticker in universe
@@ -166,6 +170,7 @@ def main() -> None:
                 args.repeats, args.horizon_days, args.temperature,
                 args.probability_estimator, args.thinking, args.workers,
                 args.retry_calls,
+                args.prompt_ensemble, args.relative_prompt_mode,
             )
             value = {
                 "model": args.model,
@@ -174,6 +179,9 @@ def main() -> None:
                 "repeats": args.repeats,
                 "probability_estimator": args.probability_estimator,
                 "thinking": args.thinking,
+                "temperature": args.temperature,
+                "prompt_ensemble": args.prompt_ensemble,
+                "prompt_mode": args.relative_prompt_mode,
                 "pairs_requested": len(pairs),
                 "views": views,
             }

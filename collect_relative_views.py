@@ -92,32 +92,71 @@ def make_pairwise_prompt(
     metadata: Mapping[str, Mapping[str, str]],
     context: Mapping[str, Any],
     horizon_days: int,
+    prompt_mode: str = "calibrated",
 ) -> tuple[str, str]:
-    system = (
-        "You generate strictly point-in-time pairwise equity views. Compare only the two supplied assets "
-        "using only the supplied information. Return JSON with preferred_asset, probability, and evidence. "
-        "probability is the probability (0.50 to 1.00) that preferred_asset outperforms the other asset. "
-        "If evidence is weak, keep probability near 0.50. Do not predict an absolute return."
+    if prompt_mode == "calibrated":
+        system = (
+            "You generate strictly point-in-time pairwise equity views. Compare only the two supplied assets "
+            "using only the supplied information. Return JSON with preferred_asset, probability, and evidence. "
+            "probability is the probability (0.50 to 1.00) that preferred_asset outperforms the other asset. "
+            "If evidence is weak, keep probability near 0.50. Do not predict an absolute return."
+        )
+    elif prompt_mode in {"decisive_v1", "decisive_v2"}:
+        fixed_rule = (
+            " Apply this fixed decision rule before any stylistic lens: compare relative cumulative "
+            "return and mean daily return (50% weight), downside-adjusted consistency (25%), relative "
+            "sector/market behavior (15%), and company/industry context (10%). If the weighted evidence "
+            "is tied, prefer the asset with the higher cumulative return; if still tied, use the ticker "
+            "that is lexicographically first."
+            if prompt_mode == "decisive_v2" else ""
+        )
+        system = (
+            "You generate a forced, strictly point-in-time pairwise ranking using only the supplied "
+            "information. You must select one of the two assets as more likely to outperform over the "
+            "requested horizon. Return JSON with preferred_asset, probability, and evidence. The probability "
+            "must be in [0.55, 0.95]: use 0.55-0.59 for a weak but measurable edge, 0.60-0.69 for a moderate "
+            "edge, 0.70-0.79 for a strong edge, and 0.80-0.95 only for unusually convergent evidence. Never "
+            "return 0.50-0.5499. Do not invent evidence or use future information. Do not predict an absolute "
+            "return. This is a confidence-forcing experimental prompt; the number is a ranking score and must "
+            "not be presented as an externally calibrated real-world probability."
+            + fixed_rule
+        )
+    else:
+        raise ValueError("prompt_mode must be calibrated, decisive_v1, or decisive_v2")
+    context_a = context.get(asset_a, {})
+    context_b = context.get(asset_b, {})
+    percentage_context = all(
+        isinstance(item, Mapping)
+        and "sector_returns" in item
+        and "market_returns" in item
+        for item in (context_a, context_b)
     )
+    return_scale = 100.0 if percentage_context else 1.0
     payload = {
         "horizon_days": horizon_days,
         "asset_a": {
             "ticker": asset_a,
             "metadata": dict(metadata.get(asset_a, {})),
-            "point_in_time_context": context.get(asset_a, {}),
-            "daily_returns": returns[asset_a].astype(float).tolist(),
+            "point_in_time_context": context_a,
+            "daily_returns": (return_scale * returns[asset_a].astype(float)).tolist(),
         },
         "asset_b": {
             "ticker": asset_b,
             "metadata": dict(metadata.get(asset_b, {})),
-            "point_in_time_context": context.get(asset_b, {}),
-            "daily_returns": returns[asset_b].astype(float).tolist(),
+            "point_in_time_context": context_b,
+            "daily_returns": (return_scale * returns[asset_b].astype(float)).tolist(),
         },
+        "return_units": "percentage points" if percentage_context else "decimal return",
     }
     return system, json.dumps(payload, ensure_ascii=False)
 
 
-def parse_pairwise_response(content: str, asset_a: str, asset_b: str) -> dict[str, Any]:
+def parse_pairwise_response(
+    content: str,
+    asset_a: str,
+    asset_b: str,
+    minimum_probability: float = 0.5,
+) -> dict[str, Any]:
     text = content.strip()
     fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, flags=re.DOTALL | re.IGNORECASE)
     if fenced:
@@ -131,8 +170,8 @@ def parse_pairwise_response(content: str, asset_a: str, asset_b: str) -> dict[st
     probability = float(value["probability"])
     if preferred not in (asset_a, asset_b):
         raise ValueError(f"preferred_asset must be {asset_a} or {asset_b}")
-    if not 0.5 <= probability <= 1.0:
-        raise ValueError("probability must be in [0.5, 1.0]")
+    if not minimum_probability <= probability <= 1.0:
+        raise ValueError(f"probability must be in [{minimum_probability}, 1.0]")
     evidence = value.get("evidence", [])
     if isinstance(evidence, str):
         evidence = [evidence]
@@ -253,6 +292,7 @@ def collect_pairwise_views(
     workers: int = 1,
     retry_calls: int = 15,
     prompt_ensemble: bool = False,
+    prompt_mode: str = "calibrated",
 ) -> list[dict[str, Any]]:
     try:
         from openai import OpenAI
@@ -263,7 +303,7 @@ def collect_pairwise_views(
     views: list[dict[str, Any]] = []
     for asset_a, asset_b in tqdm(pairs, desc="Pairwise LLM views"):
         base_system, user = make_pairwise_prompt(
-            asset_a, asset_b, returns, metadata, context, horizon_days
+            asset_a, asset_b, returns, metadata, context, horizon_days, prompt_mode
         )
         def call_once(call_id: int) -> dict[str, Any]:
             system = (
@@ -275,7 +315,10 @@ def collect_pairwise_views(
                 model, system, user, temperature, thinking
             ))
             parsed = parse_pairwise_response(
-                completion.choices[0].message.content, asset_a, asset_b
+                completion.choices[0].message.content,
+                asset_a,
+                asset_b,
+                0.55 if prompt_mode.startswith("decisive_") else 0.5,
             )
             if prompt_ensemble:
                 parsed["prompt_variant_id"] = call_id
@@ -302,6 +345,7 @@ def collect_pairwise_views(
             "status": "ok",
             "temperature": temperature,
             "prompt_ensemble": ENSEMBLE_NAME if prompt_ensemble else "single_prompt",
+            "prompt_mode": prompt_mode,
         })
     return views
 
@@ -366,6 +410,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workers", type=int, default=1, help="Concurrent calls within each pair")
     parser.add_argument("--retry-calls", type=int, default=15, help="Extra attempts used to replace invalid responses")
     parser.add_argument("--prompt-ensemble", action="store_true", help="Use a unique system prompt for every call")
+    parser.add_argument(
+        "--prompt-mode", choices=["calibrated", "decisive_v1", "decisive_v2"], default="calibrated",
+        help="decisive modes force a ranking score of at least 0.55 and are not probability-calibrated",
+    )
     return parser.parse_args()
 
 
@@ -418,6 +466,7 @@ def main() -> None:
         args.workers,
         args.retry_calls,
         args.prompt_ensemble,
+        args.prompt_mode,
     )
     payload = {
         "model": args.model,
@@ -428,6 +477,7 @@ def main() -> None:
         "thinking": args.thinking,
         "temperature": args.temperature,
         "prompt_ensemble": ENSEMBLE_NAME if args.prompt_ensemble else "single_prompt",
+        "prompt_mode": args.prompt_mode,
         "pairs_requested": len(pairs),
         "views": views,
     }

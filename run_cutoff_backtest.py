@@ -77,6 +77,7 @@ def cached_absolute_matches(
         and int(item.get("horizon_days", -1)) == horizon_days
         and float(item.get("temperature", 0.3)) == float(config["temperature"])
         and item.get("prompt_ensemble", "single_prompt") == expected_ensemble
+        and item.get("prompt_mode", "generic") == config.get("absolute_prompt_mode", "generic")
         for item in payload.values()
     )
 
@@ -97,6 +98,7 @@ def cached_relative_matches(
         and int(payload.get("horizon_days", -1)) == horizon_days
         and float(payload.get("temperature", 0.3)) == float(config["temperature"])
         and payload.get("prompt_ensemble", "single_prompt") == expected_ensemble
+        and payload.get("prompt_mode", "calibrated") == config.get("relative_prompt_mode", "calibrated")
     )
 
 
@@ -186,6 +188,7 @@ def collect_views(
             workers,
             retry_calls,
             bool(config.get("prompt_ensemble", False)),
+            str(config.get("absolute_prompt_mode", "generic")),
         )
         incomplete = [
             asset for asset in assets
@@ -222,6 +225,7 @@ def collect_views(
             workers,
             retry_calls,
             bool(config.get("prompt_ensemble", False)),
+            str(config.get("relative_prompt_mode", "calibrated")),
         )
         incomplete = [
             f"{view.get('asset_a')}/{view.get('asset_b')}"
@@ -242,6 +246,7 @@ def collect_views(
             "prompt_ensemble": (
                 ENSEMBLE_NAME if config.get("prompt_ensemble", False) else "single_prompt"
             ),
+            "prompt_mode": config.get("relative_prompt_mode", "calibrated"),
             "pairs_requested": len(pairs),
             "views": views,
         })

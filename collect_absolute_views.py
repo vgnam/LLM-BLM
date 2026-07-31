@@ -41,7 +41,46 @@ def make_absolute_prompt(
     metadata: Mapping[str, Any],
     context: Any,
     horizon_days: int,
+    prompt_mode: str = "generic",
 ) -> tuple[str, str]:
+    if prompt_mode == "paper_v2":
+        if not isinstance(context, Mapping):
+            raise ValueError("paper_v2 context must be a mapping")
+        required = {"reference_date", "sector_returns", "market_returns"}
+        missing = sorted(required - set(context))
+        if missing:
+            raise ValueError(f"paper_v2 context is missing: {missing}")
+        company_name = metadata.get("Security", metadata.get("Name", ticker))
+        sector = metadata.get("GICS Sector", metadata.get("Sector", "Unknown"))
+        sub_industry = metadata.get(
+            "GICS Sub-Industry", metadata.get("Sub-Industry", "Unknown")
+        )
+        system = (
+            f"You are providing analysis on {context['reference_date']}. Predict the average daily "
+            "return for the next two weeks based on the information provided about a stock's past "
+            "performance. You will receive the stock's daily returns from the past two weeks, its "
+            "GICS sector, the sector's daily returns, the S&P 500's daily returns, and company "
+            "information. Analyze the time-series data, sector and market performance, and company "
+            "sector and sub-industry. Predict the average daily return for the next two weeks. "
+            "Return JSON with exactly one numeric field named expected_return and no commentary. "
+            "The input returns and expected_return are percentage values: for example, -0.36 means "
+            "-0.36%, not -36%."
+        )
+        user = json.dumps({
+            "Daily Returns": [100.0 * float(value) for value in returns],
+            "Company Sector": sector,
+            "Sector Returns": [float(value) for value in context["sector_returns"]],
+            "Market Returns": [float(value) for value in context["market_returns"]],
+            "Company Information": {
+                "Ticker": ticker,
+                "Company Name": company_name,
+                "GICS Sector": sector,
+                "GICS Sub-Industry": sub_industry,
+            },
+        }, ensure_ascii=False)
+        return system, user
+    if prompt_mode != "generic":
+        raise ValueError("prompt_mode must be generic or paper_v2")
     system = (
         "You generate a strictly point-in-time absolute equity return view using only supplied information. "
         "Predict the asset's average daily arithmetic return over the requested future horizon. Return JSON "
@@ -59,7 +98,7 @@ def make_absolute_prompt(
     return system, user
 
 
-def parse_absolute_response(content: str) -> float:
+def parse_absolute_response(content: str, percentage_units: bool = False) -> float:
     text = content.strip()
     fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, flags=re.DOTALL | re.IGNORECASE)
     if fenced:
@@ -71,6 +110,8 @@ def parse_absolute_response(content: str) -> float:
     value = float(json.loads(text)["expected_return"])
     if not np.isfinite(value):
         raise ValueError("expected_return must be finite")
+    if percentage_units:
+        return value / 100.0
     if abs(value) > 0.25:
         raise ValueError(
             "expected_return magnitude exceeds 25% per day; the model likely returned percentage units"
@@ -92,6 +133,7 @@ def collect_absolute_views(
     workers: int = 1,
     retry_calls: int = 15,
     prompt_ensemble: bool = False,
+    prompt_mode: str = "generic",
 ) -> dict[str, dict[str, Any]]:
     try:
         from openai import OpenAI
@@ -107,6 +149,7 @@ def collect_absolute_views(
             metadata.get(ticker, {}),
             context.get(ticker, {}),
             horizon_days,
+            prompt_mode,
         )
         def call_once(call_id: int) -> dict[str, Any]:
             system = (
@@ -117,7 +160,10 @@ def collect_absolute_views(
                 model, system, user, temperature, thinking
             ))
             return {
-                "value": parse_absolute_response(completion.choices[0].message.content),
+                "value": parse_absolute_response(
+                    completion.choices[0].message.content,
+                    percentage_units=prompt_mode == "paper_v2",
+                ),
                 "system_prompt_sha256": prompt_sha256(system),
             }
 
@@ -141,6 +187,9 @@ def collect_absolute_views(
             "thinking": thinking,
             "temperature": temperature,
             "prompt_ensemble": ENSEMBLE_NAME if prompt_ensemble else "single_prompt",
+            "prompt_mode": prompt_mode,
+            "stored_return_units": "decimal_daily_return",
+            "model_output_units": "percentage_daily_return" if prompt_mode == "paper_v2" else "decimal_daily_return",
             "prompt_variant_ids": variant_ids if prompt_ensemble else [],
             "system_prompt_sha256": prompt_hashes if prompt_ensemble else [],
             **dict(metadata.get(ticker, {})),
@@ -167,6 +216,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workers", type=int, default=1, help="Concurrent calls within each asset")
     parser.add_argument("--retry-calls", type=int, default=15, help="Extra attempts used to replace invalid responses")
     parser.add_argument("--prompt-ensemble", action="store_true", help="Use a unique system prompt for every call")
+    parser.add_argument(
+        "--prompt-mode", choices=["generic", "paper_v2"], default="generic",
+        help="paper_v2 reproduces the prompt inputs and percentage units described in arXiv v2",
+    )
     return parser.parse_args()
 
 
@@ -208,6 +261,7 @@ def main() -> None:
         args.workers,
         args.retry_calls,
         args.prompt_ensemble,
+        args.prompt_mode,
     )
     successful = sum(bool(item["expected_return"]) for item in result.values())
     args.output.parent.mkdir(parents=True, exist_ok=True)

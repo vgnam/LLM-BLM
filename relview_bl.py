@@ -306,6 +306,7 @@ class RelViewConfig:
     risk_aversion: float = 0.1
     turnover_penalty: float = 0.0
     max_weight: float = 0.1
+    objective_convention: str = "legacy_utility"
 
     def __post_init__(self) -> None:
         if self.calibration not in {"none", "temperature", "isotonic"}:
@@ -325,6 +326,10 @@ class RelViewConfig:
             raise ValueError("risk_aversion and turnover_penalty must be non-negative")
         if not 0 < self.max_weight <= 1:
             raise ValueError("max_weight must be in (0, 1]")
+        if self.objective_convention not in {"legacy_utility", "paper_variance_minus_return"}:
+            raise ValueError(
+                "objective_convention must be legacy_utility or paper_variance_minus_return"
+            )
 
 
 @dataclass
@@ -589,20 +594,29 @@ def optimize_portfolio(
     turnover_penalty: float = 0.0,
     previous_weights: Sequence[float] | np.ndarray | None = None,
     max_weight: float = 0.1,
+    objective_convention: str = "legacy_utility",
 ) -> tuple[np.ndarray, str]:
     expected = np.asarray(expected_returns, dtype=float)
     covariance = np.asarray(covariance, dtype=float)
     asset_count = len(expected)
     if max_weight * asset_count < 1.0 - 1e-12:
         raise ValueError(f"max_weight={max_weight} is infeasible for {asset_count} assets")
+    if objective_convention not in {"legacy_utility", "paper_variance_minus_return"}:
+        raise ValueError(
+            "objective_convention must be legacy_utility or paper_variance_minus_return"
+        )
     previous = np.asarray(previous_weights, dtype=float) if previous_weights is not None else None
     if previous is not None and previous.shape != expected.shape:
         raise ValueError("previous_weights must match expected_returns")
 
     def objective(weights: np.ndarray) -> float:
-        utility = weights @ expected - risk_aversion * (weights.T @ covariance @ weights)
+        variance = weights.T @ covariance @ weights
+        if objective_convention == "paper_variance_minus_return":
+            base_objective = variance - risk_aversion * (weights @ expected)
+        else:
+            base_objective = -(weights @ expected - risk_aversion * variance)
         turnover = turnover_penalty * np.sum(np.abs(weights - previous)) if previous is not None else 0.0
-        return float(-utility + turnover)
+        return float(base_objective + turnover)
 
     initial = previous.copy() if previous is not None else np.full(asset_count, 1.0 / asset_count)
     initial = np.clip(initial, 0.0, max_weight)
@@ -689,6 +703,7 @@ def run_relview_bl(
         config.turnover_penalty,
         previous,
         config.max_weight,
+        config.objective_convention,
     )
     return RelViewResult(
         assets=assets,

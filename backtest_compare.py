@@ -45,6 +45,7 @@ def absolute_weights(
     max_weight: float,
     previous: np.ndarray | None,
     turnover_penalty: float,
+    objective_convention: str = "legacy_utility",
 ) -> tuple[np.ndarray, np.ndarray]:
     missing = [
         asset for asset in assets
@@ -67,6 +68,7 @@ def absolute_weights(
         turnover_penalty=turnover_penalty,
         previous_weights=previous,
         max_weight=max_weight,
+        objective_convention=objective_convention,
     )
     return weights, posterior
 

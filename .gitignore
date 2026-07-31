@@ -26,3 +26,14 @@ experiments/post_release_2026/summary/
 experiments/cutoff_2025_12/*/
 !experiments/cutoff_2025_12/config.json
 !experiments/cutoff_2025_12/REPORT.md
+
+# Paper-protocol reproduction (configuration/code tracked; downloaded data and calls local)
+experiments/paper_reproduction/*/
+!experiments/paper_reproduction/config.json
+!experiments/paper_reproduction/PROTOCOL.md
+
+# Five-universe fortnight study
+experiments/fortnight_5_datasets/*/
+!experiments/fortnight_5_datasets/config.json
+!experiments/fortnight_5_datasets/datasets.json
+!experiments/fortnight_5_datasets/README.md

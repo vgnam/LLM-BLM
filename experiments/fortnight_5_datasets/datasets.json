@@ -1,0 +1,29 @@
+{
+  "datasets": [
+    {
+      "id": "consumer_communication",
+      "description": "Consumer and communication-services leaders not used by the earlier five-universe study",
+      "tickers": ["AMZN", "GOOGL", "META", "TSLA", "WMT", "COST", "NFLX", "HD", "MCD", "DIS", "CMCSA", "BKNG", "TGT", "SBUX", "TJX"]
+    },
+    {
+      "id": "staples_utilities_realestate",
+      "description": "Defensive staples, regulated utilities, and real-estate equities",
+      "tickers": ["PG", "KO", "PEP", "PM", "MO", "CL", "MDLZ", "KMB", "NEE", "SO", "DUK", "AEP", "EXC", "PLD", "AMT"]
+    },
+    {
+      "id": "transport_industrial",
+      "description": "Transport, logistics, waste, machinery, and aerospace equities excluded from the old industrial set",
+      "tickers": ["WM", "RSG", "CSX", "NSC", "FDX", "DAL", "UAL", "ODFL", "CARR", "PCAR", "MMM", "EMR", "GD", "NOC", "TDG"]
+    },
+    {
+      "id": "digital_infrastructure",
+      "description": "Software, cybersecurity, payments, semiconductor equipment, and digital-infrastructure equities",
+      "tickers": ["PANW", "ACN", "NOW", "PLTR", "ADP", "PAYX", "MSI", "ANET", "LRCX", "KLAC", "SNPS", "CDNS", "FTNT", "APH", "TEL"]
+    },
+    {
+      "id": "healthcare_services_biotech",
+      "description": "Biopharma, managed care, distribution, devices, and hospital equities excluded from the old healthcare set",
+      "tickers": ["BMY", "CVS", "CI", "HUM", "ZTS", "REGN", "VRTX", "BIIB", "MCK", "COR", "CAH", "EW", "SYK", "BDX", "HCA"]
+    }
+  ]
+}

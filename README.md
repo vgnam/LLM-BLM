@@ -241,3 +241,56 @@ py -3.10 run_cutoff_backtest.py --skip-collect --temperature 1 --prompt-ensemble
 
 See `experiments/cutoff_2025_12/REPORT.md` for the methodology, leakage caveat,
 results, and reusable artifact catalog.
+
+### Paper-data fortnight reproduction
+
+Prepare the largest-50 paper universe, adjusted-close panels, exact prompt
+context, and five validation plus twenty test windows:
+
+```powershell
+py -3.10 prepare_paper_reproduction.py --overwrite
+py -3.10 validate_fortnight_data.py --root experiments/paper_reproduction/paper_sp500_top50 --config experiments/paper_reproduction/config.json
+```
+
+Run the DeepSeek comparison with 30 calls per asset/pair, temperature 1,
+thinking disabled, diversified system prompts, the paper absolute prompt, and
+the confidence-forced `decisive_v2` relative prompt:
+
+```powershell
+py -3.10 run_paper_reproduction.py --methods absolute relative --workers 30 --retry-calls 60
+py -3.10 validate_fortnight_data.py --root experiments/paper_reproduction/paper_sp500_top50 --config experiments/paper_reproduction/config.json --run-root experiments/paper_reproduction/paper_sp500_top50/deepseek_comparison --repeats 30 --require-results
+```
+
+The run is period-level resume-safe. To inspect the remaining API work without
+calling the model, add `--dry-run`. To use the paper's `N=100` call count for
+the absolute method, keep it in a separate run root:
+
+```powershell
+py -3.10 run_paper_reproduction.py --methods absolute --paper-exact --run-root experiments/paper_reproduction/paper_sp500_top50/paper_exact_deepseek --workers 30 --retry-calls 120
+```
+
+The public repository does not expose the paper's exact 26 March 2025 market
+cap snapshot or sector-series construction. The tracked protocol file records
+these two reproducibility limits. DeepSeek also postdates the historical test,
+so its output is leakage-sensitive and must not be described as a reproduction
+of the four paper models.
+
+### Five new one-year-bounded datasets
+
+Prepare and validate five disjoint 15-asset universes on the same 20-period,
+200-trading-day test calendar:
+
+```powershell
+py -3.10 prepare_fortnight_datasets.py --overwrite
+py -3.10 run_fortnight_datasets.py --skip-prepare --dry-run
+```
+
+Run all LLM collections, backtests, and reusable cross-dataset tables:
+
+```powershell
+py -3.10 run_fortnight_datasets.py --skip-prepare --workers 30 --retry-calls 60
+```
+
+Each dataset stores CSV and Parquet daily returns, per-period metrics, and long
+portfolio weights under its `deepseek_comparison/results` directory. Combined
+tables are written to `experiments/fortnight_5_datasets/summary`.

@@ -17,7 +17,7 @@
   "tau": 0.025,
   "risk_aversion": 0.1,
   "market_risk_aversion": 2.5,
-  "max_weight": 0.15,
+  "max_weight": 1.0,
   "transaction_cost_bps": 10.0,
   "prior": "equal_cap",
   "portfolio_policy": "form_once_at_cutoff_and_hold"

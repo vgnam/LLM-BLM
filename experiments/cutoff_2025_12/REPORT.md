@@ -8,8 +8,10 @@
 - Test window: 2 January through 30 July 2026, the latest completed US session
   available at run time (144 common trading days).
 - Policy: form each portfolio once at the cutoff and hold the initial weights
-  for the complete test window. All methods use the same adjusted-close return
-  panels, 0.15 maximum asset weight, and a 10 bp entry cost.
+  for the complete test window. The archived headline tables below used the
+  same adjusted-close panels, a historical 0.15 maximum asset weight, and a 10
+  bp entry cost. The tracked canonical config is now `max_weight=1.0`; its
+  already-computed no-cap comparison is reported separately below.
 - Five datasets, each containing 15 named assets: US technology, US financials,
   US healthcare, US industrial/energy, and cross-asset ETFs.
 - The two LLM methods use `deepseek-v4-flash` through OpenCode Go with thinking
