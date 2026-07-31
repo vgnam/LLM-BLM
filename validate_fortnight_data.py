@@ -46,6 +46,16 @@ def main() -> None:
     caps = load_json(args.root / "market_caps.json")
     metadata = pd.read_csv(args.root / "metadata.csv")
     periods = pd.read_csv(args.root / "periods.csv")
+    stock_panel = pd.read_csv(
+        args.root / "data" / "stock_returns.csv", parse_dates=["Date"]
+    ).set_index("Date")
+    market_panel = pd.read_csv(
+        args.root / "data" / "market_returns.csv", parse_dates=["Date"]
+    ).set_index("Date")["Market_Return"]
+    sector_panel = pd.read_csv(
+        args.root / "data" / "sector_returns.csv", parse_dates=["Date"]
+    ).set_index("Date")
+    metadata_by_asset = metadata.set_index("Symbol").to_dict(orient="index")
     if len(assets) != len(set(assets)):
         errors.append("universe contains duplicates")
     if set(assets) != set(caps):
@@ -65,6 +75,9 @@ def main() -> None:
 
     expected_days = int(config["lookback_trading_days"])
     expected_holding = int(config["holding_trading_days"])
+    realized_dates_by_phase: dict[str, list[pd.Timestamp]] = {
+        "validation": [], "test": [],
+    }
     for period in periods.itertuples(index=False):
         period_root = args.root / "periods" / period.period_id
         try:
@@ -82,12 +95,38 @@ def main() -> None:
             errors.append(f"{period.period_id} asset order mismatch")
         if formation["Date"].max() >= realized["Date"].min():
             errors.append(f"{period.period_id} formation overlaps realized data")
+        if (
+            str(formation["Date"].min().date()) != str(period.formation_start)
+            or str(formation["Date"].max().date()) != str(period.formation_end)
+            or str(realized["Date"].min().date()) != str(period.test_start)
+            or str(realized["Date"].max().date()) != str(period.test_end)
+        ):
+            errors.append(f"{period.period_id} period boundary metadata mismatch")
         if str(formation["Date"].max().date()) != str(period.reference_date):
             errors.append(f"{period.period_id} reference date mismatch")
+        realized_dates_by_phase[str(period.phase)].extend(realized["Date"].tolist())
+        formation_dates = pd.DatetimeIndex(formation["Date"])
+        realized_dates = pd.DatetimeIndex(realized["Date"])
+        try:
+            expected_formation = stock_panel.loc[formation_dates, assets].to_numpy(dtype=float)
+            expected_realized = stock_panel.loc[realized_dates, assets].to_numpy(dtype=float)
+            if not np.allclose(
+                formation[assets].to_numpy(dtype=float), expected_formation,
+                rtol=0.0, atol=1e-15,
+            ):
+                errors.append(f"{period.period_id} formation values differ from stock panel")
+            if not np.allclose(
+                realized[assets].to_numpy(dtype=float), expected_realized,
+                rtol=0.0, atol=1e-15,
+            ):
+                errors.append(f"{period.period_id} realized values differ from stock panel")
+        except KeyError as error:
+            errors.append(f"{period.period_id} date missing from stock panel: {error}")
         if set(context) != set(assets):
             errors.append(f"{period.period_id} context universe mismatch")
         for asset in assets:
             item = context.get(asset, {})
+            sector = metadata_by_asset.get(asset, {}).get("GICS Sector")
             if (
                 len(item.get("sector_returns", [])) != expected_days
                 or len(item.get("market_returns", [])) != expected_days
@@ -95,6 +134,30 @@ def main() -> None:
             ):
                 errors.append(f"{period.period_id}/{asset} context mismatch")
                 break
+            expected_sector = (
+                100.0 * sector_panel.loc[formation_dates, sector]
+            ).to_numpy(dtype=float)
+            expected_market = (
+                100.0 * market_panel.loc[formation_dates]
+            ).to_numpy(dtype=float)
+            if not np.allclose(
+                np.asarray(item["sector_returns"], dtype=float), expected_sector,
+                rtol=0.0, atol=1e-12,
+            ) or not np.allclose(
+                np.asarray(item["market_returns"], dtype=float), expected_market,
+                rtol=0.0, atol=1e-12,
+            ):
+                errors.append(f"{period.period_id}/{asset} context values differ from proxy panels")
+                break
+
+    expected_realized_counts = {"validation": 50, "test": 200}
+    for phase, expected_count in expected_realized_counts.items():
+        dates = realized_dates_by_phase[phase]
+        if len(dates) != expected_count or len(set(dates)) != expected_count:
+            errors.append(
+                f"{phase} realized calendar has {len(dates)} rows/"
+                f"{len(set(dates))} unique dates, expected {expected_count}"
+            )
 
     if args.run_root:
         repeats = int(args.repeats or config["comparison_repeats"])

@@ -292,7 +292,7 @@ def build_report(
 ## Protocol
 
 - The paper reconstruction is run first on 50 reconstructed March-2025 S&P 500 leaders.
-- Five additional disjoint 15-asset datasets use the same five validation and twenty test periods.
+- Five additional mutually disjoint 15-asset datasets (also disjoint from the earlier five-universe study) use the same five validation and twenty test periods. They may overlap the paper top-50 universe.
 - Every test contains 200 trading days from September 2024 through June 2025, so it is shorter than one year.
 - All optimizers are long-only and fully invested with `max_weight=1.0`; there is no 15% concentration cap.
 - Absolute LLM-BLM and RelView-BL both use DeepSeek V4 Flash, temperature 1, disabled reasoning, 30 calls, and validation-selected tau.
@@ -328,7 +328,7 @@ The values below are confidence-forced ranking scores, not calibrated real-world
 
 ## Interpretation constraints
 
-DeepSeek V4 Flash postdates the historical test interval. Its outputs may remember information from that interval, so LLM-based returns are leakage-sensitive and are not an out-of-sample replication of the four models in the paper. The exact 26 March 2025 paper universe was not published; the paper dataset uses the nearest public March-2025 reconstruction. The paper also does not publish its sector-return construction, so adjusted-close GICS sector ETF proxies are used.
+DeepSeek V4 Flash postdates the historical test interval. Its outputs may remember information from that interval, so LLM-based returns are leakage-sensitive and are not an out-of-sample replication of the four models in the paper. The five new universes share the same calendar, so they are asset-universe robustness checks rather than five independent time samples. The exact 26 March 2025 paper universe was not published; the paper dataset uses the nearest public March-2025 reconstruction. The paper also does not publish its sector-return construction, so adjusted-close GICS sector ETF proxies are used.
 
 ## Reusable artifacts
 
