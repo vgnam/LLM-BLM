@@ -24,6 +24,7 @@ from collect_relative_views import (
     ProviderUsageLimitError,
     atomic_checkpoint_json,
     provider_limit_from_errors,
+    provider_region_from_errors,
     _load_json_mapping,
     _load_returns,
     _load_universe,
@@ -252,6 +253,9 @@ def collect_absolute_views(
         if checkpoint_path:
             atomic_checkpoint_json(checkpoint_path, result)
         if len(samples) < repeats:
+            provider_region = provider_region_from_errors(errors)
+            if provider_region:
+                raise provider_region
             provider_limit = provider_limit_from_errors(errors)
             if provider_limit:
                 raise provider_limit

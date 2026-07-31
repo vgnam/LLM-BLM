@@ -269,6 +269,11 @@ the absolute method, keep it in a separate run root:
 py -3.10 run_paper_reproduction.py --methods absolute --paper-exact --run-root experiments/paper_reproduction/paper_sp500_top50/paper_exact_deepseek --workers 30 --retry-calls 120 --wait-on-rate-limit
 ```
 
+The collectors also checkpoint after every completed asset or pair. Quota
+resets resume automatically, but a provider `RegionError` stops immediately:
+an account-level China-hosting opt-in changes data residency and must be made
+explicitly by the workspace owner rather than by the runner.
+
 The public repository does not expose the paper's exact 26 March 2025 market
 cap snapshot or sector-series construction. The tracked protocol file records
 these two reproducibility limits. DeepSeek also postdates the historical test,

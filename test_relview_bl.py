@@ -24,6 +24,7 @@ from collect_relative_views import (
     make_pairwise_prompt,
     parse_pairwise_response,
     provider_limit_from_errors,
+    provider_region_from_errors,
 )
 from portfolio_backtest import evaluate_realized_portfolio
 from prompt_ensemble import collect_repeated_calls, diversified_system_prompt, prompt_sha256
@@ -42,6 +43,14 @@ from validate_fortnight_data import metrics_from_daily_returns
 
 
 class RelViewTests(unittest.TestCase):
+    def test_provider_region_opt_in_is_fatal_not_a_retry_delay(self):
+        error = provider_region_from_errors([
+            "Error code: 403 - RegionError: latest model is hosted in China "
+            "and requires explicit opt in"
+        ])
+        self.assertIsNotNone(error)
+        self.assertIn("RegionError", str(error))
+
     def test_absolute_collection_resumes_completed_checkpoint_asset(self):
         with tempfile.TemporaryDirectory() as temporary:
             checkpoint = Path(temporary) / "period.partial"

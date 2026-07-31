@@ -42,6 +42,10 @@ class ProviderUsageLimitError(RuntimeError):
         self.retry_after_seconds = max(60, int(retry_after_seconds))
 
 
+class ProviderRegionOptInError(RuntimeError):
+    """Provider requires an account-level data-region opt-in before calls can continue."""
+
+
 def provider_limit_from_errors(errors: list[str]) -> ProviderUsageLimitError | None:
     limited = [
         error for error in errors
@@ -60,6 +64,16 @@ def provider_limit_from_errors(errors: list[str]) -> ProviderUsageLimitError | N
             + 60
         )
     return ProviderUsageLimitError(message, seconds)
+
+
+def provider_region_from_errors(errors: list[str]) -> ProviderRegionOptInError | None:
+    matches = [
+        error for error in errors
+        if "RegionError" in error
+        or "requires explicit opt in" in error
+        or ("403" in error and "hosted in China" in error)
+    ]
+    return ProviderRegionOptInError(matches[0]) if matches else None
 
 
 def atomic_checkpoint_json(path: Path, value: Any) -> None:
@@ -463,6 +477,9 @@ def collect_pairwise_views(
         if checkpoint_path:
             atomic_checkpoint_json(checkpoint_path, {"views": views})
         if len(predictions) < repeats:
+            provider_region = provider_region_from_errors(errors)
+            if provider_region:
+                raise provider_region
             provider_limit = provider_limit_from_errors(errors)
             if provider_limit:
                 raise provider_limit
