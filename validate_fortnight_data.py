@@ -294,6 +294,20 @@ def main() -> None:
                 summary_path,
             ]
             if all(path.exists() for path in required_paths):
+                for name in (
+                    "daily_returns", "daily_returns_long", "period_metrics",
+                    "weights_long", "method_metrics",
+                ):
+                    try:
+                        csv_frame = pd.read_csv(results_root / f"{name}.csv")
+                        parquet_frame = pd.read_parquet(results_root / f"{name}.parquet")
+                        pd.testing.assert_frame_equal(
+                            csv_frame, parquet_frame,
+                            check_dtype=False, check_exact=False,
+                            rtol=1e-12, atol=1e-12,
+                        )
+                    except Exception as error:
+                        errors.append(f"{name} CSV/Parquet mismatch: {error}")
                 methods = [
                     "MVO", "BL_No_Views", "Equal_Weight",
                     "Absolute_LLM_BLM", "RelView_BL",
