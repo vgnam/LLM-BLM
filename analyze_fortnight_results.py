@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import subprocess
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -38,6 +40,23 @@ def manifest_tickers(manifest: dict[str, Any]) -> list[str]:
 
 def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def git_revision() -> str:
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+    except (OSError, subprocess.CalledProcessError):
+        return "unknown"
 
 
 def save_frame(frame: pd.DataFrame, base: Path) -> None:
@@ -406,23 +425,55 @@ def main() -> None:
         save_frame(combined[key], args.output / output_name)
     save_frame(relative_summary, args.output / "relative_probability_summary")
     save_frame(wins, args.output / "method_win_counts")
-    (args.output / "REPORT.md").write_text(
+    report_path = args.output / "REPORT.md"
+    report_path.write_text(
         build_report(
             combined["metrics"], relative_summary, wins,
             combined["weight_diagnostics"],
         ),
         encoding="utf-8",
     )
-    (args.output / "data_catalog.json").write_text(json.dumps({
+    table_paths = sorted(
+        path
+        for path in args.output.iterdir()
+        if path.suffix in {".csv", ".parquet"}
+    )
+    tracked_inputs = [
+        Path("experiments/paper_reproduction/config.json"),
+        Path("experiments/paper_reproduction/paper_universe_2025_03.json"),
+        Path("experiments/fortnight_5_datasets/config.json"),
+        args.manifest,
+        args.previous_manifest,
+    ]
+    response_counts = {
+        dataset: {
+            "absolute": len(list((run_root / "responses_absolute").glob("*.json"))),
+            "relative": len(list((run_root / "responses_relative").glob("*.json"))),
+        }
+        for dataset, _, _, run_root in specifications
+    }
+    catalog_path = args.output / "data_catalog.json"
+    catalog_path.write_text(json.dumps({
+        "code_revision": git_revision(),
         "datasets": [item[0] for item in specifications],
         "test_trading_days_per_dataset": 200,
         "methods": list(METHODS),
+        "source_run_roots": {
+            dataset: str(run_root) for dataset, _, _, run_root in specifications
+        },
+        "response_file_counts": response_counts,
         "tables": {
             **{name: f"{name}.{{csv,parquet}}" for name in output_names.values()},
             "relative_probability_summary": "relative_probability_summary.{csv,parquet}",
             "method_win_counts": "method_win_counts.{csv,parquet}",
         },
         "report": "REPORT.md",
+        "input_sha256": {
+            str(path): sha256(path) for path in tracked_inputs if path.exists()
+        },
+        "artifact_sha256": {
+            path.name: sha256(path) for path in [*table_paths, report_path]
+        },
         "units": {
             "returns": "decimal net return after transaction costs",
             "weights": "portfolio fraction",
