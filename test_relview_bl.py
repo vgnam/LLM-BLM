@@ -2,6 +2,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -11,9 +12,14 @@ from analyze_fortnight_results import (
     relative_diagnostics,
     weighted_probability_summary,
 )
-from collect_absolute_views import make_absolute_prompt, parse_absolute_response
+from collect_absolute_views import (
+    collect_absolute_views,
+    make_absolute_prompt,
+    parse_absolute_response,
+)
 from collect_relative_views import (
     aggregate_repeated_predictions,
+    collect_pairwise_views,
     completion_request_options,
     make_pairwise_prompt,
     parse_pairwise_response,
@@ -36,6 +42,51 @@ from validate_fortnight_data import metrics_from_daily_returns
 
 
 class RelViewTests(unittest.TestCase):
+    def test_absolute_collection_resumes_completed_checkpoint_asset(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            checkpoint = Path(temporary) / "period.partial"
+            checkpoint.write_text(json.dumps({"A": {
+                "expected_return": [0.01, 0.02],
+                "successful_repeats": 2,
+                "model": "model",
+                "thinking": "disabled",
+                "temperature": 1.0,
+                "prompt_ensemble": "diversified_v1",
+                "prompt_mode": "generic",
+                "system_prompt_sha256": ["one", "two"],
+            }}), encoding="utf-8")
+            with patch("openai.OpenAI") as openai:
+                result = collect_absolute_views(
+                    pd.DataFrame({"A": [0.01, -0.01]}),
+                    "model", "https://example.invalid", "key", {}, {},
+                    repeats=2, temperature=1.0, prompt_ensemble=True,
+                    checkpoint_path=checkpoint,
+                )
+            self.assertEqual(result["A"]["expected_return"], [0.01, 0.02])
+            openai.return_value.chat.completions.create.assert_not_called()
+
+    def test_relative_collection_resumes_completed_checkpoint_pair(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            checkpoint = Path(temporary) / "period.partial"
+            view = {
+                "asset_a": "A", "asset_b": "B", "status": "ok",
+                "successful_repeats": 2, "prompt_mode": "decisive_v3",
+                "prompt_ensemble": "diversified_v1",
+                "system_prompt_sha256": ["one", "two"],
+                "probability": 0.6, "probability_a": 0.6,
+            }
+            checkpoint.write_text(json.dumps({"views": [view]}), encoding="utf-8")
+            with patch("openai.OpenAI") as openai:
+                result = collect_pairwise_views(
+                    pd.DataFrame({"A": [0.01, -0.01], "B": [0.0, 0.01]}),
+                    [("A", "B")], "model", "https://example.invalid", "key",
+                    {}, {}, repeats=2, horizon_days=10, temperature=1.0,
+                    prompt_ensemble=True, prompt_mode="decisive_v3",
+                    checkpoint_path=checkpoint,
+                )
+            self.assertEqual(result, [view])
+            openai.return_value.chat.completions.create.assert_not_called()
+
     def test_independent_validator_metrics_match_portfolio_evaluator(self):
         returns = np.asarray([0.01, -0.02, 0.005, 0.003], dtype=float)
         _, expected = evaluate_realized_portfolio(

@@ -21,6 +21,8 @@ from collect_relative_views import (
     DEFAULT_MODEL,
     OPENCODE_GO_BASE_URL,
     REQUEST_TIMEOUT_SECONDS,
+    ProviderUsageLimitError,
+    atomic_checkpoint_json,
     provider_limit_from_errors,
     _load_json_mapping,
     _load_returns,
@@ -121,6 +123,31 @@ def parse_absolute_response(content: str, percentage_units: bool = False) -> flo
     return value
 
 
+def absolute_checkpoint_item_complete(
+    item: Mapping[str, Any],
+    repeats: int,
+    model: str,
+    thinking: str,
+    temperature: float,
+    prompt_ensemble: bool,
+    prompt_mode: str,
+) -> bool:
+    return (
+        len(item.get("expected_return", [])) == repeats
+        and int(item.get("successful_repeats", -1)) == repeats
+        and item.get("model") == model
+        and item.get("thinking") == thinking
+        and float(item.get("temperature", -1)) == float(temperature)
+        and item.get("prompt_ensemble")
+        == (ENSEMBLE_NAME if prompt_ensemble else "single_prompt")
+        and item.get("prompt_mode") == prompt_mode
+        and (
+            not prompt_ensemble
+            or len(item.get("system_prompt_sha256", [])) == repeats
+        )
+    )
+
+
 def collect_absolute_views(
     returns,
     model: str,
@@ -136,6 +163,7 @@ def collect_absolute_views(
     retry_calls: int = 15,
     prompt_ensemble: bool = False,
     prompt_mode: str = "generic",
+    checkpoint_path: Path | None = None,
 ) -> dict[str, dict[str, Any]]:
     try:
         from openai import OpenAI
@@ -148,8 +176,22 @@ def collect_absolute_views(
         timeout=REQUEST_TIMEOUT_SECONDS,
         max_retries=0,
     )
+    checkpoint: dict[str, Any] = {}
+    if checkpoint_path and checkpoint_path.exists():
+        try:
+            value = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+            checkpoint = value if isinstance(value, dict) else {}
+        except Exception:
+            checkpoint = {}
     result: dict[str, dict[str, Any]] = {}
     for ticker in tqdm(returns.columns.astype(str), desc="Absolute LLM views"):
+        existing = checkpoint.get(ticker, {})
+        if isinstance(existing, Mapping) and absolute_checkpoint_item_complete(
+            existing, repeats, model, thinking, temperature,
+            prompt_ensemble, prompt_mode,
+        ):
+            result[ticker] = dict(existing)
+            continue
         base_system, user = make_absolute_prompt(
             ticker,
             returns[ticker].astype(float).tolist(),
@@ -188,10 +230,6 @@ def collect_absolute_views(
         prompt_hashes = [item["system_prompt_sha256"] for _, item in calls]
         if not samples and errors and any("401" in error or "AuthError" in error for error in errors):
             raise RuntimeError("OpenCode Go authentication failed; no output file was written")
-        if not samples:
-            provider_limit = provider_limit_from_errors(errors)
-            if provider_limit:
-                raise provider_limit
         result[ticker] = {
             "ticker": ticker,
             "pct_change": returns[ticker].astype(float).tolist(),
@@ -211,6 +249,17 @@ def collect_absolute_views(
             "system_prompt_sha256": prompt_hashes if prompt_ensemble else [],
             **dict(metadata.get(ticker, {})),
         }
+        if checkpoint_path:
+            atomic_checkpoint_json(checkpoint_path, result)
+        if len(samples) < repeats:
+            provider_limit = provider_limit_from_errors(errors)
+            if provider_limit:
+                raise provider_limit
+            raise ProviderUsageLimitError(
+                f"Asset {ticker} produced {len(samples)}/{repeats} successful calls; "
+                "retrying from its checkpoint",
+                60,
+            )
     return result
 
 

@@ -62,6 +62,34 @@ def provider_limit_from_errors(errors: list[str]) -> ProviderUsageLimitError | N
     return ProviderUsageLimitError(message, seconds)
 
 
+def atomic_checkpoint_json(path: Path, value: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(f"{path.suffix}.tmp")
+    temporary.write_text(
+        json.dumps(value, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+    temporary.replace(path)
+
+
+def relative_checkpoint_item_complete(
+    item: Mapping[str, Any],
+    repeats: int,
+    prompt_ensemble: bool,
+    prompt_mode: str,
+) -> bool:
+    return (
+        item.get("status") == "ok"
+        and int(item.get("successful_repeats", -1)) == repeats
+        and item.get("prompt_mode") == prompt_mode
+        and item.get("prompt_ensemble")
+        == (ENSEMBLE_NAME if prompt_ensemble else "single_prompt")
+        and (
+            not prompt_ensemble
+            or len(item.get("system_prompt_sha256", [])) == repeats
+        )
+    )
+
+
 def _load_returns(path: Path) -> pd.DataFrame:
     frame = pd.read_csv(path)
     if "Date" in frame.columns:
@@ -329,6 +357,7 @@ def collect_pairwise_views(
     retry_calls: int = 15,
     prompt_ensemble: bool = False,
     prompt_mode: str = "calibrated",
+    checkpoint_path: Path | None = None,
 ) -> list[dict[str, Any]]:
     try:
         from openai import OpenAI
@@ -349,8 +378,28 @@ def collect_pairwise_views(
             max_retries=0,
         )
     )
+    checkpoint_by_pair: dict[tuple[str, str], dict[str, Any]] = {}
+    if checkpoint_path and checkpoint_path.exists():
+        try:
+            checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+            checkpoint_views = (
+                checkpoint.get("views", []) if isinstance(checkpoint, dict) else checkpoint
+            )
+            checkpoint_by_pair = {
+                (str(item["asset_a"]), str(item["asset_b"])): item
+                for item in checkpoint_views
+                if isinstance(item, dict) and "asset_a" in item and "asset_b" in item
+            }
+        except Exception:
+            checkpoint_by_pair = {}
     views: list[dict[str, Any]] = []
     for asset_a, asset_b in tqdm(pairs, desc="Pairwise LLM views"):
+        existing = checkpoint_by_pair.get((asset_a, asset_b))
+        if existing and relative_checkpoint_item_complete(
+            existing, repeats, prompt_ensemble, prompt_mode
+        ):
+            views.append(existing)
+            continue
         base_system, user = make_pairwise_prompt(
             asset_a, asset_b, returns, metadata, context, horizon_days, prompt_mode
         )
@@ -388,25 +437,40 @@ def collect_pairwise_views(
         if not predictions and errors and any("401" in error or "AuthError" in error for error in errors):
             raise RuntimeError("OpenCode Go authentication failed; no output file was written")
         if not predictions:
+            item = {
+                "asset_a": asset_a, "asset_b": asset_b,
+                "successful_repeats": 0, "attempted_calls": attempts,
+                "errors": errors, "status": "failed",
+                "temperature": temperature,
+                "prompt_ensemble": ENSEMBLE_NAME if prompt_ensemble else "single_prompt",
+                "prompt_mode": prompt_mode,
+            }
+        else:
+            aggregated = aggregate_repeated_predictions(
+                predictions, asset_a, asset_b, probability_estimator
+            )
+            item = {
+                **aggregated,
+                "horizon_days": horizon_days,
+                "attempted_calls": attempts,
+                "errors": errors,
+                "status": "ok",
+                "temperature": temperature,
+                "prompt_ensemble": ENSEMBLE_NAME if prompt_ensemble else "single_prompt",
+                "prompt_mode": prompt_mode,
+            }
+        views.append(item)
+        if checkpoint_path:
+            atomic_checkpoint_json(checkpoint_path, {"views": views})
+        if len(predictions) < repeats:
             provider_limit = provider_limit_from_errors(errors)
             if provider_limit:
                 raise provider_limit
-        if not predictions:
-            views.append({"asset_a": asset_a, "asset_b": asset_b, "errors": errors, "status": "failed"})
-            continue
-        aggregated = aggregate_repeated_predictions(
-            predictions, asset_a, asset_b, probability_estimator
-        )
-        views.append({
-            **aggregated,
-            "horizon_days": horizon_days,
-            "attempted_calls": attempts,
-            "errors": errors,
-            "status": "ok",
-            "temperature": temperature,
-            "prompt_ensemble": ENSEMBLE_NAME if prompt_ensemble else "single_prompt",
-            "prompt_mode": prompt_mode,
-        })
+            raise ProviderUsageLimitError(
+                f"Pair {asset_a}/{asset_b} produced {len(predictions)}/{repeats} "
+                "successful calls; retrying from its checkpoint",
+                60,
+            )
     return views
 
 

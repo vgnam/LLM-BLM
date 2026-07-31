@@ -177,20 +177,28 @@ def collect_periods(
         context = load_json(period_root / "context.json")
         print(f"[{task_number}/{len(pending)}] {period_id} {method}", flush=True)
         if method == "absolute":
+            checkpoint = absolute_dir / f"{period_id}.partial"
+            if force:
+                checkpoint.unlink(missing_ok=True)
             value = collect_absolute_views(
                 formation, str(config["model"]), base_url, api_key, metadata, context,
                 repeats, int(config["holding_trading_days"]), float(config["temperature"]),
                 str(config["thinking"]), workers, retry_calls,
                 bool(config["prompt_ensemble"]), str(config["absolute_prompt_mode"]),
+                checkpoint,
             )
             incomplete = [
                 asset for asset in assets
-                if len(value[asset].get("expected_return", [])) < minimum
+                if len(value[asset].get("expected_return", [])) < repeats
             ]
             if incomplete:
                 raise RuntimeError(f"{period_id} absolute incomplete: {incomplete}")
             atomic_json(absolute_dir / f"{period_id}.json", value)
+            checkpoint.unlink(missing_ok=True)
         else:
+            checkpoint = relative_dir / f"{period_id}.partial"
+            if force:
+                checkpoint.unlink(missing_ok=True)
             pairs = select_candidate_pairs(
                 formation, metadata_frame, caps, max_pairs=int(config["max_pairs"])
             )
@@ -200,12 +208,13 @@ def collect_periods(
                 str(config["probability_estimator"]), str(config["thinking"]), workers,
                 retry_calls, bool(config["prompt_ensemble"]),
                 str(config["relative_prompt_mode"]),
+                checkpoint,
             )
             incomplete = [
                 f"{item.get('asset_a')}/{item.get('asset_b')}"
                 for item in views
                 if item.get("status") != "ok"
-                or int(item.get("successful_repeats", 0)) < minimum
+                or int(item.get("successful_repeats", 0)) < repeats
             ]
             if incomplete:
                 raise RuntimeError(f"{period_id} relative incomplete: {incomplete}")
@@ -228,6 +237,7 @@ def collect_periods(
                 "pairs_requested": len(pairs),
                 "views": views,
             })
+            checkpoint.unlink(missing_ok=True)
 
 
 def tau_candidates_from_validation(
