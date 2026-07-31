@@ -118,7 +118,8 @@ def make_pairwise_prompt(
             "edge, 0.70-0.79 for a strong edge, and 0.80-0.95 only for unusually convergent evidence. Never "
             "return 0.50-0.5499. Do not invent evidence or use future information. Do not predict an absolute "
             "return. This is a confidence-forcing experimental prompt; the number is a ranking score and must "
-            "not be presented as an externally calibrated real-world probability."
+            "not be presented as an externally calibrated real-world probability. Evidence must be a JSON "
+            "array of at most two short strings, each no more than 12 words."
             + fixed_rule
         )
     else:
@@ -270,6 +271,7 @@ def completion_request_options(
             {"role": "user", "content": user},
         ],
         "temperature": temperature,
+        "max_tokens": 256,
         "response_format": {"type": "json_object"},
         # DeepSeek V4 defaults to thinking mode, so this must be explicit.
         "extra_body": {"thinking": {"type": thinking}},
