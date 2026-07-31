@@ -22,6 +22,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
+    parser.add_argument(
+        "--results-root",
+        type=Path,
+        help="Optional separate ablation output root; data and responses still come from --root",
+    )
     return parser.parse_args()
 
 
@@ -78,6 +83,7 @@ def validate_dates(
 def main() -> None:
     args = parse_args()
     config = load_config(args.config)
+    results_root = args.results_root or args.root
     manifest = load_manifest(Path(config["dataset_manifest"]))
     repeats = int(config["repeats"])
     max_pairs = int(config["max_pairs"])
@@ -180,7 +186,7 @@ def main() -> None:
                     f"{relative_path}: invalid pair {view.get('asset_a')}/{view.get('asset_b')}"
                 )
 
-        results = root / "results"
+        results = results_root / dataset_id / "results"
         daily = load_pair(results / "daily_long", errors)
         weights = load_pair(results / "weights_long", errors)
         metrics = load_pair(results / "method_metrics", errors)
@@ -234,7 +240,7 @@ def main() -> None:
         errors.append("datasets do not share the same realized trading dates")
     test_days = len(realized_date_sets[0]) if realized_date_sets else 0
     dataset_count = len(manifest["datasets"])
-    summary = args.root / "summary"
+    summary = results_root / "summary"
     summary_daily = load_pair(summary / "daily_returns_long", errors)
     summary_weights = load_pair(summary / "weights_long", errors)
     summary_metrics = load_pair(summary / "method_metrics", errors)
@@ -253,6 +259,12 @@ def main() -> None:
     if len(aggregate_metrics) != len(METHODS):
         errors.append("aggregate metric table has the wrong row count")
 
+    catalog_path = summary / "data_catalog.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    result_threshold = float(catalog.get("config", {}).get("abstention_threshold", math.nan))
+    if not 0.5 <= result_threshold <= 1.0:
+        errors.append("result catalog has an invalid abstention threshold")
+
     report = {
         "dataset_count": dataset_count,
         "assets_per_dataset": 15,
@@ -264,6 +276,7 @@ def main() -> None:
         "probability_samples": probability_samples,
         "accepted_relative_views": accepted_views,
         "rejected_relative_views": rejected_views,
+        "abstention_threshold": result_threshold,
         "validation_errors": errors,
     }
     print(json.dumps(report, indent=2))

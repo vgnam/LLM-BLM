@@ -57,6 +57,27 @@ correctly abstained from adding any LLM constraint. This is a valid RelView
 outcome, but it does not provide evidence that relative LLM views improve BL at
 this 144-day horizon.
 
+## No-abstention ablation
+
+Setting the threshold to 0.50 accepts all 150 saved pair views. This reuses the
+same calls and changes only the view filter:
+
+| Dataset | BL No Views | RelView-BL, threshold 0.50 | RelView edge |
+|---|---:|---:|---:|
+| US technology | +49.55% | +42.88% | -6.67 pp |
+| US financials | +4.99% | +10.84% | +5.84 pp |
+| US healthcare | +9.94% | -6.10% | -16.05 pp |
+| US industrial/energy | +27.19% | +29.27% | +2.08 pp |
+| Cross-asset ETFs | +20.91% | +11.19% | -9.72 pp |
+
+The aggregate RelView return falls to +17.85%, with Sharpe 1.65 and maximum
+drawdown -9.13%. It trails BL No Views by 5.32 percentage points and is almost
+identical in cumulative return to Absolute LLM-BLM (+17.88%). The 0.60 filter
+therefore protected the portfolio from weak views in this sample; it was not
+hiding a broad RelView advantage. Because the observed confidence range is only
+0.5003--0.5500, an intermediate threshold must be selected on a separate
+validation period rather than tuned against these realized test returns.
+
 Annualized figures summarize only 144 realized trading days and should not be
 read as stable long-run estimates. The five datasets also share the same dates,
 so they are diversified asset universes, not five independent time samples.
@@ -99,6 +120,9 @@ All main tables exist in both CSV and Parquet:
   methods, and dataset IDs.
 - `summary/validation_report.json`: 2,250 absolute samples, 4,500 probability
   samples, and zero validation errors.
+- `ablations/no_abstention/`: complete per-dataset and aggregate artifacts for
+  threshold 0.50. `ablations/threshold_comparison/` contains ready-to-plot
+  RelView daily paths and metric tables for thresholds 0.60 and 0.50.
 
 ## Reproduce or recompute
 

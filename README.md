@@ -214,5 +214,13 @@ py -3.10 run_cutoff_backtest.py --skip-collect
 py -3.10 validate_cutoff_backtest.py
 ```
 
+Run a no-abstention RelView ablation from the same saved LLM calls without
+overwriting the main 0.60-threshold results:
+
+```powershell
+py -3.10 run_cutoff_backtest.py --skip-collect --abstention-threshold 0.5 --results-root experiments/cutoff_2025_12/ablations/no_abstention
+py -3.10 validate_cutoff_backtest.py --results-root experiments/cutoff_2025_12/ablations/no_abstention
+```
+
 See `experiments/cutoff_2025_12/REPORT.md` for the methodology, leakage caveat,
 results, and reusable artifact catalog.

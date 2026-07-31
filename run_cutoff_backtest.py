@@ -374,6 +374,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--root", type=Path, default=Path("experiments/cutoff_2025_12"))
+    parser.add_argument(
+        "--results-root",
+        type=Path,
+        help="Optional separate output root for an ablation; inputs and saved views still come from --root",
+    )
     parser.add_argument("--datasets", nargs="*")
     parser.add_argument("--workers", type=int, default=30)
     parser.add_argument("--retry-calls", type=int, default=60)
@@ -381,6 +386,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--overwrite-data", action="store_true")
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--skip-collect", action="store_true")
+    parser.add_argument(
+        "--abstention-threshold",
+        type=float,
+        help="Override the RelView threshold from config (use 0.5 to accept every valid pair)",
+    )
     return parser.parse_args()
 
 
@@ -388,6 +398,11 @@ def main() -> None:
     load_env_file()
     args = parse_args()
     config = load_config(args.config)
+    if args.abstention_threshold is not None:
+        if not 0.5 <= args.abstention_threshold <= 1.0:
+            raise ValueError("--abstention-threshold must be in [0.5, 1]")
+        config = {**config, "abstention_threshold": float(args.abstention_threshold)}
+    results_root = args.results_root or args.root
     manifest = load_manifest(Path(config["dataset_manifest"]))
     selected = set(args.datasets or [])
     datasets = [item for item in manifest["datasets"] if not selected or item["id"] in selected]
@@ -409,6 +424,7 @@ def main() -> None:
         dataset_id = str(dataset["id"])
         print(f"\n=== {dataset_id}: cutoff {cutoff.date()} ===", flush=True)
         dataset_root = write_dataset_inputs(args.root, dataset)
+        result_dataset_root = results_root / dataset_id
         assets = [str(item["ticker"]) for item in dataset["assets"]]
         formation, realized = prepare_dataset_data(
             dataset_root, assets, formation_start, cutoff, test_start, test_end,
@@ -434,7 +450,7 @@ def main() -> None:
                 args.workers, args.retry_calls, args.force_views, horizon_days,
             )
         daily, weights, metrics = evaluate_dataset(
-            dataset_id, dataset_root, formation, realized, absolute, views, config
+            dataset_id, result_dataset_root, formation, realized, absolute, views, config
         )
         all_daily.append(daily)
         all_weights.append(weights)
@@ -444,13 +460,13 @@ def main() -> None:
         print(f"Prepared cutoff data under {args.root}")
         return
     aggregate_results(
-        args.root,
+        results_root,
         pd.concat(all_daily, ignore_index=True),
         pd.concat(all_weights, ignore_index=True),
         pd.concat(all_metrics, ignore_index=True),
         config,
     )
-    print(f"Saved reusable CSV/Parquet/JSON artifacts under {args.root}")
+    print(f"Saved reusable CSV/Parquet/JSON artifacts under {results_root}")
 
 
 if __name__ == "__main__":
