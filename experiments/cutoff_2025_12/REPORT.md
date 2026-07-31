@@ -78,6 +78,49 @@ hiding a broad RelView advantage. Because the observed confidence range is only
 0.5003--0.5500, an intermediate threshold must be selected on a separate
 validation period rather than tuned against these realized test returns.
 
+## Temperature 1.0 with diversified system prompts
+
+A second collection uses temperature 1.0 and 30 deterministic but differently
+framed system prompts per asset/pair. Every successful sample stores its prompt
+variant ID and SHA-256 hash. Across the study, all 2,250 absolute prompt hashes
+and all 4,500 relative prompt hashes are unique. Thinking remains disabled.
+
+| Relative-call diagnostic | Temperature 0.3, one prompt | Temperature 1.0, prompt ensemble |
+|---|---:|---:|
+| Mean pair confidence | 0.5409 | 0.5302 |
+| Maximum pair confidence | 0.5500 | 0.5957 |
+| Mean within-pair probability SD | 0.0139 | 0.0382 |
+| Mean majority-vote share | 0.938 | 0.812 |
+| Views accepted at 0.60 | 0/150 | 0/150 |
+
+The ensemble increases disagreement and extends the upper confidence tail, but
+does not produce a pair at or above 0.60. Consequently, threshold-0.60
+RelView-BL remains identical to BL No Views. Absolute LLM-BLM improves from
++17.88% to +18.79% aggregate return; Sharpe improves from 1.73 to 1.91 and
+maximum drawdown improves from -9.27% to -8.83%. It still trails BL No Views
+at +23.17%.
+
+Temperature 1.0 reduces absolute structured-output reliability: 611 malformed
+JSON attempts were discarded and replaced, requiring 2,861 attempts for 2,250
+valid absolute samples, versus 45 discarded attempts out of 2,295 at
+temperature 0.3. All 4,500 relative calls in each scenario were valid on their
+first attempt. The reported comparison therefore uses equal valid sample counts
+but should retain this retry/selection caveat.
+
+Using the temperature-1 ensemble responses, RelView threshold sensitivity is:
+
+| Threshold | Accepted views | Aggregate return | Sharpe | Max drawdown |
+|---:|---:|---:|---:|---:|
+| 0.500 | 150 | +19.18% | 1.72 | -9.15% |
+| 0.525 | 93 | +18.74% | 1.65 | -9.74% |
+| 0.550 | 14 | +21.51% | 1.79 | -9.96% |
+| 0.575 | 1 | +21.04% | 1.72 | -10.12% |
+| 0.600 | 0 | **+23.17%** | **1.93** | **-8.53%** |
+
+None of the thresholds with accepted LLM views beats BL No Views. This grid is
+a diagnostic, not a valid threshold-selection exercise, because choosing its
+best row using the same realized test window would be look-ahead overfitting.
+
 Annualized figures summarize only 144 realized trading days and should not be
 read as stable long-run estimates. The five datasets also share the same dates,
 so they are diversified asset universes, not five independent time samples.
@@ -123,6 +166,12 @@ All main tables exist in both CSV and Parquet:
 - `ablations/no_abstention/`: complete per-dataset and aggregate artifacts for
   threshold 0.50. `ablations/threshold_comparison/` contains ready-to-plot
   RelView daily paths and metric tables for thresholds 0.60 and 0.50.
+- `ablations/temperature_1_prompt_ensemble/`: temperature-1 responses and main
+  threshold-0.60 results. The corresponding `*_no_abstention`, `*_threshold_*`,
+  and `*_threshold_sensitivity` directories contain the complete sensitivity
+  outputs in CSV and Parquet.
+- `ablations/temperature_prompt_comparison/`: ready-to-plot method paths,
+  metrics, and pair-probability diagnostics for temperature 0.3 versus 1.0.
 
 ## Reproduce or recompute
 
@@ -130,6 +179,13 @@ All main tables exist in both CSV and Parquet:
 py -3.10 run_cutoff_backtest.py
 py -3.10 run_cutoff_backtest.py --skip-collect
 py -3.10 validate_cutoff_backtest.py
+```
+
+Collect and validate the temperature-1 prompt ensemble in its own output root:
+
+```powershell
+py -3.10 run_cutoff_backtest.py --temperature 1 --prompt-ensemble --responses-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble --results-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble
+py -3.10 validate_cutoff_backtest.py --responses-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble --results-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble
 ```
 
 The first command collects missing views and evaluates the study. The second

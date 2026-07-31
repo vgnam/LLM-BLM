@@ -13,6 +13,7 @@ import pandas as pd
 
 from run_cutoff_backtest import DEFAULT_CONFIG, METHODS, load_config
 from run_multidataset_experiment import load_manifest
+from prompt_ensemble import ENSEMBLE_NAME
 
 
 DEFAULT_ROOT = Path("experiments/cutoff_2025_12")
@@ -26,6 +27,11 @@ def parse_args() -> argparse.Namespace:
         "--results-root",
         type=Path,
         help="Optional separate ablation output root; data and responses still come from --root",
+    )
+    parser.add_argument(
+        "--responses-root",
+        type=Path,
+        help="Optional separate response root; formation/realized data still come from --root",
     )
     return parser.parse_args()
 
@@ -84,9 +90,13 @@ def main() -> None:
     args = parse_args()
     config = load_config(args.config)
     results_root = args.results_root or args.root
-    manifest = load_manifest(Path(config["dataset_manifest"]))
-    repeats = int(config["repeats"])
-    max_pairs = int(config["max_pairs"])
+    responses_root = args.responses_root or args.root
+    result_catalog_path = results_root / "summary" / "data_catalog.json"
+    result_catalog = json.loads(result_catalog_path.read_text(encoding="utf-8"))
+    result_config = result_catalog.get("config", config)
+    manifest = load_manifest(Path(result_config["dataset_manifest"]))
+    repeats = int(result_config["repeats"])
+    max_pairs = int(result_config["max_pairs"])
     cutoff = pd.Timestamp(config["cutoff_date"])
     formation_start = pd.Timestamp(config["formation_start"])
     test_start = pd.Timestamp(config["test_start"])
@@ -97,6 +107,10 @@ def main() -> None:
     relative_files = 0
     absolute_samples = 0
     probability_samples = 0
+    absolute_attempts = 0
+    absolute_errors = 0
+    relative_attempts = 0
+    relative_errors = 0
     accepted_views = 0
     rejected_views = 0
     realized_date_sets: list[set[pd.Timestamp]] = []
@@ -104,6 +118,7 @@ def main() -> None:
     for dataset in manifest["datasets"]:
         dataset_id = str(dataset["id"])
         root = args.root / dataset_id
+        response_root = responses_root / dataset_id
         assets = [str(item["ticker"]) for item in dataset["assets"]]
         if len(assets) != 15 or len(set(assets)) != 15:
             errors.append(f"{dataset_id}: expected 15 unique assets")
@@ -126,7 +141,7 @@ def main() -> None:
             errors.append(f"{dataset_id}: insufficient formation or realized history")
 
         absolute_path = (
-            root / "responses_absolute" / f"{config['model']}_cutoff_2025-12.json"
+            response_root / "responses_absolute" / f"{result_config['model']}_cutoff_2025-12.json"
         )
         response = json.loads(absolute_path.read_text(encoding="utf-8"))
         absolute_files += 1
@@ -136,35 +151,62 @@ def main() -> None:
             item = response.get(asset, {})
             samples = item.get("expected_return", [])
             absolute_samples += len(samples)
+            absolute_attempts += int(item.get("attempted_calls", 0))
+            absolute_errors += len(item.get("errors", []))
             if (
                 len(samples) != repeats
                 or int(item.get("successful_repeats", 0)) != repeats
                 or not finite(samples)
-                or item.get("model") != config["model"]
+                or item.get("model") != result_config["model"]
                 or item.get("thinking") != "disabled"
                 or int(item.get("horizon_days", -1)) != len(realized_dates)
             ):
                 errors.append(f"{absolute_path}: invalid samples or metadata for {asset}")
+            if result_config.get("prompt_ensemble", False):
+                variant_ids = item.get("prompt_variant_ids", [])
+                prompt_hashes = item.get("system_prompt_sha256", [])
+                if (
+                    item.get("prompt_ensemble") != ENSEMBLE_NAME
+                    or not math.isclose(
+                        float(item.get("temperature", math.nan)),
+                        float(result_config["temperature"]),
+                    )
+                    or len(variant_ids) != repeats
+                    or len(set(map(int, variant_ids))) != repeats
+                    or len(prompt_hashes) != repeats
+                    or len(set(map(str, prompt_hashes))) != repeats
+                ):
+                    errors.append(f"{absolute_path}: invalid prompt ensemble for {asset}")
 
         relative_path = (
-            root / "responses_relative" / f"{config['model']}_cutoff_2025-12.json"
+            response_root / "responses_relative" / f"{result_config['model']}_cutoff_2025-12.json"
         )
         payload = json.loads(relative_path.read_text(encoding="utf-8"))
         views = payload.get("views", [])
         relative_files += 1
         if (
-            payload.get("model") != config["model"]
+            payload.get("model") != result_config["model"]
             or payload.get("thinking") != "disabled"
             or payload.get("probability_estimator") != "mean"
-            or payload.get("cutoff_date") != config["cutoff_date"]
+            or payload.get("cutoff_date") != result_config["cutoff_date"]
             or int(payload.get("horizon_days", -1)) != len(realized_dates)
             or int(payload.get("pairs_requested", -1)) != max_pairs
             or len(views) != max_pairs
         ):
             errors.append(f"{relative_path}: invalid top-level metadata")
+        if result_config.get("prompt_ensemble", False) and (
+            payload.get("prompt_ensemble") != ENSEMBLE_NAME
+            or not math.isclose(
+                float(payload.get("temperature", math.nan)),
+                float(result_config["temperature"]),
+            )
+        ):
+            errors.append(f"{relative_path}: invalid prompt-ensemble metadata")
         for view in views:
             samples = view.get("probability_samples_a", [])
             probability_samples += len(samples)
+            relative_attempts += int(view.get("attempted_calls", 0))
+            relative_errors += len(view.get("errors", []))
             valid_probabilities = (
                 len(samples) == repeats
                 and finite(samples)
@@ -185,6 +227,20 @@ def main() -> None:
                 errors.append(
                     f"{relative_path}: invalid pair {view.get('asset_a')}/{view.get('asset_b')}"
                 )
+            if result_config.get("prompt_ensemble", False):
+                variant_ids = view.get("prompt_variant_ids", [])
+                prompt_hashes = view.get("system_prompt_sha256", [])
+                if (
+                    view.get("prompt_ensemble") != ENSEMBLE_NAME
+                    or len(variant_ids) != repeats
+                    or len(set(map(int, variant_ids))) != repeats
+                    or len(prompt_hashes) != repeats
+                    or len(set(map(str, prompt_hashes))) != repeats
+                ):
+                    errors.append(
+                        f"{relative_path}: invalid prompt ensemble for "
+                        f"{view.get('asset_a')}/{view.get('asset_b')}"
+                    )
 
         results = results_root / dataset_id / "results"
         daily = load_pair(results / "daily_long", errors)
@@ -274,9 +330,15 @@ def main() -> None:
         "relative_response_files": relative_files,
         "absolute_samples": absolute_samples,
         "probability_samples": probability_samples,
+        "absolute_attempts": absolute_attempts,
+        "absolute_errors": absolute_errors,
+        "relative_attempts": relative_attempts,
+        "relative_errors": relative_errors,
         "accepted_relative_views": accepted_views,
         "rejected_relative_views": rejected_views,
         "abstention_threshold": result_threshold,
+        "temperature": float(result_config["temperature"]),
+        "prompt_ensemble": bool(result_config.get("prompt_ensemble", False)),
         "validation_errors": errors,
     }
     print(json.dumps(report, indent=2))

@@ -222,5 +222,14 @@ py -3.10 run_cutoff_backtest.py --skip-collect --abstention-threshold 0.5 --resu
 py -3.10 validate_cutoff_backtest.py --results-root experiments/cutoff_2025_12/ablations/no_abstention
 ```
 
+Collect 30 calls with temperature 1.0 and a different auditable system prompt
+for every attempt, while keeping responses and results separate from the main
+experiment:
+
+```powershell
+py -3.10 run_cutoff_backtest.py --temperature 1 --prompt-ensemble --responses-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble --results-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble
+py -3.10 validate_cutoff_backtest.py --responses-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble --results-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble
+```
+
 See `experiments/cutoff_2025_12/REPORT.md` for the methodology, leakage caveat,
 results, and reusable artifact catalog.

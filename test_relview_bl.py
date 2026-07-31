@@ -6,6 +6,7 @@ import pandas as pd
 from collect_absolute_views import parse_absolute_response
 from collect_relative_views import aggregate_repeated_predictions, completion_request_options
 from portfolio_backtest import evaluate_realized_portfolio
+from prompt_ensemble import collect_repeated_calls, diversified_system_prompt, prompt_sha256
 from relview_bl import (
     PairwiseView,
     ProbabilityCalibrator,
@@ -19,6 +20,30 @@ from relview_bl import (
 
 
 class RelViewTests(unittest.TestCase):
+    def test_prompt_ensemble_has_unique_auditable_system_prompts(self):
+        prompts = [
+            diversified_system_prompt("return JSON only", call_id, "relative:A:B")
+            for call_id in range(30)
+        ]
+        self.assertEqual(len(set(prompts)), 30)
+        self.assertEqual(len({prompt_sha256(prompt) for prompt in prompts}), 30)
+        self.assertTrue(all("return JSON only" in prompt for prompt in prompts))
+
+    def test_prompt_ensemble_retry_uses_a_new_call_id(self):
+        attempted = []
+
+        def call_once(call_id):
+            attempted.append(call_id)
+            if call_id == 0:
+                raise ValueError("invalid JSON")
+            return call_id
+
+        calls, errors, attempts = collect_repeated_calls(call_once, 3, 1, 2)
+        self.assertEqual(attempted, [0, 1, 2, 3])
+        self.assertEqual([call_id for call_id, _ in calls], [1, 2, 3])
+        self.assertEqual(attempts, 4)
+        self.assertEqual(len(errors), 1)
+
     def test_black_litterman_without_views_returns_prior(self):
         prior = np.array([0.01, 0.02, -0.005])
         covariance = np.eye(3) * 0.04

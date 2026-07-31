@@ -11,6 +11,7 @@
   "probability_estimator": "mean",
   "thinking": "disabled",
   "temperature": 0.3,
+  "prompt_ensemble": false,
   "calibration": "none",
   "abstention_threshold": 0.6,
   "tau": 0.025,

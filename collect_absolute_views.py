@@ -8,7 +8,6 @@ original LLM-BLM formulation while using the same provider as RelView-BL.
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import os
 import re
@@ -28,6 +27,12 @@ from collect_relative_views import (
     completion_request_options,
 )
 from env_utils import load_env_file
+from prompt_ensemble import (
+    ENSEMBLE_NAME,
+    collect_repeated_calls,
+    diversified_system_prompt,
+    prompt_sha256,
+)
 
 
 def make_absolute_prompt(
@@ -86,6 +91,7 @@ def collect_absolute_views(
     thinking: str = "disabled",
     workers: int = 1,
     retry_calls: int = 15,
+    prompt_ensemble: bool = False,
 ) -> dict[str, dict[str, Any]]:
     try:
         from openai import OpenAI
@@ -95,41 +101,32 @@ def collect_absolute_views(
     client = OpenAI(base_url=base_url, api_key=api_key)
     result: dict[str, dict[str, Any]] = {}
     for ticker in tqdm(returns.columns.astype(str), desc="Absolute LLM views"):
-        system, user = make_absolute_prompt(
+        base_system, user = make_absolute_prompt(
             ticker,
             returns[ticker].astype(float).tolist(),
             metadata.get(ticker, {}),
             context.get(ticker, {}),
             horizon_days,
         )
-        samples: list[float] = []
-        errors: list[str] = []
-        def call_once() -> float:
+        def call_once(call_id: int) -> dict[str, Any]:
+            system = (
+                diversified_system_prompt(base_system, call_id, f"absolute:{ticker}")
+                if prompt_ensemble else base_system
+            )
             completion = client.chat.completions.create(**completion_request_options(
                 model, system, user, temperature, thinking
             ))
-            return parse_absolute_response(completion.choices[0].message.content)
+            return {
+                "value": parse_absolute_response(completion.choices[0].message.content),
+                "system_prompt_sha256": prompt_sha256(system),
+            }
 
-        attempts = 0
-        executor = ThreadPoolExecutor(max_workers=workers) if workers > 1 else None
-        while len(samples) < repeats and attempts < repeats + retry_calls:
-            batch_size = min(
-                workers,
-                repeats - len(samples),
-                repeats + retry_calls - attempts,
-            )
-            attempts += batch_size
-            futures: Any = (
-                [executor.submit(call_once) for _ in range(batch_size)]
-                if executor else [None] * batch_size
-            )
-            for future in (as_completed(futures) if executor else futures):
-                try:
-                    samples.append(future.result() if executor else call_once())
-                except Exception as error:
-                    errors.append(str(error))
-        if executor:
-            executor.shutdown(wait=True)
+        calls, errors, attempts = collect_repeated_calls(
+            call_once, repeats, workers, retry_calls
+        )
+        samples = [item["value"] for _, item in calls]
+        variant_ids = [call_id for call_id, _ in calls]
+        prompt_hashes = [item["system_prompt_sha256"] for _, item in calls]
         if not samples and errors and any("401" in error or "AuthError" in error for error in errors):
             raise RuntimeError("OpenCode Go authentication failed; no output file was written")
         result[ticker] = {
@@ -142,6 +139,10 @@ def collect_absolute_views(
             "horizon_days": horizon_days,
             "model": model,
             "thinking": thinking,
+            "temperature": temperature,
+            "prompt_ensemble": ENSEMBLE_NAME if prompt_ensemble else "single_prompt",
+            "prompt_variant_ids": variant_ids if prompt_ensemble else [],
+            "system_prompt_sha256": prompt_hashes if prompt_ensemble else [],
             **dict(metadata.get(ticker, {})),
         }
     return result
@@ -165,6 +166,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--temperature", type=float, default=0.3)
     parser.add_argument("--workers", type=int, default=1, help="Concurrent calls within each asset")
     parser.add_argument("--retry-calls", type=int, default=15, help="Extra attempts used to replace invalid responses")
+    parser.add_argument("--prompt-ensemble", action="store_true", help="Use a unique system prompt for every call")
     return parser.parse_args()
 
 
@@ -205,6 +207,7 @@ def main() -> None:
         args.thinking,
         args.workers,
         args.retry_calls,
+        args.prompt_ensemble,
     )
     successful = sum(bool(item["expected_return"]) for item in result.values())
     args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -9,7 +9,6 @@ Example:
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import os
 import re
@@ -21,6 +20,12 @@ import pandas as pd
 from tqdm import tqdm
 
 from env_utils import load_env_file
+from prompt_ensemble import (
+    ENSEMBLE_NAME,
+    collect_repeated_calls,
+    diversified_system_prompt,
+    prompt_sha256,
+)
 from relview_bl import select_candidate_pairs
 
 
@@ -197,6 +202,16 @@ def aggregate_repeated_predictions(
         "reported_probability_samples_a": reported_samples_a.tolist(),
         "evidence": evidence,
         "successful_repeats": len(predictions),
+        "prompt_variant_ids": [
+            int(item["prompt_variant_id"])
+            for item in predictions
+            if "prompt_variant_id" in item
+        ],
+        "system_prompt_sha256": [
+            str(item["system_prompt_sha256"])
+            for item in predictions
+            if "system_prompt_sha256" in item
+        ],
     }
 
 
@@ -237,6 +252,7 @@ def collect_pairwise_views(
     thinking: str = "disabled",
     workers: int = 1,
     retry_calls: int = 15,
+    prompt_ensemble: bool = False,
 ) -> list[dict[str, Any]]:
     try:
         from openai import OpenAI
@@ -246,35 +262,30 @@ def collect_pairwise_views(
     client = OpenAI(base_url=base_url, api_key=api_key) if base_url else OpenAI(api_key=api_key)
     views: list[dict[str, Any]] = []
     for asset_a, asset_b in tqdm(pairs, desc="Pairwise LLM views"):
-        system, user = make_pairwise_prompt(asset_a, asset_b, returns, metadata, context, horizon_days)
-        predictions: list[dict[str, Any]] = []
-        errors: list[str] = []
-        def call_once() -> dict[str, Any]:
+        base_system, user = make_pairwise_prompt(
+            asset_a, asset_b, returns, metadata, context, horizon_days
+        )
+        def call_once(call_id: int) -> dict[str, Any]:
+            system = (
+                diversified_system_prompt(
+                    base_system, call_id, f"relative:{asset_a}:{asset_b}"
+                ) if prompt_ensemble else base_system
+            )
             completion = client.chat.completions.create(**completion_request_options(
                 model, system, user, temperature, thinking
             ))
-            return parse_pairwise_response(completion.choices[0].message.content, asset_a, asset_b)
+            parsed = parse_pairwise_response(
+                completion.choices[0].message.content, asset_a, asset_b
+            )
+            if prompt_ensemble:
+                parsed["prompt_variant_id"] = call_id
+                parsed["system_prompt_sha256"] = prompt_sha256(system)
+            return parsed
 
-        attempts = 0
-        executor = ThreadPoolExecutor(max_workers=workers) if workers > 1 else None
-        while len(predictions) < repeats and attempts < repeats + retry_calls:
-            batch_size = min(
-                workers,
-                repeats - len(predictions),
-                repeats + retry_calls - attempts,
-            )
-            attempts += batch_size
-            futures: Any = (
-                [executor.submit(call_once) for _ in range(batch_size)]
-                if executor else [None] * batch_size
-            )
-            for future in (as_completed(futures) if executor else futures):
-                try:
-                    predictions.append(future.result() if executor else call_once())
-                except Exception as error:  # Keep valid repeats and make failures auditable in the output.
-                    errors.append(str(error))
-        if executor:
-            executor.shutdown(wait=True)
+        calls, errors, attempts = collect_repeated_calls(
+            call_once, repeats, workers, retry_calls
+        )
+        predictions = [item for _, item in calls]
         if not predictions and errors and any("401" in error or "AuthError" in error for error in errors):
             raise RuntimeError("OpenCode Go authentication failed; no output file was written")
         if not predictions:
@@ -289,6 +300,8 @@ def collect_pairwise_views(
             "attempted_calls": attempts,
             "errors": errors,
             "status": "ok",
+            "temperature": temperature,
+            "prompt_ensemble": ENSEMBLE_NAME if prompt_ensemble else "single_prompt",
         })
     return views
 
@@ -352,6 +365,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--temperature", type=float, default=0.3)
     parser.add_argument("--workers", type=int, default=1, help="Concurrent calls within each pair")
     parser.add_argument("--retry-calls", type=int, default=15, help="Extra attempts used to replace invalid responses")
+    parser.add_argument("--prompt-ensemble", action="store_true", help="Use a unique system prompt for every call")
     return parser.parse_args()
 
 
@@ -403,6 +417,7 @@ def main() -> None:
         args.thinking,
         args.workers,
         args.retry_calls,
+        args.prompt_ensemble,
     )
     payload = {
         "model": args.model,
@@ -411,6 +426,8 @@ def main() -> None:
         "repeats": args.repeats,
         "probability_estimator": args.probability_estimator,
         "thinking": args.thinking,
+        "temperature": args.temperature,
+        "prompt_ensemble": ENSEMBLE_NAME if args.prompt_ensemble else "single_prompt",
         "pairs_requested": len(pairs),
         "views": views,
     }

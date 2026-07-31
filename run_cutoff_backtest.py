@@ -22,6 +22,7 @@ from collect_walkforward_views import valid_absolute, valid_relative
 from env_utils import load_env_file
 from portfolio_backtest import evaluate_realized_portfolio
 from prepare_monthly_returns import download_chart_close
+from prompt_ensemble import ENSEMBLE_NAME
 from relview_bl import (
     RelViewConfig,
     implied_equilibrium_returns,
@@ -57,6 +58,46 @@ def atomic_json(path: Path, value: Any) -> None:
     temporary = path.with_suffix(f"{path.suffix}.tmp")
     temporary.write_text(json.dumps(value, indent=2, ensure_ascii=False), encoding="utf-8")
     temporary.replace(path)
+
+
+def cached_absolute_matches(
+    path: Path,
+    assets: list[str],
+    minimum: int,
+    config: dict[str, Any],
+    horizon_days: int,
+) -> bool:
+    if not valid_absolute(path, assets, minimum):
+        return False
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    expected_ensemble = ENSEMBLE_NAME if config.get("prompt_ensemble", False) else "single_prompt"
+    return all(
+        item.get("model") == config["model"]
+        and item.get("thinking") == config["thinking"]
+        and int(item.get("horizon_days", -1)) == horizon_days
+        and float(item.get("temperature", 0.3)) == float(config["temperature"])
+        and item.get("prompt_ensemble", "single_prompt") == expected_ensemble
+        for item in payload.values()
+    )
+
+
+def cached_relative_matches(
+    path: Path,
+    minimum: int,
+    config: dict[str, Any],
+    horizon_days: int,
+) -> bool:
+    if not valid_relative(path, int(config["max_pairs"]), minimum):
+        return False
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    expected_ensemble = ENSEMBLE_NAME if config.get("prompt_ensemble", False) else "single_prompt"
+    return (
+        payload.get("model") == config["model"]
+        and payload.get("thinking") == config["thinking"]
+        and int(payload.get("horizon_days", -1)) == horizon_days
+        and float(payload.get("temperature", 0.3)) == float(config["temperature"])
+        and payload.get("prompt_ensemble", "single_prompt") == expected_ensemble
+    )
 
 
 def save_table(frame: pd.DataFrame, base: Path) -> dict[str, str]:
@@ -128,7 +169,9 @@ def collect_views(
     relative_path = dataset_root / "responses_relative" / f"{config['model']}_cutoff_2025-12.json"
     minimum = int(config["minimum_successful_calls"])
 
-    if force or not valid_absolute(absolute_path, assets, minimum):
+    if force or not cached_absolute_matches(
+        absolute_path, assets, minimum, config, horizon_days
+    ):
         absolute = collect_absolute_views(
             formation,
             str(config["model"]),
@@ -142,6 +185,7 @@ def collect_views(
             str(config["thinking"]),
             workers,
             retry_calls,
+            bool(config.get("prompt_ensemble", False)),
         )
         incomplete = [
             asset for asset in assets
@@ -153,7 +197,9 @@ def collect_views(
     else:
         absolute = json.loads(absolute_path.read_text(encoding="utf-8"))
 
-    if force or not valid_relative(relative_path, int(config["max_pairs"]), minimum):
+    if force or not cached_relative_matches(
+        relative_path, minimum, config, horizon_days
+    ):
         pairs = select_candidate_pairs(
             formation,
             metadata_frame,
@@ -175,6 +221,7 @@ def collect_views(
             str(config["thinking"]),
             workers,
             retry_calls,
+            bool(config.get("prompt_ensemble", False)),
         )
         incomplete = [
             f"{view.get('asset_a')}/{view.get('asset_b')}"
@@ -191,6 +238,10 @@ def collect_views(
             "repeats": config["repeats"],
             "probability_estimator": config["probability_estimator"],
             "thinking": config["thinking"],
+            "temperature": config["temperature"],
+            "prompt_ensemble": (
+                ENSEMBLE_NAME if config.get("prompt_ensemble", False) else "single_prompt"
+            ),
             "pairs_requested": len(pairs),
             "views": views,
         })
@@ -379,6 +430,11 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="Optional separate output root for an ablation; inputs and saved views still come from --root",
     )
+    parser.add_argument(
+        "--responses-root",
+        type=Path,
+        help="Optional separate root for collected/reused LLM responses; inputs still come from --root",
+    )
     parser.add_argument("--datasets", nargs="*")
     parser.add_argument("--workers", type=int, default=30)
     parser.add_argument("--retry-calls", type=int, default=60)
@@ -391,6 +447,12 @@ def parse_args() -> argparse.Namespace:
         type=float,
         help="Override the RelView threshold from config (use 0.5 to accept every valid pair)",
     )
+    parser.add_argument("--temperature", type=float, help="Override the configured LLM temperature")
+    parser.add_argument(
+        "--prompt-ensemble",
+        action="store_true",
+        help="Use a different deterministic system-prompt specification for every repeated API call",
+    )
     return parser.parse_args()
 
 
@@ -402,7 +464,14 @@ def main() -> None:
         if not 0.5 <= args.abstention_threshold <= 1.0:
             raise ValueError("--abstention-threshold must be in [0.5, 1]")
         config = {**config, "abstention_threshold": float(args.abstention_threshold)}
+    if args.temperature is not None:
+        if args.temperature < 0:
+            raise ValueError("--temperature must be non-negative")
+        config = {**config, "temperature": float(args.temperature)}
+    if args.prompt_ensemble:
+        config = {**config, "prompt_ensemble": True}
     results_root = args.results_root or args.root
+    responses_root = args.responses_root or args.root
     manifest = load_manifest(Path(config["dataset_manifest"]))
     selected = set(args.datasets or [])
     datasets = [item for item in manifest["datasets"] if not selected or item["id"] in selected]
@@ -425,6 +494,7 @@ def main() -> None:
         print(f"\n=== {dataset_id}: cutoff {cutoff.date()} ===", flush=True)
         dataset_root = write_dataset_inputs(args.root, dataset)
         result_dataset_root = results_root / dataset_id
+        response_dataset_root = responses_root / dataset_id
         assets = [str(item["ticker"]) for item in dataset["assets"]]
         formation, realized = prepare_dataset_data(
             dataset_root, assets, formation_start, cutoff, test_start, test_end,
@@ -437,16 +507,16 @@ def main() -> None:
         horizon_days = len(realized)
         if args.skip_collect:
             absolute = json.loads(
-                (dataset_root / "responses_absolute" / f"{config['model']}_cutoff_2025-12.json")
+                (response_dataset_root / "responses_absolute" / f"{config['model']}_cutoff_2025-12.json")
                 .read_text(encoding="utf-8")
             )
             views = json.loads(
-                (dataset_root / "responses_relative" / f"{config['model']}_cutoff_2025-12.json")
+                (response_dataset_root / "responses_relative" / f"{config['model']}_cutoff_2025-12.json")
                 .read_text(encoding="utf-8")
             )["views"]
         else:
             absolute, views = collect_views(
-                dataset_root, formation, metadata, config, str(api_key),
+                response_dataset_root, formation, metadata, config, str(api_key),
                 args.workers, args.retry_calls, args.force_views, horizon_days,
             )
         daily, weights, metrics = evaluate_dataset(
