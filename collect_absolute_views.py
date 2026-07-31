@@ -21,6 +21,7 @@ from collect_relative_views import (
     DEFAULT_MODEL,
     OPENCODE_GO_BASE_URL,
     REQUEST_TIMEOUT_SECONDS,
+    provider_limit_from_errors,
     _load_json_mapping,
     _load_returns,
     _load_universe,
@@ -187,6 +188,10 @@ def collect_absolute_views(
         prompt_hashes = [item["system_prompt_sha256"] for _, item in calls]
         if not samples and errors and any("401" in error or "AuthError" in error for error in errors):
             raise RuntimeError("OpenCode Go authentication failed; no output file was written")
+        if not samples:
+            provider_limit = provider_limit_from_errors(errors)
+            if provider_limit:
+                raise provider_limit
         result[ticker] = {
             "ticker": ticker,
             "pct_change": returns[ticker].astype(float).tolist(),

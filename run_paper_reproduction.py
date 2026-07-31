@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import time
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,7 @@ from backtest_compare import absolute_weights
 from collect_absolute_views import collect_absolute_views
 from collect_relative_views import (
     OPENCODE_GO_BASE_URL,
+    ProviderUsageLimitError,
     _metadata_lookup,
     collect_pairwise_views,
 )
@@ -395,6 +397,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--paper-exact", action="store_true", help="Use N=100; disables the diversified prompt ensemble")
     parser.add_argument("--workers", type=int, default=30)
     parser.add_argument("--retry-calls", type=int, default=60)
+    parser.add_argument(
+        "--wait-on-rate-limit",
+        action="store_true",
+        help="Wait for the provider reset time and resume the first incomplete period",
+    )
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--skip-collect", action="store_true")
@@ -426,11 +433,23 @@ def main() -> None:
             raise ValueError(f"unknown or phase-excluded period IDs: {sorted(missing)}")
     methods = set(args.methods)
     if not args.skip_collect:
-        collect_periods(
-            args.data_root, args.run_root, selected, assets, metadata_frame, caps,
-            config, methods, repeats, args.workers, args.retry_calls, args.force,
-            args.dry_run,
-        )
+        while True:
+            try:
+                collect_periods(
+                    args.data_root, args.run_root, selected, assets, metadata_frame, caps,
+                    config, methods, repeats, args.workers, args.retry_calls, args.force,
+                    args.dry_run,
+                )
+                break
+            except ProviderUsageLimitError as error:
+                if not args.wait_on_rate_limit:
+                    raise
+                print(
+                    "Provider usage limit reached; resuming in "
+                    f"{error.retry_after_seconds} seconds: {error}",
+                    flush=True,
+                )
+                time.sleep(error.retry_after_seconds)
     if args.dry_run or args.skip_backtest:
         return
 

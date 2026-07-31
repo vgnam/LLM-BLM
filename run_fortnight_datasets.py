@@ -83,6 +83,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--datasets", nargs="*")
     parser.add_argument("--workers", type=int, default=30)
     parser.add_argument("--retry-calls", type=int, default=60)
+    parser.add_argument(
+        "--wait-on-rate-limit",
+        action="store_true",
+        help="Propagate automatic provider-reset waiting to every dataset run",
+    )
     parser.add_argument("--skip-prepare", action="store_true")
     parser.add_argument("--skip-collect", action="store_true")
     parser.add_argument("--skip-backtest", action="store_true")
@@ -125,6 +130,8 @@ def main() -> None:
         ]
         if args.skip_collect:
             command.append("--skip-collect")
+        if args.wait_on_rate_limit:
+            command.append("--wait-on-rate-limit")
         if args.skip_backtest:
             command.append("--skip-backtest")
         if args.force:

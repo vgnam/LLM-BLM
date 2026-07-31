@@ -257,7 +257,7 @@ thinking disabled, diversified system prompts, the paper absolute prompt, and
 the confidence-forced `decisive_v3` relative prompt:
 
 ```powershell
-py -3.10 run_paper_reproduction.py --methods absolute relative --workers 30 --retry-calls 60
+py -3.10 run_paper_reproduction.py --methods absolute relative --workers 30 --retry-calls 60 --wait-on-rate-limit
 py -3.10 validate_fortnight_data.py --root experiments/paper_reproduction/paper_sp500_top50 --config experiments/paper_reproduction/config.json --run-root experiments/paper_reproduction/paper_sp500_top50/deepseek_comparison --repeats 30 --require-results
 ```
 
@@ -266,7 +266,7 @@ calling the model, add `--dry-run`. To use the paper's `N=100` call count for
 the absolute method, keep it in a separate run root:
 
 ```powershell
-py -3.10 run_paper_reproduction.py --methods absolute --paper-exact --run-root experiments/paper_reproduction/paper_sp500_top50/paper_exact_deepseek --workers 30 --retry-calls 120
+py -3.10 run_paper_reproduction.py --methods absolute --paper-exact --run-root experiments/paper_reproduction/paper_sp500_top50/paper_exact_deepseek --workers 30 --retry-calls 120 --wait-on-rate-limit
 ```
 
 The public repository does not expose the paper's exact 26 March 2025 market
@@ -288,7 +288,7 @@ py -3.10 run_fortnight_datasets.py --skip-prepare --dry-run
 Run all LLM collections, backtests, and reusable cross-dataset tables:
 
 ```powershell
-py -3.10 run_fortnight_datasets.py --skip-prepare --workers 30 --retry-calls 60
+py -3.10 run_fortnight_datasets.py --skip-prepare --workers 30 --retry-calls 60 --wait-on-rate-limit
 ```
 
 Each dataset stores CSV and Parquet daily returns, per-period metrics, and long

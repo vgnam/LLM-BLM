@@ -34,6 +34,34 @@ DEFAULT_MODEL = "deepseek-v4-flash"
 REQUEST_TIMEOUT_SECONDS = 45.0
 
 
+class ProviderUsageLimitError(RuntimeError):
+    """Provider quota/rate limit with a machine-readable retry delay."""
+
+    def __init__(self, message: str, retry_after_seconds: int = 60):
+        super().__init__(message)
+        self.retry_after_seconds = max(60, int(retry_after_seconds))
+
+
+def provider_limit_from_errors(errors: list[str]) -> ProviderUsageLimitError | None:
+    limited = [
+        error for error in errors
+        if "429" in error or "RateLimitError" in error or "GoUsageLimitError" in error
+    ]
+    if not limited:
+        return None
+    message = limited[0]
+    hours = re.search(r"Resets in\s+(\d+)hr", message, flags=re.IGNORECASE)
+    minutes = re.search(r"(?:\d+hr\s+)?(\d+)min", message, flags=re.IGNORECASE)
+    seconds = 60
+    if hours or minutes:
+        seconds = (
+            3600 * (int(hours.group(1)) if hours else 0)
+            + 60 * (int(minutes.group(1)) if minutes else 0)
+            + 60
+        )
+    return ProviderUsageLimitError(message, seconds)
+
+
 def _load_returns(path: Path) -> pd.DataFrame:
     frame = pd.read_csv(path)
     if "Date" in frame.columns:
@@ -355,6 +383,10 @@ def collect_pairwise_views(
         predictions = [item for _, item in calls]
         if not predictions and errors and any("401" in error or "AuthError" in error for error in errors):
             raise RuntimeError("OpenCode Go authentication failed; no output file was written")
+        if not predictions:
+            provider_limit = provider_limit_from_errors(errors)
+            if provider_limit:
+                raise provider_limit
         if not predictions:
             views.append({"asset_a": asset_a, "asset_b": asset_b, "errors": errors, "status": "failed"})
             continue

@@ -10,6 +10,7 @@ from collect_relative_views import (
     completion_request_options,
     make_pairwise_prompt,
     parse_pairwise_response,
+    provider_limit_from_errors,
 )
 from portfolio_backtest import evaluate_realized_portfolio
 from prompt_ensemble import collect_repeated_calls, diversified_system_prompt, prompt_sha256
@@ -27,6 +28,14 @@ from relview_bl import (
 
 
 class RelViewTests(unittest.TestCase):
+    def test_provider_usage_limit_parses_reset_delay(self):
+        error = provider_limit_from_errors([
+            "RateLimitError 429 GoUsageLimitError: 5-hour usage limit reached. "
+            "Resets in 1hr 42min."
+        ])
+        self.assertIsNotNone(error)
+        self.assertEqual(error.retry_after_seconds, 6180)
+
     def test_paper_optimizer_uses_variance_minus_point_one_return(self):
         expected = np.array([0.2, 0.0])
         covariance = np.diag([1.0, 0.0])
