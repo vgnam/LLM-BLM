@@ -89,6 +89,8 @@ def main() -> None:
     if args.run_root:
         repeats = int(args.repeats or config["comparison_repeats"])
         expected_ensemble = ENSEMBLE_NAME if config["prompt_ensemble"] else "single_prompt"
+        absolute_hashes: list[str] = []
+        relative_hashes: list[str] = []
         for period in periods.itertuples(index=False):
             absolute_path = args.run_root / "responses_absolute" / f"{period.period_id}.json"
             relative_path = args.run_root / "responses_relative" / f"{period.period_id}.json"
@@ -102,9 +104,14 @@ def main() -> None:
                         len(item.get("expected_return", [])) != repeats
                         or item.get("prompt_mode") != config["absolute_prompt_mode"]
                         or item.get("prompt_ensemble") != expected_ensemble
+                        or (
+                            config["prompt_ensemble"]
+                            and len(item.get("system_prompt_sha256", [])) != repeats
+                        )
                     ):
                         errors.append(f"invalid absolute response {period.period_id}/{asset}")
                         break
+                    absolute_hashes.extend(item.get("system_prompt_sha256", []))
             if not relative_path.exists():
                 errors.append(f"missing relative response {period.period_id}")
             else:
@@ -115,8 +122,22 @@ def main() -> None:
                     or relative.get("prompt_mode") != config["relative_prompt_mode"]
                     or relative.get("prompt_ensemble") != expected_ensemble
                     or any(int(item.get("successful_repeats", 0)) != repeats for item in views)
+                    or (
+                        config["prompt_ensemble"]
+                        and any(len(item.get("system_prompt_sha256", [])) != repeats for item in views)
+                    )
                 ):
                     errors.append(f"invalid relative response {period.period_id}")
+                relative_hashes.extend(
+                    prompt_hash
+                    for item in views
+                    for prompt_hash in item.get("system_prompt_sha256", [])
+                )
+        if config["prompt_ensemble"]:
+            if len(absolute_hashes) != len(set(absolute_hashes)):
+                errors.append("absolute system prompt hashes are not globally unique")
+            if len(relative_hashes) != len(set(relative_hashes)):
+                errors.append("relative system prompt hashes are not globally unique")
         if args.require_results:
             for name in (
                 "daily_returns", "daily_returns_long", "period_metrics",
