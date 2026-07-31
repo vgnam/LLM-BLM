@@ -245,6 +245,7 @@ def build_report(
     metrics: pd.DataFrame,
     relative_summary: pd.DataFrame,
     wins: pd.DataFrame,
+    weight_diagnostics: pd.DataFrame,
 ) -> str:
     metric_rows = []
     for item in metrics.itertuples(index=False):
@@ -274,6 +275,17 @@ def build_report(
         [item.Scope, item.Metric, item.Method, item.Wins]
         for item in wins.itertuples(index=False)
         if item.Wins > 0
+    ]
+    concentration_rows = [
+        [
+            item.Dataset,
+            item.Method,
+            pct(item.Maximum_Observed_Weight),
+            pct(item.Mean_Period_Max_Weight),
+            f"{item.Mean_Effective_Assets:.2f}",
+            item.Minimum_Positive_Assets,
+        ]
+        for item in weight_diagnostics.itertuples(index=False)
     ]
     return f"""# Paper-aligned and five-dataset comparison
 
@@ -306,6 +318,13 @@ The values below are confidence-forced ranking scores, not calibrated real-world
 ## Method wins
 
 {markdown_table(["Scope", "Metric", "Method", "Wins"], win_rows)}
+
+## Portfolio concentration with no 15% cap
+
+{markdown_table(
+    ["Dataset", "Method", "Maximum weight", "Mean period maximum", "Mean effective assets", "Minimum positive assets"],
+    concentration_rows,
+)}
 
 ## Interpretation constraints
 
@@ -388,7 +407,11 @@ def main() -> None:
     save_frame(relative_summary, args.output / "relative_probability_summary")
     save_frame(wins, args.output / "method_win_counts")
     (args.output / "REPORT.md").write_text(
-        build_report(combined["metrics"], relative_summary, wins), encoding="utf-8"
+        build_report(
+            combined["metrics"], relative_summary, wins,
+            combined["weight_diagnostics"],
+        ),
+        encoding="utf-8",
     )
     (args.output / "data_catalog.json").write_text(json.dumps({
         "datasets": [item[0] for item in specifications],
