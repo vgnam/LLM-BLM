@@ -15,6 +15,7 @@ DEFAULT_PAPER_DATA_ROOT = Path("experiments/paper_reproduction/paper_sp500_top50
 DEFAULT_PAPER_RUN_ROOT = DEFAULT_PAPER_DATA_ROOT / "deepseek_comparison"
 DEFAULT_FIVE_ROOT = Path("experiments/fortnight_5_datasets")
 DEFAULT_MANIFEST = DEFAULT_FIVE_ROOT / "datasets.json"
+DEFAULT_PREVIOUS_MANIFEST = Path("experiments/post_release_2026/datasets.json")
 DEFAULT_OUTPUT = DEFAULT_FIVE_ROOT / "summary"
 METHODS = (
     "MVO",
@@ -23,6 +24,16 @@ METHODS = (
     "Absolute_LLM_BLM",
     "RelView_BL",
 )
+
+
+def manifest_tickers(manifest: dict[str, Any]) -> list[str]:
+    tickers: list[str] = []
+    for dataset in manifest.get("datasets", []):
+        records = dataset.get("tickers", dataset.get("assets", []))
+        for record in records:
+            ticker = record.get("ticker") if isinstance(record, dict) else record
+            tickers.append(str(ticker))
+    return tickers
 
 
 def load_json(path: Path) -> Any:
@@ -312,6 +323,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--paper-run-root", type=Path, default=DEFAULT_PAPER_RUN_ROOT)
     parser.add_argument("--five-root", type=Path, default=DEFAULT_FIVE_ROOT)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--previous-manifest", type=Path, default=DEFAULT_PREVIOUS_MANIFEST)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     return parser.parse_args()
 
@@ -319,6 +331,18 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     manifest = load_json(args.manifest)
+    new_tickers = manifest_tickers(manifest)
+    if len(manifest.get("datasets", [])) != 5:
+        raise ValueError("the new-data manifest must contain exactly five datasets")
+    if any(len(dataset.get("tickers", [])) != 15 for dataset in manifest["datasets"]):
+        raise ValueError("every new dataset must contain exactly 15 tickers")
+    if len(new_tickers) != len(set(new_tickers)):
+        raise ValueError("the five new datasets are not mutually disjoint")
+    if args.previous_manifest.exists():
+        previous = set(manifest_tickers(load_json(args.previous_manifest)))
+        reused = sorted(set(new_tickers).intersection(previous))
+        if reused:
+            raise ValueError(f"new datasets reuse previous-study assets: {reused}")
     specifications = [
         (
             "paper_sp500_top50",

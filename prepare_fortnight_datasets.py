@@ -25,6 +25,17 @@ DEFAULT_CONFIG = Path("experiments/fortnight_5_datasets/config.json")
 DEFAULT_MANIFEST = Path("experiments/fortnight_5_datasets/datasets.json")
 DEFAULT_ROOT = Path("experiments/fortnight_5_datasets")
 DEFAULT_METADATA_SOURCE = Path("responses/gemma_2024-06-01_2024-06-30.json")
+DEFAULT_PREVIOUS_MANIFEST = Path("experiments/post_release_2026/datasets.json")
+
+
+def manifest_tickers(manifest: dict[str, Any]) -> set[str]:
+    tickers: set[str] = set()
+    for dataset in manifest.get("datasets", []):
+        records = dataset.get("tickers", dataset.get("assets", []))
+        for record in records:
+            ticker = record.get("ticker") if isinstance(record, dict) else record
+            tickers.add(str(ticker))
+    return tickers
 
 
 def prepare_dataset(
@@ -154,6 +165,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
     parser.add_argument("--market-caps", type=Path, default=Path("market_caps.json"))
     parser.add_argument("--metadata-source", type=Path, default=DEFAULT_METADATA_SOURCE)
+    parser.add_argument("--previous-manifest", type=Path, default=DEFAULT_PREVIOUS_MANIFEST)
     parser.add_argument("--datasets", nargs="*")
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
@@ -173,6 +185,14 @@ def main() -> None:
     missing = requested - {dataset["id"] for dataset in selected}
     if missing:
         raise ValueError(f"unknown datasets: {sorted(missing)}")
+    previous_tickers = (
+        manifest_tickers(load_json(args.previous_manifest))
+        if args.previous_manifest.exists() else set()
+    )
+    selected_tickers = manifest_tickers({"datasets": selected})
+    reused = selected_tickers.intersection(previous_tickers)
+    if reused:
+        raise ValueError(f"new datasets reuse previous-study assets: {sorted(reused)}")
     seen: set[str] = set()
     for dataset in selected:
         overlap = seen.intersection(dataset["tickers"])

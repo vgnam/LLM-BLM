@@ -6,7 +6,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from analyze_fortnight_results import relative_diagnostics, weighted_probability_summary
+from analyze_fortnight_results import (
+    manifest_tickers,
+    relative_diagnostics,
+    weighted_probability_summary,
+)
 from collect_absolute_views import make_absolute_prompt, parse_absolute_response
 from collect_relative_views import (
     aggregate_repeated_predictions,
@@ -31,6 +35,13 @@ from relview_bl import (
 
 
 class RelViewTests(unittest.TestCase):
+    def test_manifest_tickers_supports_new_and_previous_schemas(self):
+        manifest = {"datasets": [
+            {"tickers": ["A", "B"]},
+            {"assets": [{"ticker": "C"}, {"ticker": "D"}]},
+        ]}
+        self.assertEqual(manifest_tickers(manifest), ["A", "B", "C", "D"])
+
     def test_relative_diagnostics_preserve_call_and_aggregate_distinction(self):
         with tempfile.TemporaryDirectory() as temporary:
             response_root = Path(temporary) / "responses_relative"
