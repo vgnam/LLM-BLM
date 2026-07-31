@@ -32,9 +32,22 @@ from relview_bl import (
     run_relview_bl,
     select_candidate_pairs,
 )
+from validate_fortnight_data import metrics_from_daily_returns
 
 
 class RelViewTests(unittest.TestCase):
+    def test_independent_validator_metrics_match_portfolio_evaluator(self):
+        returns = np.asarray([0.01, -0.02, 0.005, 0.003], dtype=float)
+        _, expected = evaluate_realized_portfolio(
+            pd.DataFrame({"A": returns}), {"A": 1.0}
+        )
+        actual = metrics_from_daily_returns(returns)
+        for key in (
+            "trading_days", "cumulative_return", "annualized_return",
+            "annualized_volatility", "sharpe", "max_drawdown",
+        ):
+            self.assertAlmostEqual(actual[key], expected[key], places=12)
+
     def test_manifest_tickers_supports_new_and_previous_schemas(self):
         manifest = {"datasets": [
             {"tickers": ["A", "B"]},

@@ -33,6 +33,30 @@ def close(left: float, right: float, tolerance: float = 1e-10) -> bool:
     return math.isclose(float(left), float(right), rel_tol=tolerance, abs_tol=tolerance)
 
 
+def metrics_from_daily_returns(values: np.ndarray) -> dict[str, float | int]:
+    returns = np.asarray(values, dtype=float)
+    wealth = np.cumprod(1.0 + returns)
+    days = len(returns)
+    cumulative = float(wealth[-1] - 1.0) if days else 0.0
+    annualized = (
+        float((1.0 + cumulative) ** (252.0 / days) - 1.0)
+        if days and cumulative > -1.0 else -1.0
+    )
+    daily_volatility = float(np.std(returns, ddof=1)) if days > 1 else 0.0
+    drawdown = wealth / np.maximum.accumulate(wealth) - 1.0 if days else np.asarray([])
+    return {
+        "trading_days": days,
+        "cumulative_return": cumulative,
+        "annualized_return": annualized,
+        "annualized_volatility": daily_volatility * math.sqrt(252.0),
+        "sharpe": (
+            float(np.mean(returns)) / daily_volatility * math.sqrt(252.0)
+            if daily_volatility > 0 else 0.0
+        ),
+        "max_drawdown": float(np.min(drawdown)) if days else 0.0,
+    }
+
+
 def main() -> None:
     args = parse_args()
     errors: list[str] = []
@@ -78,6 +102,7 @@ def main() -> None:
     realized_dates_by_phase: dict[str, list[pd.Timestamp]] = {
         "validation": [], "test": [],
     }
+    realized_by_period: dict[str, pd.DataFrame] = {}
     for period in periods.itertuples(index=False):
         period_root = args.root / "periods" / period.period_id
         try:
@@ -105,6 +130,7 @@ def main() -> None:
         if str(formation["Date"].max().date()) != str(period.reference_date):
             errors.append(f"{period.period_id} reference date mismatch")
         realized_dates_by_phase[str(period.phase)].extend(realized["Date"].tolist())
+        realized_by_period[str(period.period_id)] = realized.set_index("Date")[assets]
         formation_dates = pd.DatetimeIndex(formation["Date"])
         realized_dates = pd.DatetimeIndex(realized["Date"])
         try:
@@ -364,6 +390,101 @@ def main() -> None:
                     or float(summary.get("config", {}).get("max_weight", -1)) != 1.0
                 ):
                     errors.append("summary.json run metadata is invalid")
+                try:
+                    wide_from_long = daily_long.pivot(
+                        index="Date", columns="Method", values="Portfolio_Return"
+                    ).reindex(columns=methods)
+                    wide_from_long.columns = [f"{method}_Return" for method in methods]
+                    wide_actual = daily.set_index("Date").reindex(columns=wide_from_long.columns)
+                    pd.testing.assert_frame_equal(
+                        wide_actual.sort_index(), wide_from_long.sort_index(),
+                        check_dtype=False, check_names=False,
+                        check_exact=False, rtol=1e-12, atol=1e-12,
+                    )
+                except Exception as error:
+                    errors.append(f"daily wide/long mismatch: {error}")
+
+                try:
+                    daily_indexed = daily.set_index("Date")
+                    period_indexed = period_metrics.set_index("Period")
+                    method_indexed = method_metrics.set_index("Method")
+                    previous_weights: dict[str, np.ndarray | None] = {
+                        method: None for method in methods
+                    }
+                    turnover_totals = {method: 0.0 for method in methods}
+                    test_periods = periods[periods["phase"] == "test"]
+                    for period in test_periods.itertuples(index=False):
+                        realized = realized_by_period[str(period.period_id)]
+                        date_labels = realized.index.strftime("%Y-%m-%d")
+                        period_row = period_indexed.loc[str(period.period_id)]
+                        for method in methods:
+                            method_weights = (
+                                weights[
+                                    (weights["Period"] == str(period.period_id))
+                                    & (weights["Method"] == method)
+                                ]
+                                .set_index("Asset")["Weight"]
+                                .reindex(assets)
+                                .to_numpy(dtype=float)
+                            )
+                            previous = previous_weights[method]
+                            method_turnover = (
+                                1.0 if previous is None
+                                else float(np.sum(np.abs(method_weights - previous)))
+                            )
+                            expected_daily = realized.to_numpy(dtype=float) @ method_weights
+                            expected_daily[0] -= (
+                                method_turnover
+                                * float(config["transaction_cost_bps"]) / 10_000.0
+                            )
+                            actual_daily = daily_indexed.loc[
+                                date_labels, f"{method}_Return"
+                            ].to_numpy(dtype=float)
+                            if not np.allclose(
+                                expected_daily, actual_daily, rtol=1e-11, atol=1e-13
+                            ):
+                                errors.append(
+                                    f"{period.period_id}/{method} daily returns do not match weights"
+                                )
+                            expected_metrics = metrics_from_daily_returns(expected_daily)
+                            for key, expected in expected_metrics.items():
+                                actual = period_row.get(f"{method}_{key}")
+                                if actual is None or not close(actual, expected, 1e-9):
+                                    errors.append(
+                                        f"{period.period_id}/{method} {key} mismatch"
+                                    )
+                                    break
+                            if not close(
+                                period_row.get(f"{method}_turnover", float("nan")),
+                                method_turnover,
+                            ):
+                                errors.append(f"{period.period_id}/{method} turnover mismatch")
+                            turnover_totals[method] += method_turnover
+                            previous_weights[method] = method_weights
+
+                    for method in methods:
+                        expected_metrics = metrics_from_daily_returns(
+                            daily_indexed[f"{method}_Return"].to_numpy(dtype=float)
+                        )
+                        csv_row = method_indexed.loc[method]
+                        json_row = summary["summary"][method]
+                        for key, expected in expected_metrics.items():
+                            if not close(csv_row.get(key, float("nan")), expected, 1e-9):
+                                errors.append(f"{method} method_metrics {key} mismatch")
+                                break
+                            if not close(json_row.get(key, float("nan")), expected, 1e-9):
+                                errors.append(f"{method} summary {key} mismatch")
+                                break
+                        if not close(
+                            csv_row.get("total_turnover", float("nan")),
+                            turnover_totals[method], 1e-9,
+                        ) or not close(
+                            json_row.get("total_turnover", float("nan")),
+                            turnover_totals[method], 1e-9,
+                        ):
+                            errors.append(f"{method} total_turnover mismatch")
+                except Exception as error:
+                    errors.append(f"backtest recomputation failed: {error}")
 
     print(json.dumps({
         "root": str(args.root),
