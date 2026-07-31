@@ -20,6 +20,7 @@ from tqdm import tqdm
 from collect_relative_views import (
     DEFAULT_MODEL,
     OPENCODE_GO_BASE_URL,
+    REQUEST_TIMEOUT_SECONDS,
     _load_json_mapping,
     _load_returns,
     _load_universe,
@@ -140,7 +141,12 @@ def collect_absolute_views(
     except ImportError as error:
         raise RuntimeError("Install the openai package to collect LLM views") from error
 
-    client = OpenAI(base_url=base_url, api_key=api_key)
+    client = OpenAI(
+        base_url=base_url,
+        api_key=api_key,
+        timeout=REQUEST_TIMEOUT_SECONDS,
+        max_retries=0,
+    )
     result: dict[str, dict[str, Any]] = {}
     for ticker in tqdm(returns.columns.astype(str), desc="Absolute LLM views"):
         base_system, user = make_absolute_prompt(

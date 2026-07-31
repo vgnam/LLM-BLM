@@ -31,6 +31,7 @@ from relview_bl import select_candidate_pairs
 
 OPENCODE_GO_BASE_URL = "https://opencode.ai/zen/go/v1"
 DEFAULT_MODEL = "deepseek-v4-flash"
+REQUEST_TIMEOUT_SECONDS = 45.0
 
 
 def _load_returns(path: Path) -> pd.DataFrame:
@@ -303,7 +304,20 @@ def collect_pairwise_views(
     except ImportError as error:
         raise RuntimeError("Install the openai package to collect LLM views") from error
 
-    client = OpenAI(base_url=base_url, api_key=api_key) if base_url else OpenAI(api_key=api_key)
+    client = (
+        OpenAI(
+            base_url=base_url,
+            api_key=api_key,
+            timeout=REQUEST_TIMEOUT_SECONDS,
+            max_retries=0,
+        )
+        if base_url
+        else OpenAI(
+            api_key=api_key,
+            timeout=REQUEST_TIMEOUT_SECONDS,
+            max_retries=0,
+        )
+    )
     views: list[dict[str, Any]] = []
     for asset_a, asset_b in tqdm(pairs, desc="Pairwise LLM views"):
         base_system, user = make_pairwise_prompt(
