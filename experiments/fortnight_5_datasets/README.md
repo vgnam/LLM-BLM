@@ -10,6 +10,6 @@ All methods use the paper optimizer convention, long-only fully invested
 weights with `max_weight=1.0`, market-cap equilibrium priors, and 10 bps
 turnover costs. DeepSeek V4 Flash is queried 30 times at temperature 1 with
 thinking disabled and a unique system-prompt variant per call. The relative
-`decisive_v2` score is intentionally confidence-forced and is not a calibrated
+`decisive_v3` score is intentionally confidence-forced and is not a calibrated
 real-world probability. Because the model postdates this historical period,
 all LLM results remain vulnerable to training-memory leakage.

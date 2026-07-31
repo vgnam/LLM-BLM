@@ -152,8 +152,14 @@ def collect_absolute_views(
             prompt_mode,
         )
         def call_once(call_id: int) -> dict[str, Any]:
+            reference_date = (
+                context.get(ticker, {}).get("reference_date", "undated")
+                if isinstance(context.get(ticker, {}), Mapping) else "undated"
+            )
             system = (
-                diversified_system_prompt(base_system, call_id, f"absolute:{ticker}")
+                diversified_system_prompt(
+                    base_system, call_id, f"absolute:{ticker}:{reference_date}"
+                )
                 if prompt_ensemble else base_system
             )
             completion = client.chat.completions.create(**completion_request_options(

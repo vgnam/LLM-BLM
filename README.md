@@ -254,7 +254,7 @@ py -3.10 validate_fortnight_data.py --root experiments/paper_reproduction/paper_
 
 Run the DeepSeek comparison with 30 calls per asset/pair, temperature 1,
 thinking disabled, diversified system prompts, the paper absolute prompt, and
-the confidence-forced `decisive_v2` relative prompt:
+the confidence-forced `decisive_v3` relative prompt:
 
 ```powershell
 py -3.10 run_paper_reproduction.py --methods absolute relative --workers 30 --retry-calls 60

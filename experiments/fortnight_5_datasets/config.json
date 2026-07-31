@@ -18,7 +18,7 @@
   "temperature": 1.0,
   "prompt_ensemble": true,
   "absolute_prompt_mode": "paper_v2",
-  "relative_prompt_mode": "decisive_v2",
+  "relative_prompt_mode": "decisive_v3",
   "calibration": "none",
   "abstention_threshold": 0.6,
   "risk_aversion": 0.1,

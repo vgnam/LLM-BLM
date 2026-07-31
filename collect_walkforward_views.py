@@ -85,7 +85,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--temperature", type=float, default=0.3)
     parser.add_argument("--prompt-ensemble", action="store_true")
     parser.add_argument("--absolute-prompt-mode", choices=["generic", "paper_v2"], default="generic")
-    parser.add_argument("--relative-prompt-mode", choices=["calibrated", "decisive_v1", "decisive_v2"], default="calibrated")
+    parser.add_argument("--relative-prompt-mode", choices=["calibrated", "decisive_v1", "decisive_v2", "decisive_v3"], default="calibrated")
     parser.add_argument("--max-pairs", type=int, default=45)
     parser.add_argument("--probability-estimator", choices=["mean", "votes"], default="mean")
     parser.add_argument("--force", action="store_true")

@@ -114,7 +114,7 @@ class RelViewTests(unittest.TestCase):
             "B": {"sector_returns": [1.0, 2.0], "market_returns": [0.5, 0.6]},
         }
         system, user = make_pairwise_prompt(
-            "A", "B", returns, {}, context, 10, "decisive_v2"
+            "A", "B", returns, {}, context, 10, "decisive_v3"
         )
         self.assertIn("[0.55, 0.95]", system)
         self.assertIn("fixed decision rule", system)

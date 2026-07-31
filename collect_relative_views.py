@@ -101,14 +101,14 @@ def make_pairwise_prompt(
             "probability is the probability (0.50 to 1.00) that preferred_asset outperforms the other asset. "
             "If evidence is weak, keep probability near 0.50. Do not predict an absolute return."
         )
-    elif prompt_mode in {"decisive_v1", "decisive_v2"}:
+    elif prompt_mode in {"decisive_v1", "decisive_v2", "decisive_v3"}:
         fixed_rule = (
             " Apply this fixed decision rule before any stylistic lens: compare relative cumulative "
             "return and mean daily return (50% weight), downside-adjusted consistency (25%), relative "
             "sector/market behavior (15%), and company/industry context (10%). If the weighted evidence "
             "is tied, prefer the asset with the higher cumulative return; if still tied, use the ticker "
             "that is lexicographically first."
-            if prompt_mode == "decisive_v2" else ""
+            if prompt_mode in {"decisive_v2", "decisive_v3"} else ""
         )
         system = (
             "You generate a forced, strictly point-in-time pairwise ranking using only the supplied "
@@ -123,7 +123,9 @@ def make_pairwise_prompt(
             + fixed_rule
         )
     else:
-        raise ValueError("prompt_mode must be calibrated, decisive_v1, or decisive_v2")
+        raise ValueError(
+            "prompt_mode must be calibrated, decisive_v1, decisive_v2, or decisive_v3"
+        )
     context_a = context.get(asset_a, {})
     context_b = context.get(asset_b, {})
     percentage_context = all(
@@ -308,9 +310,15 @@ def collect_pairwise_views(
             asset_a, asset_b, returns, metadata, context, horizon_days, prompt_mode
         )
         def call_once(call_id: int) -> dict[str, Any]:
+            reference_date = (
+                context.get(asset_a, {}).get("reference_date", "undated")
+                if isinstance(context.get(asset_a, {}), Mapping) else "undated"
+            )
             system = (
                 diversified_system_prompt(
-                    base_system, call_id, f"relative:{asset_a}:{asset_b}"
+                    base_system,
+                    call_id,
+                    f"relative:{asset_a}:{asset_b}:{reference_date}",
                 ) if prompt_ensemble else base_system
             )
             completion = client.chat.completions.create(**completion_request_options(
@@ -413,7 +421,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--retry-calls", type=int, default=15, help="Extra attempts used to replace invalid responses")
     parser.add_argument("--prompt-ensemble", action="store_true", help="Use a unique system prompt for every call")
     parser.add_argument(
-        "--prompt-mode", choices=["calibrated", "decisive_v1", "decisive_v2"], default="calibrated",
+        "--prompt-mode", choices=["calibrated", "decisive_v1", "decisive_v2", "decisive_v3"], default="calibrated",
         help="decisive modes force a ranking score of at least 0.55 and are not probability-calibrated",
     )
     return parser.parse_args()
