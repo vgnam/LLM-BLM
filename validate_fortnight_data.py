@@ -190,6 +190,7 @@ def main() -> None:
         expected_ensemble = ENSEMBLE_NAME if config["prompt_ensemble"] else "single_prompt"
         absolute_hashes: list[str] = []
         relative_hashes: list[str] = []
+        relative_accepted_counts: dict[str, int] = {}
         for period in periods.itertuples(index=False):
             absolute_path = args.run_root / "responses_absolute" / f"{period.period_id}.json"
             relative_path = args.run_root / "responses_relative" / f"{period.period_id}.json"
@@ -294,6 +295,15 @@ def main() -> None:
                     for item in views
                     for prompt_hash in item.get("system_prompt_sha256", [])
                 )
+                if config.get("calibration") == "none":
+                    relative_accepted_counts[str(period.period_id)] = sum(
+                        max(
+                            float(item.get("probability_a", 0.5)),
+                            1.0 - float(item.get("probability_a", 0.5)),
+                        ) >= float(config["abstention_threshold"])
+                        and len(item.get("evidence", [])) >= 1
+                        for item in views
+                    )
         if config["prompt_ensemble"]:
             if len(absolute_hashes) != len(set(absolute_hashes)):
                 errors.append("absolute system prompt hashes are not globally unique")
@@ -367,6 +377,17 @@ def main() -> None:
                     ).all()
                 ):
                     errors.append("period_metrics is not a complete 20-period test")
+                if relative_accepted_counts:
+                    actual_accepted = period_metrics.set_index("Period")[
+                        "Accepted_Relative_Views"
+                    ].to_dict()
+                    for period_id, expected in relative_accepted_counts.items():
+                        if not period_id.startswith("test_"):
+                            continue
+                        if int(actual_accepted.get(period_id, -1)) != int(expected):
+                            errors.append(
+                                f"{period_id} accepted relative-view count mismatch"
+                            )
                 expected_weight_rows = 20 * len(methods) * len(assets)
                 numeric_weights = weights.get("Weight", pd.Series(dtype=float)).to_numpy(dtype=float)
                 sums = weights.groupby(["Period", "Method"])["Weight"].sum()
