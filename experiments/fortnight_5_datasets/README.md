@@ -13,3 +13,9 @@ thinking disabled and a unique system-prompt variant per call. The relative
 `decisive_v3` score is intentionally confidence-forced and is not a calibrated
 real-world probability. Because the model postdates this historical period,
 all LLM results remain vulnerable to training-memory leakage.
+
+After the paper reconstruction and all five datasets finish, run
+`py -3.10 analyze_fortnight_results.py`. It creates CSV and Parquet tables for
+all six datasets, relative-score diagnostics proving the arithmetic-mean
+aggregation, concentration diagnostics, method win counts, and `REPORT.md`
+under the generated `summary` directory.

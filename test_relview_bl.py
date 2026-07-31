@@ -1,9 +1,12 @@
 import json
+import tempfile
 import unittest
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+from analyze_fortnight_results import relative_diagnostics, weighted_probability_summary
 from collect_absolute_views import make_absolute_prompt, parse_absolute_response
 from collect_relative_views import (
     aggregate_repeated_predictions,
@@ -28,6 +31,41 @@ from relview_bl import (
 
 
 class RelViewTests(unittest.TestCase):
+    def test_relative_diagnostics_preserve_call_and_aggregate_distinction(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            response_root = Path(temporary) / "responses_relative"
+            response_root.mkdir()
+            (response_root / "test_01.json").write_text(json.dumps({
+                "probability_semantics": "confidence-forced ranking score",
+                "views": [
+                    {
+                        "status": "ok",
+                        "probability": 0.60,
+                        "reported_probability_samples_a": [0.55, 0.65],
+                        "votes": {"A": 2, "B": 0},
+                        "successful_repeats": 2,
+                    },
+                    {
+                        "status": "ok",
+                        "probability": 0.50,
+                        "reported_probability_samples_a": [0.55, 0.45],
+                        "votes": {"A": 1, "B": 1},
+                        "successful_repeats": 2,
+                    },
+                ],
+            }), encoding="utf-8")
+            diagnostics = relative_diagnostics(Path(temporary), 0.60)
+            self.assertEqual(int(diagnostics.loc[0, "Pair_Views"]), 2)
+            self.assertEqual(int(diagnostics.loc[0, "Successful_Calls"]), 4)
+            self.assertAlmostEqual(diagnostics.loc[0, "Aggregate_Confidence_Mean"], 0.55)
+            self.assertEqual(int(diagnostics.loc[0, "Near_Half_Below_0_55"]), 1)
+            self.assertEqual(int(diagnostics.loc[0, "Accepted_At_Threshold"]), 1)
+            self.assertAlmostEqual(diagnostics.loc[0, "Per_Call_Confidence_Min"], 0.55)
+            summary = weighted_probability_summary(
+                diagnostics.assign(Dataset="synthetic")
+            )
+            self.assertAlmostEqual(summary.loc[0, "Accepted_Share"], 0.5)
+
     def test_provider_usage_limit_parses_reset_delay(self):
         error = provider_limit_from_errors([
             "RateLimitError 429 GoUsageLimitError: 5-hour usage limit reached. "

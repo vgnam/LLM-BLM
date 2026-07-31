@@ -289,8 +289,10 @@ Run all LLM collections, backtests, and reusable cross-dataset tables:
 
 ```powershell
 py -3.10 run_fortnight_datasets.py --skip-prepare --workers 30 --retry-calls 60 --wait-on-rate-limit
+py -3.10 analyze_fortnight_results.py
 ```
 
 Each dataset stores CSV and Parquet daily returns, per-period metrics, and long
 portfolio weights under its `deepseek_comparison/results` directory. Combined
-tables are written to `experiments/fortnight_5_datasets/summary`.
+tables plus a six-dataset report are written to
+`experiments/fortnight_5_datasets/summary`.
