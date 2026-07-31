@@ -118,7 +118,10 @@ def main() -> None:
                 ):
                     errors.append(f"invalid relative response {period.period_id}")
         if args.require_results:
-            for name in ("daily_returns", "period_metrics", "weights_long"):
+            for name in (
+                "daily_returns", "daily_returns_long", "period_metrics",
+                "weights_long", "method_metrics",
+            ):
                 for suffix in (".csv", ".parquet"):
                     if not (args.run_root / "results" / f"{name}{suffix}").exists():
                         errors.append(f"missing result {name}{suffix}")

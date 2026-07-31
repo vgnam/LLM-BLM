@@ -464,8 +464,17 @@ def main() -> None:
     )
     results = args.run_root / "results"
     save_frame(daily, results / "daily_returns")
+    daily_long = daily.melt(
+        id_vars=["Date"], var_name="Method", value_name="Portfolio_Return"
+    )
+    daily_long["Method"] = daily_long["Method"].str.replace(r"_Return$", "", regex=True)
+    save_frame(daily_long, results / "daily_returns_long")
     save_frame(period_metrics, results / "period_metrics")
     save_frame(weights, results / "weights_long")
+    method_metrics = pd.DataFrame([
+        {"Method": method, **metrics} for method, metrics in summary.items()
+    ])
+    save_frame(method_metrics, results / "method_metrics")
     atomic_json(results / "summary.json", {
         "config": config,
         "run": {
@@ -481,6 +490,13 @@ def main() -> None:
             "relative_tau_note": "RelView uses the absolute-view validation-selected tau for comparability",
         },
         "summary": summary,
+        "artifacts": {
+            "daily_wide": "results/daily_returns.{csv,parquet}",
+            "daily_long": "results/daily_returns_long.{csv,parquet}",
+            "period_metrics": "results/period_metrics.{csv,parquet}",
+            "weights_long": "results/weights_long.{csv,parquet}",
+            "method_metrics": "results/method_metrics.{csv,parquet}",
+        },
     })
     print(json.dumps(summary, indent=2), flush=True)
     print(f"Saved reusable results to {results}", flush=True)
