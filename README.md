@@ -231,5 +231,13 @@ py -3.10 run_cutoff_backtest.py --temperature 1 --prompt-ensemble --responses-ro
 py -3.10 validate_cutoff_backtest.py --responses-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble --results-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble
 ```
 
+Remove the per-asset concentration cap for every method in a saved-response
+ablation by passing `--max-weight 1.0`. Keep a separate results root so the
+capped comparison is preserved.
+
+```powershell
+py -3.10 run_cutoff_backtest.py --skip-collect --temperature 1 --prompt-ensemble --abstention-threshold 0.5 --max-weight 1.0 --responses-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble --results-root experiments/cutoff_2025_12/ablations/temperature_1_prompt_ensemble_no_abstention_no_cap
+```
+
 See `experiments/cutoff_2025_12/REPORT.md` for the methodology, leakage caveat,
 results, and reusable artifact catalog.

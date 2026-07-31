@@ -121,6 +121,27 @@ None of the thresholds with accepted LLM views beats BL No Views. This grid is
 a diagnostic, not a valid threshold-selection exercise, because choosing its
 best row using the same realized test window would be look-ahead overfitting.
 
+## Removing the per-asset concentration cap
+
+Setting `max_weight=1.0` removes the 0.15 cap for every method. With temperature
+1.0 prompt-ensemble responses:
+
+| Weight constraint | Threshold | Accepted views | BL No Views | RelView-BL | RelView max drawdown |
+|---|---:|---:|---:|---:|---:|
+| 0.15 cap | 0.60 | 0 | +23.17% | +23.17% | -8.53% |
+| No cap | 0.60 | 0 | +35.99% | +35.99% | -16.31% |
+| 0.15 cap | 0.50 | 150 | +23.17% | +19.18% | -9.15% |
+| No cap | 0.50 | 150 | +35.99% | +12.26% | -13.41% |
+
+Removing the cap cannot separate RelView from BL when no view is accepted:
+both methods still optimize the same prior. At threshold 0.50, the methods do
+separate, but the unconstrained optimizer produces nearly single-asset
+portfolios. In US technology, BL No Views assigns 99.28% to MU and 0.72% to AMD,
+while RelView assigns 100% to NVDA. Their technology test returns are +206.03%
+and +4.60%, respectively. This concentration drives much of the aggregate gap
+and shows that the 0.15 cap acts as important regularization rather than merely
+hiding view effects.
+
 Annualized figures summarize only 144 realized trading days and should not be
 read as stable long-run estimates. The five datasets also share the same dates,
 so they are diversified asset universes, not five independent time samples.
@@ -172,6 +193,8 @@ All main tables exist in both CSV and Parquet:
   outputs in CSV and Parquet.
 - `ablations/temperature_prompt_comparison/`: ready-to-plot method paths,
   metrics, and pair-probability diagnostics for temperature 0.3 versus 1.0.
+- `ablations/max_weight_comparison/`: capped/no-cap daily paths, metrics, and
+  weights for thresholds 0.60 and 0.50, in both CSV and Parquet.
 
 ## Reproduce or recompute
 

@@ -449,6 +449,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--temperature", type=float, help="Override the configured LLM temperature")
     parser.add_argument(
+        "--max-weight",
+        type=float,
+        help="Override the per-asset weight cap (use 1.0 to remove the concentration cap)",
+    )
+    parser.add_argument(
         "--prompt-ensemble",
         action="store_true",
         help="Use a different deterministic system-prompt specification for every repeated API call",
@@ -468,6 +473,10 @@ def main() -> None:
         if args.temperature < 0:
             raise ValueError("--temperature must be non-negative")
         config = {**config, "temperature": float(args.temperature)}
+    if args.max_weight is not None:
+        if not 0 < args.max_weight <= 1.0:
+            raise ValueError("--max-weight must be in (0, 1]")
+        config = {**config, "max_weight": float(args.max_weight)}
     if args.prompt_ensemble:
         config = {**config, "prompt_ensemble": True}
     results_root = args.results_root or args.root

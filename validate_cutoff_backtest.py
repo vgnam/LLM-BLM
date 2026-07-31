@@ -265,7 +265,7 @@ def main() -> None:
             if not np.allclose(totals.to_numpy(), 1.0, rtol=1e-10, atol=1e-10):
                 errors.append(f"{dataset_id}: method weights do not sum to one")
             if (weights["Weight"] < -1e-10).any() or (
-                weights["Weight"] > float(config["max_weight"]) + 1e-8
+                weights["Weight"] > float(result_config["max_weight"]) + 1e-8
             ).any():
                 errors.append(f"{dataset_id}: method weights violate bounds")
         if len(metrics) != len(METHODS) or set(metrics.get("Method", [])) != expected_methods:
