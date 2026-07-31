@@ -116,7 +116,14 @@ def main() -> None:
             periods_path = root / "results" / f"{result_name}_periods.csv"
             summary = json.loads(summary_path.read_text(encoding="utf-8"))
             periods = pd.read_csv(periods_path)
-            if summary["config"]["calibration"] != calibration or len(periods) != len(months):
+            expected_methods = {
+                "BL_No_Views", "Absolute_LLM_BLM", "RelView_BL", "Equal_Weight"
+            }
+            if (
+                summary["config"]["calibration"] != calibration
+                or len(periods) != len(months)
+                or set(summary["summary"]) != expected_methods
+            ):
                 errors.append(f"{result_name} results invalid for {dataset_id}")
 
     report = {

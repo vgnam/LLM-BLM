@@ -109,6 +109,7 @@ def main() -> None:
         raise ValueError(f"market caps missing assets: {missing_caps}")
 
     history: list[dict[str, Any]] = []
+    previous_bl: np.ndarray | None = None
     previous_absolute: np.ndarray | None = None
     previous_relative: np.ndarray | None = None
     daily_frames: list[pd.DataFrame] = []
@@ -143,6 +144,18 @@ def main() -> None:
             covariance, caps / caps.sum(), args.market_risk_aversion
         )
 
+        # Vanilla Black--Litterman with no subjective views: with an empty view
+        # matrix the posterior is exactly the equilibrium prior.  Optimizing it
+        # with the same constraints isolates the incremental effect of LLM views.
+        bl_no_views, _ = optimize_portfolio(
+            prior,
+            covariance,
+            risk_aversion=args.risk_aversion,
+            turnover_penalty=args.turnover_penalty,
+            previous_weights=previous_bl,
+            max_weight=args.max_weight,
+        )
+
         absolute_response = load_json(absolute_path)
         absolute, _ = absolute_weights(
             absolute_response, assets, prior, covariance, args.tau,
@@ -168,9 +181,11 @@ def main() -> None:
         relative = relative_result.weights.to_numpy(dtype=float)
         equal = np.full(len(assets), 1.0 / len(assets))
 
+        bl_turnover = turnover(bl_no_views, previous_bl)
         absolute_turnover = turnover(absolute, previous_absolute)
         relative_turnover = turnover(relative, previous_relative)
         method_data: dict[str, tuple[np.ndarray, float]] = {
+            "BL_No_Views": (bl_no_views, bl_turnover),
             "Absolute_LLM_BLM": (absolute, absolute_turnover),
             "RelView_BL": (relative, relative_turnover),
             "Equal_Weight": (equal, 0.0 if period_rows else 1.0),
@@ -210,6 +225,7 @@ def main() -> None:
 
         # Outcomes enter calibration only after this period's portfolio is fixed.
         history.extend(calibration_observations_from_realized_returns(relative_views, realized))
+        previous_bl = bl_no_views
         previous_absolute = absolute
         previous_relative = relative
         print(
@@ -219,7 +235,7 @@ def main() -> None:
 
     daily_all = pd.concat(daily_frames, ignore_index=True)
     summary: dict[str, dict[str, float | int]] = {}
-    for method in ("Absolute_LLM_BLM", "RelView_BL", "Equal_Weight"):
+    for method in ("BL_No_Views", "Absolute_LLM_BLM", "RelView_BL", "Equal_Weight"):
         column = f"{method}_Return"
         synthetic = pd.DataFrame({method: daily_all[column].to_numpy()}, index=daily_all["Date"])
         _, metrics = evaluate_realized_portfolio(synthetic, {method: 1.0})

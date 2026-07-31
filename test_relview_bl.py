@@ -10,6 +10,7 @@ from relview_bl import (
     PairwiseView,
     ProbabilityCalibrator,
     RelViewConfig,
+    black_litterman_posterior,
     build_relview_matrices,
     calibration_observations_from_realized_returns,
     run_relview_bl,
@@ -18,6 +19,18 @@ from relview_bl import (
 
 
 class RelViewTests(unittest.TestCase):
+    def test_black_litterman_without_views_returns_prior(self):
+        prior = np.array([0.01, 0.02, -0.005])
+        covariance = np.eye(3) * 0.04
+        posterior = black_litterman_posterior(
+            prior,
+            covariance,
+            np.empty((0, 3)),
+            np.empty(0),
+            np.empty((0, 0)),
+        )
+        np.testing.assert_allclose(posterior, prior)
+
     def test_absolute_response_uses_decimal_daily_return(self):
         self.assertAlmostEqual(parse_absolute_response('{"expected_return": 0.0025}'), 0.0025)
         with self.assertRaises(ValueError):

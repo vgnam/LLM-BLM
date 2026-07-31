@@ -14,7 +14,7 @@ from portfolio_backtest import evaluate_realized_portfolio
 from run_multidataset_experiment import DEFAULT_MANIFEST, DEFAULT_ROOT, load_manifest
 
 
-METHODS = ("Absolute_LLM_BLM", "RelView_BL", "Equal_Weight")
+METHODS = ("BL_No_Views", "Absolute_LLM_BLM", "RelView_BL", "Equal_Weight")
 
 
 def parse_args() -> argparse.Namespace:
@@ -75,6 +75,8 @@ def main() -> None:
     wins = {method: int((cumulative.idxmax(axis=1) == method).sum()) for method in METHODS}
     medians = {method: float(cumulative[method].median()) for method in METHODS}
     rel_minus_abs = cumulative["RelView_BL"] - cumulative["Absolute_LLM_BLM"]
+    rel_minus_bl = cumulative["RelView_BL"] - cumulative["BL_No_Views"]
+    absolute_minus_bl = cumulative["Absolute_LLM_BLM"] - cumulative["BL_No_Views"]
     rel_minus_equal = cumulative["RelView_BL"] - cumulative["Equal_Weight"]
     report = {
         "experiment": manifest["experiment"],
@@ -87,6 +89,16 @@ def main() -> None:
             "mean": float(rel_minus_abs.mean()),
             "median": float(rel_minus_abs.median()),
             "positive_datasets": int((rel_minus_abs > 0).sum()),
+        },
+        "relview_minus_bl_no_views": {
+            "mean": float(rel_minus_bl.mean()),
+            "median": float(rel_minus_bl.median()),
+            "positive_datasets": int((rel_minus_bl > 0).sum()),
+        },
+        "absolute_minus_bl_no_views": {
+            "mean": float(absolute_minus_bl.mean()),
+            "median": float(absolute_minus_bl.median()),
+            "positive_datasets": int((absolute_minus_bl > 0).sum()),
         },
         "relview_minus_equal": {
             "mean": float(rel_minus_equal.mean()),

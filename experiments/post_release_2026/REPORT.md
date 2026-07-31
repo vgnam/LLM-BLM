@@ -9,8 +9,10 @@
   dates or data-source label.
 - Formation months: May and June 2026. Each portfolio is evaluated on the first
   10 trading days of the following month (June and July 2026), for 20 test days.
-- Both methods use 30 calls per asset/pair, the same return panels, equal-cap
-  Black--Litterman prior, optimizer, 0.15 maximum weight, and 10 bps trading cost.
+- Both LLM methods use 30 calls per asset/pair. All methods use the same return
+  panels, equal-cap Black--Litterman prior, optimizer, 0.15 maximum weight, and
+  10 bps trading cost. `BL No Views` uses the equilibrium prior without LLM
+  `P`, `Q`, or `Omega`.
 - RelView uses 30 candidate pairs and an abstention threshold of 0.60.
 
 The windows begin after the public DeepSeek V4 release on 24 April 2026. This
@@ -19,19 +21,21 @@ silently update the served model after release.
 
 ## Main results: rolling isotonic calibration
 
-| Dataset | Absolute LLM-BLM | RelView-BL | Equal Weight | Winner |
-|---|---:|---:|---:|---|
-| US technology | -17.55% | -12.17% | -9.46% | Equal Weight |
-| US financials | +5.61% | +11.41% | +11.43% | Equal Weight |
-| US healthcare | +0.51% | +0.03% | +2.11% | Equal Weight |
-| US industrial/energy | -1.12% | -0.70% | +2.29% | Equal Weight |
-| Cross-asset ETFs | -2.85% | -4.45% | -0.80% | Equal Weight |
+| Dataset | BL No Views | Absolute LLM-BLM | RelView-BL | Equal Weight | Winner |
+|---|---:|---:|---:|---:|---|
+| US technology | -12.95% | -17.55% | -12.17% | -9.46% | Equal Weight |
+| US financials | +13.25% | +5.61% | +11.41% | +11.43% | BL No Views |
+| US healthcare | +0.78% | +0.51% | +0.03% | +2.11% | Equal Weight |
+| US industrial/energy | -0.69% | -1.12% | -0.70% | +2.29% | Equal Weight |
+| Cross-asset ETFs | -3.97% | -2.85% | -4.45% | -0.80% | Equal Weight |
 
-Median cumulative return across datasets was -1.12% for Absolute LLM-BLM,
--0.70% for RelView-BL, and +2.11% for Equal Weight. RelView beat Absolute in
-three of five datasets, but did not beat Equal Weight in any dataset. An
-equal-weight combination of all five dataset portfolios returned -3.21%,
--1.18%, and +1.02%, respectively.
+Median cumulative return across datasets was -0.69% for BL No Views, -1.12%
+for Absolute LLM-BLM, -0.70% for RelView-BL, and +2.11% for Equal Weight.
+RelView beat BL No Views in only one of five datasets and trailed it by 0.46
+percentage points per dataset on average. Absolute beat BL No Views in one of
+five and trailed it by 2.36 points on average. An equal-weight combination of
+all five dataset portfolios returned -0.78%, -3.21%, -1.18%, and +1.02%,
+respectively.
 
 The main RelView run accepted 66 of 300 pair-period views. With only 30 prior
 calibration observations available in the second formation month, isotonic
@@ -41,10 +45,12 @@ others accepted none.
 ## No-calibration ablation
 
 Using the same saved LLM calls with raw probabilities and the same 0.60
-threshold, Equal Weight won four datasets and RelView won the financials
-dataset. Median returns were -1.12% for Absolute, -1.26% for RelView, and
-+2.11% for Equal Weight. The equal-weight combination returned -3.21%, -0.67%,
-and +1.02%, respectively.
+threshold, Equal Weight won four datasets and BL No Views won financials.
+Median returns were -0.69% for BL No Views, -1.12% for Absolute, -1.26% for
+RelView, and +2.11% for Equal Weight. The equal-weight combination returned
+-0.78%, -3.21%, -0.67%, and +1.02%, respectively. RelView beat BL No Views in
+two of five datasets; its mean edge was +0.04 points but its median edge was
+-0.57 points, so the result was driven by the technology dataset.
 
 This ablation accepted only 12 of 300 pair-period views. It confirms that the
 failure to consistently beat Equal Weight is not caused solely by the short
@@ -52,13 +58,14 @@ isotonic calibration history.
 
 ## Interpretation
 
-Across these five post-release datasets, RelView was generally better than the
-absolute-view baseline in the primary specification, but neither LLM method
-beat a simple equal-weight portfolio consistently. The observation window is
-only 20 trading days and all datasets share the same calendar dates, so the
-five results are not independent and annualized statistics are not reliable.
-The defensible conclusion is therefore negative but preliminary: the new data
-does not reproduce the strong RelView advantage seen in the contaminated
-2024--2025 historical test.
+Across these five post-release datasets, adding absolute LLM views hurt the
+no-view BL baseline materially. RelView was better than Absolute but did not
+improve on BL No Views reliably, and none of the optimized variants beat a
+simple equal-weight portfolio consistently. The observation window is only 20
+trading days and all datasets share the same calendar dates, so the five
+results are not independent and annualized statistics are not reliable. The
+defensible conclusion is therefore negative but preliminary: the new data does
+not reproduce the strong RelView advantage seen in the contaminated 2024--2025
+historical test.
 
 Machine-readable outputs are in `summary/` and `summary_no_calibration/`.
