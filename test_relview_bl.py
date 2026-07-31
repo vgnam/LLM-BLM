@@ -176,6 +176,11 @@ class RelViewTests(unittest.TestCase):
         )
         self.assertIn("[0.55, 0.95]", system)
         self.assertIn("fixed decision rule", system)
+        with self.assertRaises(ValueError):
+            parse_pairwise_response(
+                '{"preferred_asset":"A","probability":0.96,"evidence":[]}',
+                "A", "B", 0.55, 0.95,
+            )
         self.assertEqual(json.loads(user)["asset_a"]["daily_returns"], [1.0, 2.0])
         with self.assertRaises(ValueError):
             parse_pairwise_response(

@@ -188,6 +188,7 @@ def parse_pairwise_response(
     asset_a: str,
     asset_b: str,
     minimum_probability: float = 0.5,
+    maximum_probability: float = 1.0,
 ) -> dict[str, Any]:
     text = content.strip()
     fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, flags=re.DOTALL | re.IGNORECASE)
@@ -202,8 +203,10 @@ def parse_pairwise_response(
     probability = float(value["probability"])
     if preferred not in (asset_a, asset_b):
         raise ValueError(f"preferred_asset must be {asset_a} or {asset_b}")
-    if not minimum_probability <= probability <= 1.0:
-        raise ValueError(f"probability must be in [{minimum_probability}, 1.0]")
+    if not minimum_probability <= probability <= maximum_probability:
+        raise ValueError(
+            f"probability must be in [{minimum_probability}, {maximum_probability}]"
+        )
     evidence = value.get("evidence", [])
     if isinstance(evidence, str):
         evidence = [evidence]
@@ -371,6 +374,7 @@ def collect_pairwise_views(
                 asset_a,
                 asset_b,
                 0.55 if prompt_mode.startswith("decisive_") else 0.5,
+                0.95 if prompt_mode.startswith("decisive_") else 1.0,
             )
             if prompt_ensemble:
                 parsed["prompt_variant_id"] = call_id

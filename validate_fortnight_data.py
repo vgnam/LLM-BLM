@@ -243,7 +243,10 @@ def main() -> None:
                         or int(item.get("attempted_calls", 0)) < repeats
                         or (
                             str(config["relative_prompt_mode"]).startswith("decisive_")
-                            and any(max(value, 1.0 - value) < 0.55 - 1e-12 for value in reported)
+                            and any(
+                                not 0.55 - 1e-12 <= max(value, 1.0 - value) <= 0.95 + 1e-12
+                                for value in reported
+                            )
                         )
                         or (
                             config["prompt_ensemble"]
