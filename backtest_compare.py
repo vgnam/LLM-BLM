@@ -109,6 +109,7 @@ def main() -> None:
         raise ValueError(f"market caps missing assets: {missing_caps}")
 
     history: list[dict[str, Any]] = []
+    previous_mvo: np.ndarray | None = None
     previous_bl: np.ndarray | None = None
     previous_absolute: np.ndarray | None = None
     previous_relative: np.ndarray | None = None
@@ -142,6 +143,18 @@ def main() -> None:
         caps = np.asarray([float(market_caps[asset]) for asset in assets], dtype=float)
         prior = implied_equilibrium_returns(
             covariance, caps / caps.sum(), args.market_risk_aversion
+        )
+
+        # Classical mean-variance optimization without BL or LLM views.  It
+        # uses only the formation-window sample mean and covariance while
+        # keeping the same constraints and trading-cost treatment.
+        mvo, _ = optimize_portfolio(
+            formation.mean().to_numpy(dtype=float),
+            covariance,
+            risk_aversion=args.risk_aversion,
+            turnover_penalty=args.turnover_penalty,
+            previous_weights=previous_mvo,
+            max_weight=args.max_weight,
         )
 
         # Vanilla Black--Litterman with no subjective views: with an empty view
@@ -181,10 +194,12 @@ def main() -> None:
         relative = relative_result.weights.to_numpy(dtype=float)
         equal = np.full(len(assets), 1.0 / len(assets))
 
+        mvo_turnover = turnover(mvo, previous_mvo)
         bl_turnover = turnover(bl_no_views, previous_bl)
         absolute_turnover = turnover(absolute, previous_absolute)
         relative_turnover = turnover(relative, previous_relative)
         method_data: dict[str, tuple[np.ndarray, float]] = {
+            "MVO": (mvo, mvo_turnover),
             "BL_No_Views": (bl_no_views, bl_turnover),
             "Absolute_LLM_BLM": (absolute, absolute_turnover),
             "RelView_BL": (relative, relative_turnover),
@@ -225,6 +240,7 @@ def main() -> None:
 
         # Outcomes enter calibration only after this period's portfolio is fixed.
         history.extend(calibration_observations_from_realized_returns(relative_views, realized))
+        previous_mvo = mvo
         previous_bl = bl_no_views
         previous_absolute = absolute
         previous_relative = relative
@@ -235,7 +251,7 @@ def main() -> None:
 
     daily_all = pd.concat(daily_frames, ignore_index=True)
     summary: dict[str, dict[str, float | int]] = {}
-    for method in ("BL_No_Views", "Absolute_LLM_BLM", "RelView_BL", "Equal_Weight"):
+    for method in ("MVO", "BL_No_Views", "Absolute_LLM_BLM", "RelView_BL", "Equal_Weight"):
         column = f"{method}_Return"
         synthetic = pd.DataFrame({method: daily_all[column].to_numpy()}, index=daily_all["Date"])
         _, metrics = evaluate_realized_portfolio(synthetic, {method: 1.0})

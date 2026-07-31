@@ -117,7 +117,7 @@ def main() -> None:
             summary = json.loads(summary_path.read_text(encoding="utf-8"))
             periods = pd.read_csv(periods_path)
             expected_methods = {
-                "BL_No_Views", "Absolute_LLM_BLM", "RelView_BL", "Equal_Weight"
+                "MVO", "BL_No_Views", "Absolute_LLM_BLM", "RelView_BL", "Equal_Weight"
             }
             if (
                 summary["config"]["calibration"] != calibration
