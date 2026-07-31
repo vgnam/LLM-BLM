@@ -1,0 +1,23 @@
+{
+  "dataset_manifest": "experiments/post_release_2026/datasets.json",
+  "formation_start": "2025-01-01",
+  "cutoff_date": "2025-12-31",
+  "test_start": "2026-01-01",
+  "test_end": "2026-07-31",
+  "model": "deepseek-v4-flash",
+  "repeats": 30,
+  "minimum_successful_calls": 20,
+  "max_pairs": 30,
+  "probability_estimator": "mean",
+  "thinking": "disabled",
+  "temperature": 0.3,
+  "calibration": "none",
+  "abstention_threshold": 0.6,
+  "tau": 0.025,
+  "risk_aversion": 0.1,
+  "market_risk_aversion": 2.5,
+  "max_weight": 0.15,
+  "transaction_cost_bps": 10.0,
+  "prior": "equal_cap",
+  "portfolio_policy": "form_once_at_cutoff_and_hold"
+}

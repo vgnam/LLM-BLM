@@ -196,3 +196,23 @@ py evaluate_relview.py --returns yfinance/returns_2024-06-01_2024-06-30.csv --un
 Both evaluator JSON files now include cumulative return, annualized return and
 volatility, Sharpe ratio, maximum drawdown, turnover, and transaction cost. The
 daily return paths are saved separately for plotting and multi-period analysis.
+
+### December 2025 static-cutoff study
+
+Run all five 15-asset datasets with formation data ending on 31 December 2025,
+then hold the portfolios through the latest configured 2026 session:
+
+```powershell
+py -3.10 run_cutoff_backtest.py
+```
+
+Recompute every method from saved data and LLM responses without an API key,
+then validate all CSV, Parquet, JSON, date-boundary, and sample-count artifacts:
+
+```powershell
+py -3.10 run_cutoff_backtest.py --skip-collect
+py -3.10 validate_cutoff_backtest.py
+```
+
+See `experiments/cutoff_2025_12/REPORT.md` for the methodology, leakage caveat,
+results, and reusable artifact catalog.
