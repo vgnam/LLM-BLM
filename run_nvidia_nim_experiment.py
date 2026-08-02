@@ -437,9 +437,6 @@ def evaluate_method(
 def plot_nav(daily: pd.DataFrame, title: str, output: Path) -> None:
     if daily.empty:
         return
-    daily = daily[
-        ~daily["Method"].astype(str).str.startswith("BLM_LLM__")
-    ].copy()
     fig, axis = plt.subplots(figsize=(12, 7))
     style_by_method: dict[str, dict[str, Any]] = {
         "BL": {
@@ -466,10 +463,7 @@ def plot_nav(daily: pd.DataFrame, title: str, output: Path) -> None:
             style = {"color": "tab:purple", "linewidth": 2.0, "zorder": 4}
         else:
             style = style_by_method.get(method, {})
-        display_label = (
-            "PairBL (GPT-OSS-20B)"
-            if method.startswith("RelViewBL__") else method
-        )
+        display_label = display_method_name(method)
         axis.plot(
             pd.to_datetime(ordered["Date"]), ordered["NAV"], label=display_label,
             linewidth=style.get("linewidth", 1.8),
@@ -484,7 +478,9 @@ def plot_nav(daily: pd.DataFrame, title: str, output: Path) -> None:
             if len(nav_by_method[left]) == len(nav_by_method[right]) and np.allclose(
                 nav_by_method[left], nav_by_method[right], rtol=1e-10, atol=1e-12
             ):
-                overlaps.append(f"{left} = {right}")
+                overlaps.append(
+                    f"{display_method_name(left)} = {display_method_name(right)}"
+                )
     axis.axhline(1.0, color="black", linewidth=0.8, alpha=0.5)
     axis.set_title(title)
     axis.set_xlabel("Date")
@@ -501,6 +497,14 @@ def plot_nav(daily: pd.DataFrame, title: str, output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=180)
     plt.close(fig)
+
+
+def display_method_name(method: str) -> str:
+    if method.startswith("RelViewBL__"):
+        return "PairBL (GPT-OSS-20B)"
+    if method.startswith("BLM_LLM__"):
+        return "LLM-BLM (GPT-OSS-20B)"
+    return method
 
 
 def save_method_artifacts(

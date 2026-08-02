@@ -11,12 +11,13 @@ from 2025 and holds the fixed weights over 144 trading sessions from 2 January
 to 30 July 2026. All methods use the same long-only optimizer, 15% per-asset
 cap, and 10 bps entry cost. PairBL uses GPT-OSS-20B through NVIDIA NIM, three
 repeated calls per comparison, a 15-pair sparse comparison graph, and a 0.55
-abstention threshold. The comparison methods are no-view Black--Litterman
-(BL), mean--variance optimization (MVO), and equal weighting (EW).
+abstention threshold. The comparison methods are absolute-view LLM-BLM using
+the same GPT-OSS-20B model, no-view Black--Litterman (BL), mean--variance
+optimization (MVO), and equal weighting (EW).
 
 The three 15-asset universes are US technology equities (including NVDA), US
 financial equities, and cross-asset ETFs. The tables below contain every saved
-evaluation metric for the four reported methods.
+evaluation metric for the five reported methods.
 
 ### US Technology Equities
 
@@ -25,6 +26,7 @@ evaluation metric for the four reported methods.
 | BL | 144 | 49.55% | 102.25% | 47.39% | 1.724 | -25.75% | 2.559 | 3.970 | 1.496 |
 | MVO | 144 | 49.66% | 102.52% | 43.50% | 1.841 | -23.18% | 2.776 | 4.422 | 1.497 |
 | EW | 144 | 18.98% | 35.55% | 26.65% | 1.274 | -15.77% | 1.879 | 2.254 | 1.190 |
+| LLM-BLM (GPT-OSS-20B) | 144 | 49.55% | 102.25% | 47.39% | 1.724 | -25.75% | 2.559 | 3.970 | 1.496 |
 | **PairBL (GPT-OSS-20B)** | **144** | **58.48%** | **123.85%** | **46.62%** | **1.963** | **-25.68%** | **2.934** | **4.824** | **1.585** |
 
 | Method | Mean daily return | Best day | Worst day | Positive days | Annualized downside deviation | Daily VaR 95% | Daily CVaR 95% | Turnover | Cost (bps) |
@@ -32,6 +34,7 @@ evaluation metric for the four reported methods.
 | BL | 0.32% | 9.04% | -9.73% | 61.11% | 31.93% | -4.30% | -5.94% | 1.00 | 10 |
 | MVO | 0.32% | 8.58% | -8.99% | 60.42% | 28.84% | -3.58% | -5.27% | 1.00 | 10 |
 | EW | 0.13% | 4.01% | -6.48% | 54.17% | 18.07% | -2.38% | -3.32% | 1.00 | 10 |
+| LLM-BLM (GPT-OSS-20B) | 0.32% | 9.04% | -9.73% | 61.11% | 31.93% | -4.30% | -5.94% | 1.00 | 10 |
 | **PairBL (GPT-OSS-20B)** | **0.36%** | **8.75%** | **-9.54%** | **60.42%** | **31.19%** | **-4.35%** | **-5.92%** | **1.00** | **10** |
 
 ![US technology NAV](experiments/nvidia_nim_2025_2026/us_technology/plots/nav_2026.png)
@@ -43,6 +46,7 @@ evaluation metric for the four reported methods.
 | BL | 144 | 4.99% | 8.90% | 26.03% | 0.458 | -20.10% | 0.626 | 0.443 | 1.050 |
 | MVO | 144 | 7.55% | 13.58% | 25.03% | 0.634 | -18.26% | 0.889 | 0.744 | 1.075 |
 | EW | 144 | 8.08% | 14.57% | 18.77% | 0.818 | -13.16% | 1.165 | 1.107 | 1.081 |
+| LLM-BLM (GPT-OSS-20B) | 144 | 6.65% | 11.92% | 23.89% | 0.591 | -18.80% | 0.813 | 0.634 | 1.066 |
 | **PairBL (GPT-OSS-20B)** | **144** | **9.11%** | **16.48%** | **25.70%** | **0.722** | **-18.13%** | **0.998** | **0.909** | **1.091** |
 
 | Method | Mean daily return | Best day | Worst day | Positive days | Annualized downside deviation | Daily VaR 95% | Daily CVaR 95% | Turnover | Cost (bps) |
@@ -50,6 +54,7 @@ evaluation metric for the four reported methods.
 | BL | 0.05% | 4.46% | -6.24% | 53.47% | 19.03% | -2.86% | -3.81% | 1.00 | 10 |
 | MVO | 0.06% | 4.58% | -5.03% | 55.56% | 17.84% | -2.78% | -3.56% | 1.00 | 10 |
 | EW | 0.06% | 3.25% | -3.77% | 53.47% | 13.18% | -1.96% | -2.59% | 1.00 | 10 |
+| LLM-BLM (GPT-OSS-20B) | 0.06% | 4.16% | -5.41% | 54.17% | 17.36% | -2.64% | -3.42% | 1.00 | 10 |
 | **PairBL (GPT-OSS-20B)** | **0.07%** | **4.39%** | **-6.08%** | **57.64%** | **18.59%** | **-2.85%** | **-3.72%** | **1.00** | **10** |
 
 ![US financial NAV](experiments/nvidia_nim_2025_2026/us_financials/plots/nav_2026.png)
@@ -61,6 +66,7 @@ evaluation metric for the four reported methods.
 | BL | 144 | 20.91% | 39.41% | 19.72% | 1.785 | -9.00% | 2.405 | 4.378 | 1.209 |
 | MVO | 144 | 6.61% | 11.86% | 24.62% | 0.578 | -14.49% | 0.774 | 0.819 | 1.066 |
 | EW | 144 | 12.67% | 23.22% | 12.53% | 1.730 | -5.45% | 2.352 | 4.263 | 1.127 |
+| LLM-BLM (GPT-OSS-20B) | 144 | 17.20% | 32.02% | 22.48% | 1.349 | -12.03% | 1.785 | 2.660 | 1.172 |
 | **PairBL (GPT-OSS-20B)** | **144** | **11.19%** | **20.40%** | **20.62%** | **1.003** | **-11.84%** | **1.432** | **1.722** | **1.112** |
 
 | Method | Mean daily return | Best day | Worst day | Positive days | Annualized downside deviation | Daily VaR 95% | Daily CVaR 95% | Turnover | Cost (bps) |
@@ -68,6 +74,7 @@ evaluation metric for the four reported methods.
 | BL | 0.14% | 3.11% | -5.04% | 59.03% | 14.63% | -2.05% | -3.19% | 1.00 | 10 |
 | MVO | 0.06% | 3.90% | -6.54% | 54.86% | 18.40% | -2.95% | -3.78% | 1.00 | 10 |
 | EW | 0.09% | 2.03% | -3.24% | 61.11% | 9.22% | -1.45% | -1.97% | 1.00 | 10 |
+| LLM-BLM (GPT-OSS-20B) | 0.12% | 3.21% | -6.43% | 60.42% | 16.98% | -2.28% | -3.59% | 1.00 | 10 |
 | **PairBL (GPT-OSS-20B)** | **0.08%** | **3.61%** | **-4.01%** | **54.86%** | **14.45%** | **-2.53%** | **-2.93%** | **1.00** | **10** |
 
 ![Cross-asset ETF NAV](experiments/nvidia_nim_2025_2026/cross_asset_etfs/plots/nav_2026.png)
@@ -79,6 +86,7 @@ evaluation metric for the four reported methods.
 | BL | +25.46% | **1.688** | -11.06% |
 | MVO | +21.08% | 1.439 | -13.84% |
 | EW | +13.74% | 1.572 | **-8.85%** |
+| LLM-BLM (GPT-OSS-20B) | +24.93% | **1.693** | -11.20% |
 | **PairBL (GPT-OSS-20B)** | **+25.77%** | 1.657 | -13.17% |
 
 ![PairBL equal-dataset aggregate NAV](experiments/nvidia_nim_2025_2026/plots/aggregate_nav_2026.png)
