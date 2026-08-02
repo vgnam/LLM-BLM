@@ -1,0 +1,23 @@
+{
+  "Dataset": "us_financials",
+  "Method": "BL",
+  "Status": "success",
+  "trading_days": 144,
+  "cumulative_return": 0.04993909394458762,
+  "annualized_return": 0.0890233378567098,
+  "annualized_volatility": 0.26026654775537267,
+  "sharpe": 0.4576853801097588,
+  "max_drawdown": -0.20101678941330614,
+  "turnover": 1.0,
+  "transaction_cost_bps": 10.0,
+  "final_nav": 1.0499390939445876,
+  "mean_daily_return": 0.0004726991819018747,
+  "best_day": 0.04456048310866917,
+  "worst_day": -0.06243855125266495,
+  "positive_day_ratio": 0.5347222222222222,
+  "annualized_downside_deviation": 0.1902646371981019,
+  "sortino": 0.6260763723279039,
+  "calmar": 0.4428651861197071,
+  "daily_var_95": -0.02856008734085652,
+  "daily_cvar_95": -0.03814907194047541
+}

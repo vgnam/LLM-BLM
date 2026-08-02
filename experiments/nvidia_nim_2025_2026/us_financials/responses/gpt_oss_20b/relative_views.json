@@ -1,0 +1,765 @@
+{
+  "requested_model": "openai/gpt-oss-20b",
+  "model": "openai/gpt-oss-20b",
+  "base_url": "https://integrate.api.nvidia.com/v1",
+  "cutoff_date": "2025-12-31",
+  "horizon_days": 144,
+  "repeats": 3,
+  "probability_estimator": "mean",
+  "temperature": 0.3,
+  "pairs_requested": 15,
+  "views": [
+    {
+      "asset_a": "GS",
+      "asset_b": "MS",
+      "preferred_asset": "GS",
+      "probability": 0.5066666666666667,
+      "probability_a": 0.5066666666666667,
+      "probability_samples_a": [
+        0.52,
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.52,
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.6666666666666666,
+      "mean_reported_probability_a": 0.5066666666666667,
+      "votes": {
+        "GS": 2,
+        "MS": 1
+      },
+      "reported_probability_samples_a": [
+        0.52,
+        0.55,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "Average daily returns of GS and MS are very close",
+        "Both assets exhibit similar volatility and large swings in the same direction",
+        "Both assets show mixed daily returns over the 144‑day window; no clear dominance is evident from the raw data.",
+        "MS average daily return higher",
+        "MS had a large positive spike"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 5,
+      "errors": [
+        "prompt_call_id=0: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=1: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "PNC",
+      "asset_b": "USB",
+      "preferred_asset": "USB",
+      "probability": 0.52,
+      "probability_a": 0.48,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.42000000000000004,
+        0.57
+      ],
+      "probability_samples": [
+        0.55,
+        0.58,
+        0.43000000000000005
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.3333333333333333,
+      "mean_reported_probability_a": 0.48,
+      "votes": {
+        "PNC": 1,
+        "USB": 2
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.42000000000000004,
+        0.57
+      ],
+      "evidence": [
+        "USB recent daily returns show slightly higher average positive values",
+        "USB has occasional large gains that may outweigh PNC's more modest returns",
+        "USB has a higher average daily return over the 144‑day period",
+        "USB exhibits greater volatility, indicating higher risk but also higher upside potential",
+        "PNC had slightly higher average positive returns",
+        "USB had a larger negative spike of -0.0981"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 5,
+      "errors": [
+        "prompt_call_id=0: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=2: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MS",
+      "asset_b": "C",
+      "preferred_asset": "C",
+      "probability": 0.56,
+      "probability_a": 0.43999999999999995,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.44999999999999996,
+        0.42000000000000004
+      ],
+      "probability_samples": [
+        0.55,
+        0.55,
+        0.58
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.43999999999999995,
+      "votes": {
+        "MS": 0,
+        "C": 3
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.44999999999999996,
+        0.42000000000000004
+      ],
+      "evidence": [
+        "B had a 9.15% return day, A had 11.35%",
+        "B also experienced a -12.14% day, A had -6.37%",
+        "C has a large positive return of 0.0915",
+        "MS has several large negative returns, including -0.0637",
+        "C has higher average daily return",
+        "C has more positive outliers"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 8,
+      "errors": [
+        "prompt_call_id=2: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=1: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=4: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=5: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=6: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AXP",
+      "asset_b": "COF",
+      "preferred_asset": "COF",
+      "probability": 0.5533333333333335,
+      "probability_a": 0.4466666666666666,
+      "probability_samples_a": [
+        0.43999999999999995,
+        0.44999999999999996,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.56,
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.4466666666666666,
+      "votes": {
+        "AXP": 0,
+        "COF": 3
+      },
+      "reported_probability_samples_a": [
+        0.43999999999999995,
+        0.44999999999999996,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "COF shows higher average daily return than AXP",
+        "COF has larger positive return spikes",
+        "Comparable mean daily returns",
+        "Similar volatility",
+        "COF had a 14.8% return on day 71, slightly higher than AXP's 13.4% on the same day.",
+        "Both stocks experienced large swings, but COF’s higher volatility suggests a higher chance of outperforming over 144 days."
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 6,
+      "errors": [
+        "prompt_call_id=2: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=1: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=3: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "WFC",
+      "preferred_asset": "BAC",
+      "probability": 0.56,
+      "probability_a": 0.56,
+      "probability_samples_a": [
+        0.55,
+        0.55,
+        0.58
+      ],
+      "probability_samples": [
+        0.55,
+        0.55,
+        0.58
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.56,
+      "votes": {
+        "BAC": 3,
+        "WFC": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55,
+        0.58
+      ],
+      "evidence": [
+        "BAC has a slightly higher average daily return than WFC",
+        "Both stocks exhibit similar volatility over the 144‑day period",
+        "BAC has lower volatility than WFC",
+        "WFC shows higher average daily return but more volatility",
+        "BAC shows a slightly higher average daily return than WFC",
+        "WFC exhibits more extreme negative daily returns"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 3,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "C",
+      "preferred_asset": "C",
+      "probability": 0.5833333333333333,
+      "probability_a": 0.4166666666666667,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.35,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.55,
+        0.65,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.4166666666666667,
+      "votes": {
+        "BAC": 0,
+        "C": 3
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.35,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "Citigroup shows higher early average returns and a strong positive 0.0915 spike.",
+        "BAC has a significant negative -0.1106 but overall similar volatility.",
+        "Higher average daily return in early period",
+        "C had stronger positive swings",
+        "C has a slightly higher early average daily return than BAC",
+        "Both assets exhibit similar volatility over the period"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 5,
+      "errors": [
+        "prompt_call_id=2: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=1: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "JPM",
+      "asset_b": "GS",
+      "preferred_asset": "GS",
+      "probability": 0.5700000000000001,
+      "probability_a": 0.43,
+      "probability_samples_a": [
+        0.42000000000000004,
+        0.44999999999999996,
+        0.42000000000000004
+      ],
+      "probability_samples": [
+        0.58,
+        0.55,
+        0.58
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.43,
+      "votes": {
+        "JPM": 0,
+        "GS": 3
+      },
+      "reported_probability_samples_a": [
+        0.42000000000000004,
+        0.44999999999999996,
+        0.42000000000000004
+      ],
+      "evidence": [
+        "GS had a 0.118 return spike, JPM had a -0.0748 spike",
+        "GS had several positive 0.04+ returns, JPM had more negative large swings",
+        "Both assets have comparable average daily returns",
+        "GS shows slightly higher volatility due to larger extreme moves",
+        "JPM had a large negative return of -0.075",
+        "GS had a large positive return of 0.118"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 4,
+      "errors": [
+        "prompt_call_id=1: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AXP",
+      "asset_b": "PNC",
+      "preferred_asset": "AXP",
+      "probability": 0.5166666666666667,
+      "probability_a": 0.5166666666666667,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.55,
+        0.55
+      ],
+      "probability_samples": [
+        0.44999999999999996,
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.6666666666666666,
+      "mean_reported_probability_a": 0.5166666666666667,
+      "votes": {
+        "AXP": 2,
+        "PNC": 1
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.55,
+        0.55
+      ],
+      "evidence": [
+        "Mean return slightly higher for PNC",
+        "Both assets have comparable volatility",
+        "AXP recorded a large positive return of 13.38% on one day, while PNC recorded a large negative return of -8.88% on a different day.",
+        "AXP had a larger positive spike (0.1338) than PNC (0.0699).",
+        "AXP also experienced a larger negative dip (-0.099) compared to PNC (-0.0888)."
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 5,
+      "errors": [
+        "prompt_call_id=1: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=2: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "AXP",
+      "preferred_asset": "AXP",
+      "probability": 0.56,
+      "probability_a": 0.43999999999999995,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.35,
+        0.52
+      ],
+      "probability_samples": [
+        0.55,
+        0.65,
+        0.48
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.3333333333333333,
+      "mean_reported_probability_a": 0.43999999999999995,
+      "votes": {
+        "GS": 1,
+        "AXP": 2
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.35,
+        0.52
+      ],
+      "evidence": [
+        "Average daily return slightly higher for AXP",
+        "Volatility of both assets is comparable",
+        "Higher average daily return",
+        "Greater cumulative return over 144 days",
+        "GS has a marginally higher average daily return over the 144‑day period",
+        "GS exhibits slightly lower volatility compared to AXP"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 4,
+      "errors": [
+        "prompt_call_id=0: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "BLK",
+      "preferred_asset": "GS",
+      "probability": 0.58,
+      "probability_a": 0.58,
+      "probability_samples_a": [
+        0.55,
+        0.62,
+        0.57
+      ],
+      "probability_samples": [
+        0.55,
+        0.62,
+        0.57
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.58,
+      "votes": {
+        "GS": 3,
+        "BLK": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.62,
+        0.57
+      ],
+      "evidence": [
+        "GS shows a higher average daily return over the 144‑day window",
+        "GS has fewer extreme negative returns compared to BLK",
+        "GS has a higher average daily return over the 144‑day horizon",
+        "BLK shows larger negative spikes that reduce its cumulative return",
+        "GS shows a marginally higher average daily return over the 144‑day horizon",
+        "BLK exhibits higher volatility and more frequent large negative swings"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 3,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "JPM",
+      "asset_b": "SCHW",
+      "preferred_asset": "JPM",
+      "probability": 0.5166666666666667,
+      "probability_a": 0.5166666666666667,
+      "probability_samples_a": [
+        0.55,
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.55,
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.6666666666666666,
+      "mean_reported_probability_a": 0.5166666666666667,
+      "votes": {
+        "JPM": 2,
+        "SCHW": 1
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "Average daily returns of JPM and SCHW are comparable",
+        "Both stocks exhibit similar volatility over the observed period",
+        "Average daily returns over the most recent 144 days are very close, but JPM shows a few larger positive moves that offset its larger negative swings.",
+        "Cumulative return from the first 144 daily returns suggests JPM slightly outperforms SCHW, though the margin is small.",
+        "JPM shows several large negative daily returns (e.g., -0.07, -0.07)",
+        "SCHW has occasional large positive returns (e.g., +0.076, +0.048)"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 8,
+      "errors": [
+        "prompt_call_id=0: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=3: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=4: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=5: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=6: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "SCHW",
+      "asset_b": "ICE",
+      "preferred_asset": "SCHW",
+      "probability": 0.5233333333333333,
+      "probability_a": 0.5233333333333333,
+      "probability_samples_a": [
+        0.55,
+        0.44999999999999996,
+        0.57
+      ],
+      "probability_samples": [
+        0.55,
+        0.44999999999999996,
+        0.57
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.6666666666666666,
+      "mean_reported_probability_a": 0.5233333333333333,
+      "votes": {
+        "SCHW": 2,
+        "ICE": 1
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.44999999999999996,
+        0.57
+      ],
+      "evidence": [
+        "Both assets have comparable volatility and similar recent performance",
+        "No clear advantage in cumulative return over the 144‑day horizon",
+        "ICE had higher recent positive spikes",
+        "SCHW had a large negative drop",
+        "SCHW had a 7.6% daily return, higher than ICE's largest daily return",
+        "ICE experienced a -6.46% swing, while SCHW's largest negative was -7.76%"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 7,
+      "errors": [
+        "prompt_call_id=1: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=0: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=3: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=5: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "ICE",
+      "asset_b": "CB",
+      "preferred_asset": "ICE",
+      "probability": 0.5566666666666666,
+      "probability_a": 0.5566666666666666,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.57,
+        0.65
+      ],
+      "probability_samples": [
+        0.44999999999999996,
+        0.57,
+        0.65
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.6666666666666666,
+      "mean_reported_probability_a": 0.5566666666666666,
+      "votes": {
+        "ICE": 2,
+        "CB": 1
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.57,
+        0.65
+      ],
+      "evidence": [
+        "CB has several large positive daily returns (e.g., 0.0367, 0.0380, 0.0318) that boost its average,",
+        "ICE includes a large negative return of -0.0646 but fewer comparable positive spikes, reducing its mean relative to CB.",
+        "ICE has a slightly higher average daily return over the 144‑day horizon",
+        "CB exhibits higher volatility than ICE",
+        "ICE has a higher average daily return over the 144‑day horizon",
+        "ICE’s cumulative return over 144 days exceeds CB’s"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 4,
+      "errors": [
+        "prompt_call_id=0: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "CME",
+      "asset_b": "ICE",
+      "preferred_asset": "ICE",
+      "probability": 0.51,
+      "probability_a": 0.49,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.55,
+        0.47
+      ],
+      "probability_samples": [
+        0.55,
+        0.44999999999999996,
+        0.53
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.3333333333333333,
+      "mean_reported_probability_a": 0.49,
+      "votes": {
+        "CME": 1,
+        "ICE": 2
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.55,
+        0.47
+      ],
+      "evidence": [
+        "ICE shows a slightly higher average return over the recent 144 days",
+        "ICE’s volatility is comparable to CME’s",
+        "Cumulative returns over 144 days are very close between CME and ICE",
+        "Both assets exhibit similar volatility and a few large negative days",
+        "Average daily returns of CME and ICE are very close",
+        "Volatility of both equities is comparable over the 144‑day window"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 6,
+      "errors": [
+        "prompt_call_id=1: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=0: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=4: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "C",
+      "preferred_asset": "C",
+      "probability": 0.5166666666666666,
+      "probability_a": 0.4833333333333334,
+      "probability_samples_a": [
+        0.55,
+        0.55,
+        0.35
+      ],
+      "probability_samples": [
+        0.44999999999999996,
+        0.44999999999999996,
+        0.65
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.6666666666666666,
+      "mean_reported_probability_a": 0.4833333333333334,
+      "votes": {
+        "GS": 2,
+        "C": 1
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55,
+        0.35
+      ],
+      "evidence": [
+        "GS had a larger positive spike (0.118) than C (0.0915)",
+        "C had a larger negative spike (-0.121) than GS (-0.092)",
+        "GS had a higher peak return of 11.8% versus C's 9.1%",
+        "Both assets show similar volatility, but GS had a slightly higher average return over the 144‑day period",
+        "C shows a higher cumulative return than GS in the first 10 days",
+        "C’s average daily return appears slightly higher than GS’s over the sample period"
+      ],
+      "successful_repeats": 3,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 144,
+      "attempted_calls": 8,
+      "errors": [
+        "prompt_call_id=0: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=1: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=2: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=3: 'NoneType' object has no attribute 'strip'",
+        "prompt_call_id=6: 'NoneType' object has no attribute 'strip'"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    }
+  ]
+}

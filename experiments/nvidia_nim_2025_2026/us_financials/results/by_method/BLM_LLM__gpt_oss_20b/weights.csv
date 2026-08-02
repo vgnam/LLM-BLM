@@ -1,0 +1,16 @@
+Dataset,Method,Asset,Weight
+us_financials,BLM_LLM__gpt_oss_20b,JPM,0.09999999999999969
+us_financials,BLM_LLM__gpt_oss_20b,BAC,0.1499999999999999
+us_financials,BLM_LLM__gpt_oss_20b,GS,0.14999999999999988
+us_financials,BLM_LLM__gpt_oss_20b,MS,0.14999999999999997
+us_financials,BLM_LLM__gpt_oss_20b,WFC,8.760353553682876e-17
+us_financials,BLM_LLM__gpt_oss_20b,C,7.24247051220317e-17
+us_financials,BLM_LLM__gpt_oss_20b,AXP,0.15
+us_financials,BLM_LLM__gpt_oss_20b,BLK,1.249000902703301e-16
+us_financials,BLM_LLM__gpt_oss_20b,SCHW,0.15
+us_financials,BLM_LLM__gpt_oss_20b,PNC,7.068998164605489e-17
+us_financials,BLM_LLM__gpt_oss_20b,USB,1.8561541192951836e-16
+us_financials,BLM_LLM__gpt_oss_20b,COF,0.15
+us_financials,BLM_LLM__gpt_oss_20b,CME,0.0
+us_financials,BLM_LLM__gpt_oss_20b,ICE,0.0
+us_financials,BLM_LLM__gpt_oss_20b,CB,1.8431436932253575e-16

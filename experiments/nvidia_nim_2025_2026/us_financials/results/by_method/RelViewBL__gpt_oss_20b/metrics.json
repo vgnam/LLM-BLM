@@ -1,0 +1,23 @@
+{
+  "Dataset": "us_financials",
+  "Method": "RelViewBL__gpt_oss_20b",
+  "Status": "success",
+  "trading_days": 144,
+  "cumulative_return": 0.0911018380082107,
+  "annualized_return": 0.16483457460869477,
+  "annualized_volatility": 0.2569624928551059,
+  "sharpe": 0.72223959281264,
+  "max_drawdown": -0.18128788785098182,
+  "turnover": 1.0,
+  "transaction_cost_bps": 10.0,
+  "final_nav": 1.0911018380082107,
+  "mean_daily_return": 0.0007364622468563198,
+  "best_day": 0.043857889964172156,
+  "worst_day": -0.06081967135224,
+  "positive_day_ratio": 0.5763888888888888,
+  "annualized_downside_deviation": 0.18594945278169242,
+  "sortino": 0.9980587919539423,
+  "calmar": 0.9092420710653785,
+  "daily_var_95": -0.028455307009985872,
+  "daily_cvar_95": -0.037206431174124144
+}

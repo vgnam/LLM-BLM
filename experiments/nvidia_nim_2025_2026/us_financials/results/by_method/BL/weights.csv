@@ -1,0 +1,16 @@
+Dataset,Method,Asset,Weight
+us_financials,BL,JPM,0.0
+us_financials,BL,BAC,0.10000000000000059
+us_financials,BL,GS,0.14999999999999994
+us_financials,BL,MS,0.15
+us_financials,BL,WFC,0.15
+us_financials,BL,C,0.14999999999999994
+us_financials,BL,AXP,0.14999999999999983
+us_financials,BL,BLK,0.0
+us_financials,BL,SCHW,6.192425882273219e-17
+us_financials,BL,PNC,0.0
+us_financials,BL,USB,2.359415681718372e-16
+us_financials,BL,COF,0.14999999999999988
+us_financials,BL,CME,3.096384393610932e-17
+us_financials,BL,ICE,0.0
+us_financials,BL,CB,6.624365413176676e-17

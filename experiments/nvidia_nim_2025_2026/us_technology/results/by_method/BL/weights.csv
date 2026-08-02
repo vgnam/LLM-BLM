@@ -1,0 +1,16 @@
+Dataset,Method,Asset,Weight
+us_technology,BL,AAPL,0.0
+us_technology,BL,MSFT,2.7312796462551433e-17
+us_technology,BL,NVDA,0.15
+us_technology,BL,AMD,0.15
+us_technology,BL,AVGO,0.15
+us_technology,BL,ORCL,0.15
+us_technology,BL,CRM,0.0
+us_technology,BL,ADBE,2.5082876399040007e-17
+us_technology,BL,QCOM,0.10000000000000007
+us_technology,BL,TXN,0.0
+us_technology,BL,AMAT,0.14999999999999997
+us_technology,BL,MU,0.15
+us_technology,BL,IBM,0.0
+us_technology,BL,CSCO,0.0
+us_technology,BL,INTU,1.5860538147587644e-17

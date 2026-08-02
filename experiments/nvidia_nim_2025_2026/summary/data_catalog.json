@@ -1,0 +1,81 @@
+{
+  "experiment_id": "nvidia_nim_2025_views_2026_backtest",
+  "config": {
+    "experiment_id": "nvidia_nim_2025_views_2026_backtest",
+    "source_experiment_root": "experiments/cutoff_2025_12",
+    "dataset_manifest": "experiments/post_release_2026/datasets.json",
+    "datasets": [
+      "us_technology",
+      "us_financials",
+      "cross_asset_etfs"
+    ],
+    "formation_start": "2025-01-01",
+    "cutoff_date": "2025-12-31",
+    "test_start": "2026-01-01",
+    "test_end": "2026-07-31",
+    "base_url": "https://integrate.api.nvidia.com/v1",
+    "api_key_env": "NVIDIA_API_KEY",
+    "models": [
+      {
+        "requested_model": "qwen3-next-80b-a3b-instruct:latest",
+        "api_model": "qwen/qwen3-next-80b-a3b-instruct",
+        "slug": "qwen3_next_80b_a3b_instruct"
+      },
+      {
+        "requested_model": "mistralai/mixtral-8x7b-instruct-v0-1",
+        "api_model": "mistralai/mixtral-8x7b-instruct-v0.1",
+        "slug": "mixtral_8x7b_instruct_v0_1"
+      },
+      {
+        "requested_model": "openai/gpt-oss-20b",
+        "api_model": "openai/gpt-oss-20b",
+        "slug": "gpt_oss_20b"
+      }
+    ],
+    "repeats": 3,
+    "minimum_successful_calls": 3,
+    "max_pairs": 15,
+    "probability_estimator": "mean",
+    "temperature": 0.3,
+    "calibration": "none",
+    "abstention_threshold": 0.55,
+    "tau": 0.025,
+    "risk_aversion": 0.1,
+    "market_risk_aversion": 2.5,
+    "max_weight": 0.15,
+    "transaction_cost_bps": 10.0,
+    "annual_risk_free_rate": 0.0,
+    "portfolio_policy": "form_once_at_2025_cutoff_and_hold_through_2026"
+  },
+  "security": "The NVIDIA API key is read from the environment and is not persisted.",
+  "dataset_count": 3,
+  "datasets": [
+    "us_technology",
+    "us_financials",
+    "cross_asset_etfs"
+  ],
+  "method_count_requested": 9,
+  "successful_method_dataset_rows": 15,
+  "model_status_file": "model_status.json",
+  "tables": {
+    "method_inventory": "summary/method_inventory.{csv,parquet}",
+    "daily_returns_and_nav": "summary/daily_returns_nav_long.{csv,parquet}",
+    "weights": "summary/weights_long.{csv,parquet}",
+    "metrics": "summary/method_metrics.{csv,parquet}",
+    "aggregate_daily": "summary/equal_dataset_daily_nav.{csv,parquet}",
+    "aggregate_metrics": "summary/equal_dataset_metrics.{csv,parquet}"
+  },
+  "metric_definitions": {
+    "cumulative_return": "Final compounded return after the one-time entry cost",
+    "annualized_return": "Geometrically annualized return using 252 trading days",
+    "annualized_volatility": "Sample daily volatility times sqrt(252)",
+    "sharpe": "Annualized mean excess return divided by daily volatility",
+    "max_drawdown": "Minimum peak-to-trough NAV decline",
+    "sortino": "Annualized mean excess return divided by annualized downside deviation",
+    "calmar": "Annualized return divided by absolute maximum drawdown",
+    "daily_var_95": "Fifth percentile of daily net returns",
+    "daily_cvar_95": "Mean daily net return at or below daily_var_95",
+    "positive_day_ratio": "Fraction of test sessions with a positive net return",
+    "turnover": "One-way absolute entry turnover; fixed at 1 for a fully invested new portfolio"
+  }
+}

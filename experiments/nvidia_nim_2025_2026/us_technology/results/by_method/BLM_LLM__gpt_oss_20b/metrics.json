@@ -1,0 +1,23 @@
+{
+  "Dataset": "us_technology",
+  "Method": "BLM_LLM__gpt_oss_20b",
+  "Status": "success",
+  "trading_days": 144,
+  "cumulative_return": 0.4955138405709738,
+  "annualized_return": 1.022475475918161,
+  "annualized_volatility": 0.47393765659649095,
+  "sharpe": 1.7241123252788286,
+  "max_drawdown": -0.2575459820839098,
+  "turnover": 1.0,
+  "transaction_cost_bps": 10.0,
+  "final_nav": 1.4955138405709738,
+  "mean_daily_return": 0.003242546647427678,
+  "best_day": 0.09043795626772935,
+  "worst_day": -0.09726870794040966,
+  "positive_day_ratio": 0.6111111111111112,
+  "annualized_downside_deviation": 0.31929229742468523,
+  "sortino": 2.559165259364009,
+  "calmar": 3.9700696071625505,
+  "daily_var_95": -0.04304109670260701,
+  "daily_cvar_95": -0.059380397222265596
+}

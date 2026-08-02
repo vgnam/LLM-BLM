@@ -1,0 +1,13 @@
+{
+  "dataset": "us_financials",
+  "formation_source": "experiments\\cutoff_2025_12\\us_financials\\data\\formation_returns.csv",
+  "formation_sha256": "251bd9f12180c4c637e4d4c4c91160041997a6c4e71e87b4890bc8db335b6a85",
+  "realized_source": "experiments\\cutoff_2025_12\\us_financials\\data\\realized_returns.csv",
+  "realized_sha256": "309d5817bc019da29195d04dc4b8d19d1d50fb31fa34fb0f751e59d5f940d3d7",
+  "formation_rows": 250,
+  "actual_formation_start": "2025-01-02",
+  "actual_formation_end": "2025-12-31",
+  "realized_rows": 144,
+  "actual_test_start": "2026-01-02",
+  "actual_test_end": "2026-07-30"
+}

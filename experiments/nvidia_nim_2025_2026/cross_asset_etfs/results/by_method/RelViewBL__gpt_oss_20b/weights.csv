@@ -1,0 +1,16 @@
+Dataset,Method,Asset,Weight
+cross_asset_etfs,RelViewBL__gpt_oss_20b,SPY,0.15
+cross_asset_etfs,RelViewBL__gpt_oss_20b,QQQ,0.15
+cross_asset_etfs,RelViewBL__gpt_oss_20b,IWM,0.15
+cross_asset_etfs,RelViewBL__gpt_oss_20b,DIA,0.14999999999999997
+cross_asset_etfs,RelViewBL__gpt_oss_20b,EFA,0.1499999999999999
+cross_asset_etfs,RelViewBL__gpt_oss_20b,EEM,0.15
+cross_asset_etfs,RelViewBL__gpt_oss_20b,VNQ,2.463307335887066e-16
+cross_asset_etfs,RelViewBL__gpt_oss_20b,TLT,0.0
+cross_asset_etfs,RelViewBL__gpt_oss_20b,IEF,0.0
+cross_asset_etfs,RelViewBL__gpt_oss_20b,HYG,3.4834349508901167e-17
+cross_asset_etfs,RelViewBL__gpt_oss_20b,LQD,0.0
+cross_asset_etfs,RelViewBL__gpt_oss_20b,GLD,0.0
+cross_asset_etfs,RelViewBL__gpt_oss_20b,SLV,0.1
+cross_asset_etfs,RelViewBL__gpt_oss_20b,USO,0.0
+cross_asset_etfs,RelViewBL__gpt_oss_20b,DBC,0.0

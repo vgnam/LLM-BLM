@@ -1,0 +1,16 @@
+Dataset,Method,Asset,Weight
+us_technology,RelViewBL__gpt_oss_20b,AAPL,0.0
+us_technology,RelViewBL__gpt_oss_20b,MSFT,8.141929818083136e-17
+us_technology,RelViewBL__gpt_oss_20b,NVDA,0.14999999999999988
+us_technology,RelViewBL__gpt_oss_20b,AMD,0.1499999999999999
+us_technology,RelViewBL__gpt_oss_20b,AVGO,9.848899403355168e-17
+us_technology,RelViewBL__gpt_oss_20b,ORCL,0.14999999999999994
+us_technology,RelViewBL__gpt_oss_20b,CRM,1.4654009063143414e-16
+us_technology,RelViewBL__gpt_oss_20b,ADBE,5.4351430794877954e-17
+us_technology,RelViewBL__gpt_oss_20b,QCOM,0.09999999999999998
+us_technology,RelViewBL__gpt_oss_20b,TXN,0.14999999999999994
+us_technology,RelViewBL__gpt_oss_20b,AMAT,0.14999999999999997
+us_technology,RelViewBL__gpt_oss_20b,MU,0.15
+us_technology,RelViewBL__gpt_oss_20b,IBM,1.609916863033513e-16
+us_technology,RelViewBL__gpt_oss_20b,CSCO,0.0
+us_technology,RelViewBL__gpt_oss_20b,INTU,0.0

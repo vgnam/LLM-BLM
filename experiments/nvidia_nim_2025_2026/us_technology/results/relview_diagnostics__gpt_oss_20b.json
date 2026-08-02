@@ -1,0 +1,295 @@
+{
+  "calibration_method": "none",
+  "accepted_view_count": 11,
+  "rejected_view_count": 4,
+  "accepted_views": [
+    {
+      "asset_a": "AVGO",
+      "asset_b": "NVDA",
+      "raw_probability_a": 0.44999999999999996,
+      "calibrated_probability_a": 0.44999999999999996,
+      "uncertainty": 0.5463872269939042,
+      "disagreement": 0.0,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Both stocks are in the same IT sector and have comparable daily return volatility over the 144‑day period.  The mean daily returns are close, with NVDA slightly higher on average.  The evidence is weak enough to keep probability modest.",
+        "NVDA’s maximum daily return (0.187) slightly exceeds AVGO’s (0.186)",
+        "NVDA’s average daily return is marginally higher than AVGO’s over the 144‑day period",
+        "NVDA has a slightly higher average daily return over the 144‑day period",
+        "NVDA recorded a larger positive outlier (≈0.187) compared to AVGO"
+      ],
+      "projected_score_difference": -0.20043267589581149,
+      "consistency_residual": -0.00023801956633989763,
+      "q": -0.0036580084916604957,
+      "omega": 0.00010212204697409586
+    },
+    {
+      "asset_a": "AMAT",
+      "asset_b": "MU",
+      "raw_probability_a": 0.41,
+      "calibrated_probability_a": 0.41,
+      "uncertainty": 0.6148531063877343,
+      "disagreement": 0.2553429066960741,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "AMAT shows fewer extreme negative swings in the first 144 days",
+        "MU had a sharp -16% drop early in the period",
+        "Higher average daily return",
+        "Higher cumulative return",
+        "MU has a higher average daily return than AMAT",
+        "MU shows more positive returns over the 144‑day period"
+      ],
+      "projected_score_difference": -0.36334997853377615,
+      "consistency_residual": -0.0006153986676357692,
+      "q": -0.006439001584030307,
+      "omega": 0.00012931599157018305
+    },
+    {
+      "asset_a": "AMAT",
+      "asset_b": "QCOM",
+      "raw_probability_a": 0.55,
+      "calibrated_probability_a": 0.55,
+      "uncertainty": 0.6063872269939042,
+      "disagreement": 0.20000000000000007,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Higher cumulative return over the 144‑day period",
+        "More large positive spikes in daily returns",
+        "Comparable mean daily returns",
+        "Similar volatility",
+        "Similar mean daily returns",
+        "Comparable volatility"
+      ],
+      "projected_score_difference": 0.2000235119541287,
+      "consistency_residual": 0.0006471835080227029,
+      "q": 0.0036507367408547104,
+      "omega": 0.00012577969139798066
+    },
+    {
+      "asset_a": "MSFT",
+      "asset_b": "NVDA",
+      "raw_probability_a": 0.41,
+      "calibrated_probability_a": 0.41,
+      "uncertainty": 0.5699992501116871,
+      "disagreement": 0.10583005244258363,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "NVDA’s first 144‑day average return exceeds MSFT’s",
+        "NVDA’s cumulative return over the same period is higher",
+        "NVDA shows larger upside potential with a 0.187 spike, MSFT has a single 0.101 spike",
+        "NVDA’s returns include more extreme values, indicating higher volatility but also higher mean over 144 days",
+        "NVDA has a higher average daily return over the 144‑day period",
+        "NVDA exhibits larger positive spikes than MSFT"
+      ],
+      "projected_score_difference": -0.3638460083321746,
+      "consistency_residual": -0.00011936886923730183,
+      "q": -0.006447061911068843,
+      "omega": 0.00011113824979870896
+    },
+    {
+      "asset_a": "ADBE",
+      "asset_b": "CRM",
+      "raw_probability_a": 0.44333333333333336,
+      "calibrated_probability_a": 0.44333333333333336,
+      "uncertainty": 0.5522855805368411,
+      "disagreement": 0.023094010767584924,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "CRM has a marginally higher average daily return over the 144‑day period",
+        "Adobe experienced a significant one‑day drop of -13.85% that impacted its cumulative performance",
+        "CRM has lower volatility and fewer extreme negative returns",
+        "ADBE had a large -13.85% drop during the period",
+        "CRM shows slightly higher average daily return",
+        "ADBE had a large negative return of -13.85%"
+      ],
+      "projected_score_difference": -0.22731992766547654,
+      "consistency_residual": -0.000324756529524739,
+      "q": -0.004133174490565803,
+      "omega": 0.00010433858446748597
+    },
+    {
+      "asset_a": "AMD",
+      "asset_b": "NVDA",
+      "raw_probability_a": 0.5833333333333333,
+      "calibrated_probability_a": 0.5833333333333333,
+      "uncertainty": 0.5745753944769539,
+      "disagreement": 0.11547005383792514,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "AMD had higher peak daily returns (e.g., 0.238 vs 0.187 for NVDA)",
+        "NVDA experienced a larger negative outlier (-0.169) than AMD",
+        "NVDA has larger negative swings, indicating higher volatility",
+        "AMD shows higher average daily return due to larger positive spikes",
+        "AMD had large positive spikes (e.g., 0.238, 0.113)",
+        "NVDA’s gains were generally smaller and more evenly distributed"
+      ],
+      "projected_score_difference": 0.33619034016255966,
+      "consistency_residual": 0.00028189645865289714,
+      "q": 0.0059934865899837556,
+      "omega": 0.00011292976188988502
+    },
+    {
+      "asset_a": "AVGO",
+      "asset_b": "ORCL",
+      "raw_probability_a": 0.44333333333333336,
+      "calibrated_probability_a": 0.44333333333333336,
+      "uncertainty": 0.6057560527887316,
+      "disagreement": 0.20132891827388671,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "ORCL had a single-day gain of 35.94%",
+        "AVGO had a single-day loss of 17.39%",
+        "ORCL had a 0.3594 return spike",
+        "AVGO experienced a -0.1739 drop",
+        "Both are IT equities with comparable volatility",
+        "AVGO shows slightly higher average daily return in the sample"
+      ],
+      "projected_score_difference": -0.22753472208000858,
+      "consistency_residual": -0.00010996211499270103,
+      "q": -0.004136948377237954,
+      "omega": 0.00012551800623134796
+    },
+    {
+      "asset_a": "CRM",
+      "asset_b": "QCOM",
+      "raw_probability_a": 0.44333333333333336,
+      "calibrated_probability_a": 0.44333333333333336,
+      "uncertainty": 0.5522855805368411,
+      "disagreement": 0.023094010767584924,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Both stocks show comparable volatility and mixed returns over the 144‑day horizon.",
+        "QCOM had a 15% gain on day 50, while CRM’s largest gain was 8.7% on day 50.",
+        "CRM experienced a 6% loss on day 1, whereas QCOM’s first day was only 0.013% loss.",
+        "QCOM had a 15% spike",
+        "CRM had a 6% drop"
+      ],
+      "projected_score_difference": -0.22706969217747994,
+      "consistency_residual": -0.0005749920175213419,
+      "q": -0.004128777455756696,
+      "omega": 0.00010433858446748597
+    },
+    {
+      "asset_a": "CRM",
+      "asset_b": "INTU",
+      "raw_probability_a": 0.43333333333333335,
+      "calibrated_probability_a": 0.43333333333333335,
+      "uncertainty": 0.5527340385760048,
+      "disagreement": 0.03055050463303884,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "INTU had a 12.58% gain on day 30 and a 9.63% gain on day 60, both larger than CRM’s largest daily gains (8.68% and 5.87%).",
+        "The cumulative return over the 144‑day horizon is higher for INTU, driven by those strong positive days.",
+        "INTU had a 12.6% single-day gain (0.1258)",
+        "CRM had a 8.7% single-day gain (0.0868)",
+        "INTU shows a significant positive spike of 12.6% during the period",
+        "CRM’s daily returns are largely negative, averaging around -0.5% per day"
+      ],
+      "projected_score_difference": -0.26831505250356713,
+      "consistency_residual": 5.106590888787066e-05,
+      "q": -0.004846548316800081,
+      "omega": 0.00010450808368918722
+    },
+    {
+      "asset_a": "IBM",
+      "asset_b": "QCOM",
+      "raw_probability_a": 0.56,
+      "calibrated_probability_a": 0.56,
+      "uncertainty": 0.555186065456441,
+      "disagreement": 0.03464101615137745,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Both assets show comparable cumulative returns over 144 days",
+        "Volatility and large swings are similar for QCOM and IBM",
+        "IBM has more frequent large positive returns than QCOM",
+        "QCOM shows higher volatility with larger swings",
+        "IBM has a higher average daily return over the 144‑day sample",
+        "IBM’s cumulative return is higher than Qualcomm’s in the historical data"
+      ],
+      "projected_score_difference": 0.24110239142444811,
+      "consistency_residual": 5.966539244012248e-05,
+      "q": 0.004374581864286559,
+      "omega": 0.00010543728449077263
+    },
+    {
+      "asset_a": "AVGO",
+      "asset_b": "MU",
+      "raw_probability_a": 0.3833333333333333,
+      "calibrated_probability_a": 0.3833333333333333,
+      "uncertainty": 0.5648221513091165,
+      "disagreement": 0.11547005383792512,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "MU has a higher average daily return than AVGO",
+        "MU exhibits more large positive spikes in its daily returns",
+        "Higher cumulative return over 144 days",
+        "Positive average daily return",
+        "MU shows higher early cumulative returns and a higher average daily return over the first 10 days compared to AVGO."
+      ],
+      "projected_score_difference": -0.4757462932047787,
+      "consistency_residual": 0.00032259648970373034,
+      "q": -0.008189841154187139,
+      "omega": 0.00010912874116353292
+    }
+  ],
+  "rejected_views": [
+    {
+      "asset_a": "MU",
+      "asset_b": "NVDA",
+      "raw_probability_a": 0.4866666666666667,
+      "calibrated_probability_a": 0.4866666666666667,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "QCOM",
+      "asset_b": "TXN",
+      "raw_probability_a": 0.49333333333333323,
+      "calibrated_probability_a": 0.49333333333333323,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "AAPL",
+      "asset_b": "QCOM",
+      "raw_probability_a": 0.5133333333333333,
+      "calibrated_probability_a": 0.5133333333333333,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "AMAT",
+      "asset_b": "CSCO",
+      "raw_probability_a": 0.48333333333333334,
+      "calibrated_probability_a": 0.48333333333333334,
+      "reason": "low_confidence"
+    }
+  ],
+  "raw_cycle_count": 0,
+  "consistency_rmse": 0.00036596241242118174,
+  "latent_scores": {
+    "AAPL": 9.040916163864192e-14,
+    "MSFT": -0.2094193443353964,
+    "NVDA": 0.1544266639967782,
+    "AMD": 0.4906170041593379,
+    "AVGO": -0.04600601189903327,
+    "ORCL": 0.1815287101809753,
+    "CRM": -0.3607029013596394,
+    "ADBE": -0.5880228290251159,
+    "QCOM": -0.13363320918215946,
+    "TXN": 1.4113221296578997e-13,
+    "AMAT": 0.06639030277196926,
+    "MU": 0.42974028130574543,
+    "IBM": 0.10746918224228867,
+    "CSCO": 9.040916163864192e-14,
+    "INTU": -0.09238784885607228
+  }
+}

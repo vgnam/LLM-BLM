@@ -1,0 +1,10 @@
+Method,Family,Uses_LLM,Requested_Model,API_Model,Model_Status
+BL,Black-Litterman,False,,,not_applicable
+MVO,Mean-Variance Optimization,False,,,not_applicable
+EW,Equal Weight,False,,,not_applicable
+BLM_LLM__qwen3_next_80b_a3b_instruct,BLM-LLM,True,qwen3-next-80b-a3b-instruct:latest,qwen/qwen3-next-80b-a3b-instruct,unavailable
+RelViewBL__qwen3_next_80b_a3b_instruct,RelViewBL,True,qwen3-next-80b-a3b-instruct:latest,qwen/qwen3-next-80b-a3b-instruct,unavailable
+BLM_LLM__mixtral_8x7b_instruct_v0_1,BLM-LLM,True,mistralai/mixtral-8x7b-instruct-v0-1,mistralai/mixtral-8x7b-instruct-v0.1,unavailable
+RelViewBL__mixtral_8x7b_instruct_v0_1,RelViewBL,True,mistralai/mixtral-8x7b-instruct-v0-1,mistralai/mixtral-8x7b-instruct-v0.1,unavailable
+BLM_LLM__gpt_oss_20b,BLM-LLM,True,openai/gpt-oss-20b,openai/gpt-oss-20b,available
+RelViewBL__gpt_oss_20b,RelViewBL,True,openai/gpt-oss-20b,openai/gpt-oss-20b,available

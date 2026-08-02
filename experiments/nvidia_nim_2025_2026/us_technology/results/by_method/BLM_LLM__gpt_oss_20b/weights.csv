@@ -1,0 +1,16 @@
+Dataset,Method,Asset,Weight
+us_technology,BLM_LLM__gpt_oss_20b,AAPL,4.755169784005249e-17
+us_technology,BLM_LLM__gpt_oss_20b,MSFT,1.9081958235744878e-17
+us_technology,BLM_LLM__gpt_oss_20b,NVDA,0.14999999999999974
+us_technology,BLM_LLM__gpt_oss_20b,AMD,0.15
+us_technology,BLM_LLM__gpt_oss_20b,AVGO,0.14999999999999997
+us_technology,BLM_LLM__gpt_oss_20b,ORCL,0.15
+us_technology,BLM_LLM__gpt_oss_20b,CRM,3.0846467715681085e-18
+us_technology,BLM_LLM__gpt_oss_20b,ADBE,7.321113549241869e-17
+us_technology,BLM_LLM__gpt_oss_20b,QCOM,0.10000000000000017
+us_technology,BLM_LLM__gpt_oss_20b,TXN,0.0
+us_technology,BLM_LLM__gpt_oss_20b,AMAT,0.1499999999999999
+us_technology,BLM_LLM__gpt_oss_20b,MU,0.14999999999999983
+us_technology,BLM_LLM__gpt_oss_20b,IBM,6.59325533504745e-17
+us_technology,BLM_LLM__gpt_oss_20b,CSCO,2.4219041043515734e-19
+us_technology,BLM_LLM__gpt_oss_20b,INTU,1.351418195191871e-16

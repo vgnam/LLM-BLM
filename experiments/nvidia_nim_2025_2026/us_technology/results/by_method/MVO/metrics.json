@@ -1,0 +1,23 @@
+{
+  "Dataset": "us_technology",
+  "Method": "MVO",
+  "Status": "success",
+  "trading_days": 144,
+  "cumulative_return": 0.4966491190315825,
+  "annualized_return": 1.025163027943159,
+  "annualized_volatility": 0.43500132717645534,
+  "sharpe": 1.8406962696026536,
+  "max_drawdown": -0.23182518719012302,
+  "turnover": 1.0,
+  "transaction_cost_bps": 10.0,
+  "final_nav": 1.4966491190315825,
+  "mean_daily_return": 0.003177402064309146,
+  "best_day": 0.08577509734651388,
+  "worst_day": -0.08991183464358998,
+  "positive_day_ratio": 0.6041666666666666,
+  "annualized_downside_deviation": 0.2883975826469534,
+  "sortino": 2.7763940073870215,
+  "calmar": 4.42213825153696,
+  "daily_var_95": -0.03582295953473057,
+  "daily_cvar_95": -0.05272443070079279
+}

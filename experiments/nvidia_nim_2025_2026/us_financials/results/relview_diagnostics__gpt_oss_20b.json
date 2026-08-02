@@ -1,0 +1,253 @@
+{
+  "calibration_method": "none",
+  "accepted_view_count": 8,
+  "rejected_view_count": 7,
+  "accepted_views": [
+    {
+      "asset_a": "C",
+      "asset_b": "MS",
+      "raw_probability_a": 0.56,
+      "calibrated_probability_a": 0.56,
+      "uncertainty": 0.555186065456441,
+      "disagreement": 0.03464101615137745,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "B had a 9.15% return day, A had 11.35%",
+        "B also experienced a -12.14% day, A had -6.37%",
+        "C has a large positive return of 0.0915",
+        "MS has several large negative returns, including -0.0637",
+        "C has higher average daily return",
+        "C has more positive outliers"
+      ],
+      "projected_score_difference": 0.24118842741886226,
+      "consistency_residual": -2.6370601974023966e-05,
+      "q": 0.0023125808714155654,
+      "omega": 2.9452560910301213e-05
+    },
+    {
+      "asset_a": "AXP",
+      "asset_b": "COF",
+      "raw_probability_a": 0.4466666666666666,
+      "calibrated_probability_a": 0.4466666666666666,
+      "uncertainty": 0.5493526183215265,
+      "disagreement": 0.011547005383792525,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "COF shows higher average daily return than AXP",
+        "COF has larger positive return spikes",
+        "Comparable mean daily returns",
+        "Similar volatility",
+        "COF had a 14.8% return on day 71, slightly higher than AXP's 13.4% on the same day.",
+        "Both stocks experienced large swings, but COF’s higher volatility suggests a higher chance of outperforming over 144 days."
+      ],
+      "projected_score_difference": -0.21390822810756308,
+      "consistency_residual": -0.00023976029806915822,
+      "q": -0.00205931405177759,
+      "omega": 2.8837094062357623e-05
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "WFC",
+      "raw_probability_a": 0.56,
+      "calibrated_probability_a": 0.56,
+      "uncertainty": 0.555186065456441,
+      "disagreement": 0.03464101615137745,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "BAC has a slightly higher average daily return than WFC",
+        "Both stocks exhibit similar volatility over the 144‑day period",
+        "BAC has lower volatility than WFC",
+        "WFC shows higher average daily return but more volatility",
+        "BAC shows a slightly higher average daily return than WFC",
+        "WFC exhibits more extreme negative daily returns"
+      ],
+      "projected_score_difference": 0.2410018335580446,
+      "consistency_residual": 0.0001602232588436281,
+      "q": 0.002310859227850025,
+      "omega": 2.9452560910301213e-05
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "C",
+      "raw_probability_a": 0.4166666666666667,
+      "calibrated_probability_a": 0.4166666666666667,
+      "uncertainty": 0.5745753944769539,
+      "disagreement": 0.11547005383792512,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Citigroup shows higher early average returns and a strong positive 0.0915 spike.",
+        "BAC has a significant negative -0.1106 but overall similar volatility.",
+        "Higher average daily return in early period",
+        "C had stronger positive swings",
+        "C has a slightly higher early average daily return than BAC",
+        "Both assets exhibit similar volatility over the period"
+      ],
+      "projected_score_difference": -0.3362790725465459,
+      "consistency_residual": -0.0001931640746668517,
+      "q": -0.003168087924024307,
+      "omega": 3.154497677074888e-05
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "JPM",
+      "raw_probability_a": 0.5700000000000001,
+      "calibrated_probability_a": 0.5700000000000001,
+      "uncertainty": 0.5532998234348732,
+      "disagreement": 0.03464101615137745,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "GS had a 0.118 return spike, JPM had a -0.0748 spike",
+        "GS had several positive 0.04+ returns, JPM had more negative large swings",
+        "Both assets have comparable average daily returns",
+        "GS shows slightly higher volatility due to larger extreme moves",
+        "JPM had a large negative return of -0.075",
+        "GS had a large positive return of 0.118"
+      ],
+      "projected_score_difference": 0.2816852058093886,
+      "consistency_residual": 0.000165946331599387,
+      "q": 0.002682469019168377,
+      "omega": 2.925283884319552e-05
+    },
+    {
+      "asset_a": "AXP",
+      "asset_b": "GS",
+      "raw_probability_a": 0.56,
+      "calibrated_probability_a": 0.56,
+      "uncertainty": 0.596057783082933,
+      "disagreement": 0.17088007490635065,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Average daily return slightly higher for AXP",
+        "Volatility of both assets is comparable",
+        "Higher average daily return",
+        "Greater cumulative return over 144 days",
+        "GS has a marginally higher average daily return over the 144‑day period",
+        "GS exhibits slightly lower volatility compared to AXP"
+      ],
+      "projected_score_difference": 0.24076926973771862,
+      "consistency_residual": 0.00039278707916962086,
+      "q": 0.0023087132210944683,
+      "omega": 3.3947136403972724e-05
+    },
+    {
+      "asset_a": "BLK",
+      "asset_b": "GS",
+      "raw_probability_a": 0.42000000000000004,
+      "calibrated_probability_a": 0.42000000000000004,
+      "uncertainty": 0.5623602551696107,
+      "disagreement": 0.07211102550927975,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "GS shows a higher average daily return over the 144‑day window",
+        "GS has fewer extreme negative returns compared to BLK",
+        "GS has a higher average daily return over the 144‑day horizon",
+        "BLK shows larger negative spikes that reduce its cumulative return",
+        "GS shows a marginally higher average daily return over the 144‑day horizon",
+        "BLK exhibits higher volatility and more frequent large negative swings"
+      ],
+      "projected_score_difference": -0.3225817299363669,
+      "consistency_residual": -0.000191662326683939,
+      "q": -0.003047756825748362,
+      "omega": 3.021839881477473e-05
+    },
+    {
+      "asset_a": "CB",
+      "asset_b": "ICE",
+      "raw_probability_a": 0.44333333333333336,
+      "calibrated_probability_a": 0.44333333333333336,
+      "uncertainty": 0.6057560527887316,
+      "disagreement": 0.20132891827388671,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "CB has several large positive daily returns (e.g., 0.0367, 0.0380, 0.0318) that boost its average,",
+        "ICE includes a large negative return of -0.0646 but fewer comparable positive spikes, reducing its mean relative to CB.",
+        "ICE has a slightly higher average daily return over the 144‑day horizon",
+        "CB exhibits higher volatility than ICE",
+        "ICE has a higher average daily return over the 144‑day horizon",
+        "ICE’s cumulative return over 144 days exceeds CB’s"
+      ],
+      "projected_score_difference": -0.2275757564990348,
+      "consistency_residual": -6.89276959664753e-05,
+      "q": -0.0021865884917258993,
+      "omega": 3.5060481818303394e-05
+    }
+  ],
+  "rejected_views": [
+    {
+      "asset_a": "GS",
+      "asset_b": "MS",
+      "raw_probability_a": 0.5066666666666667,
+      "calibrated_probability_a": 0.5066666666666667,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "PNC",
+      "asset_b": "USB",
+      "raw_probability_a": 0.48,
+      "calibrated_probability_a": 0.48,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "AXP",
+      "asset_b": "PNC",
+      "raw_probability_a": 0.5166666666666667,
+      "calibrated_probability_a": 0.5166666666666667,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "JPM",
+      "asset_b": "SCHW",
+      "raw_probability_a": 0.5166666666666667,
+      "calibrated_probability_a": 0.5166666666666667,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "ICE",
+      "asset_b": "SCHW",
+      "raw_probability_a": 0.4766666666666667,
+      "calibrated_probability_a": 0.4766666666666667,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "CME",
+      "asset_b": "ICE",
+      "raw_probability_a": 0.49,
+      "calibrated_probability_a": 0.49,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "C",
+      "asset_b": "GS",
+      "raw_probability_a": 0.5166666666666666,
+      "calibrated_probability_a": 0.5166666666666666,
+      "reason": "low_confidence"
+    }
+  ],
+  "raw_cycle_count": 0,
+  "consistency_rmse": 0.0002062523407498447,
+  "latent_scores": {
+    "JPM": -0.2999211721768526,
+    "BAC": -0.047591971029199834,
+    "GS": -0.01823596636746401,
+    "MS": 0.04749867409848378,
+    "WFC": -0.28859380458724443,
+    "C": 0.28868710151734606,
+    "AXP": 0.2225333033702546,
+    "BLK": -0.3408176963038309,
+    "SCHW": 9.152308540668249e-14,
+    "PNC": 9.152308540668249e-14,
+    "USB": 9.152308540668249e-14,
+    "COF": 0.43644153147781767,
+    "CME": 9.152308540668249e-14,
+    "ICE": 0.11378787824967923,
+    "CB": -0.11378787824935557
+  }
+}

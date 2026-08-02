@@ -1,0 +1,13 @@
+{
+  "dataset": "us_technology",
+  "formation_source": "experiments\\cutoff_2025_12\\us_technology\\data\\formation_returns.csv",
+  "formation_sha256": "da729f32136090e54011f8adc4e054a351ce88c28450f73e745d7962a7b4d3c8",
+  "realized_source": "experiments\\cutoff_2025_12\\us_technology\\data\\realized_returns.csv",
+  "realized_sha256": "f7aa4e9aadf4edefb76394708c866270387b8576881089aaed27a4e30502206f",
+  "formation_rows": 250,
+  "actual_formation_start": "2025-01-02",
+  "actual_formation_end": "2025-12-31",
+  "realized_rows": 144,
+  "actual_test_start": "2026-01-02",
+  "actual_test_end": "2026-07-30"
+}

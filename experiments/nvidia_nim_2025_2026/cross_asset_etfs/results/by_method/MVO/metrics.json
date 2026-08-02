@@ -1,0 +1,23 @@
+{
+  "Dataset": "cross_asset_etfs",
+  "Method": "MVO",
+  "Status": "success",
+  "trading_days": 144,
+  "cumulative_return": 0.06612386966132844,
+  "annualized_return": 0.11857064338772294,
+  "annualized_volatility": 0.24618222405648718,
+  "sharpe": 0.5784670638437625,
+  "max_drawdown": -0.14485510087247444,
+  "turnover": 1.0,
+  "transaction_cost_bps": 10.0,
+  "final_nav": 1.0661238696613284,
+  "mean_daily_return": 0.0005651123346050928,
+  "best_day": 0.038962729461354755,
+  "worst_day": -0.065438478167617,
+  "positive_day_ratio": 0.5486111111111112,
+  "annualized_downside_deviation": 0.18397419201547371,
+  "sortino": 0.7740667686069016,
+  "calmar": 0.8185465521998327,
+  "daily_var_95": -0.029543786864072445,
+  "daily_cvar_95": -0.037838272371561635
+}

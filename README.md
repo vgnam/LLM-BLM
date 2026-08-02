@@ -4,6 +4,59 @@
 
 ![model](figure/model.png)
 
+## NVIDIA NIM: 2025 Views and 2026 Backtest
+
+The NVIDIA NIM experiment forms each portfolio once using 250 daily return
+observations from 2025 and holds the fixed weights over 144 trading sessions
+from 2 January to 30 July 2026. All methods use the same long-only optimizer,
+15% per-asset cap, and 10 bps entry cost. The three 15-asset universes are US
+technology equities (including NVDA), US financial equities, and cross-asset
+ETFs. Each successful LLM view uses three repeated calls; RelViewBL uses a
+15-pair sparse comparison graph and a 0.55 abstention threshold.
+
+The hosted NVIDIA NIM endpoint returned HTTP 410 for
+`qwen/qwen3-next-80b-a3b-instruct` and
+`mistralai/mixtral-8x7b-instruct-v0.1`, reporting that both reached end of life
+on 27 July 2026. They remain explicit `unavailable` rows in the saved method
+inventory and metrics rather than being silently replaced. The complete
+LLM-based results below therefore use `openai/gpt-oss-20b`.
+
+### Cumulative Return by Dataset
+
+| Dataset | BL | MVO | EW | BLM-LLM (GPT-OSS-20B) | RelViewBL (GPT-OSS-20B) |
+|---|---:|---:|---:|---:|---:|
+| US technology | +49.55% | +49.66% | +18.98% | +49.55% | **+58.48%** |
+| US financials | +4.99% | +7.55% | +8.08% | +6.65% | **+9.11%** |
+| Cross-asset ETFs | **+20.91%** | +6.61% | +12.67% | +17.20% | +11.19% |
+
+BL and BLM-LLM produce identical optimized weights in the US technology
+universe, so their NAV paths overlap exactly in that plot. BL is rendered as a
+blue dashed line over the red BLM-LLM line to keep both methods visible.
+
+### Equal-Dataset Aggregate
+
+| Method | Cumulative return | Sharpe | Maximum drawdown |
+|---|---:|---:|---:|
+| BL | +25.46% | 1.688 | -11.06% |
+| MVO | +21.08% | 1.439 | -13.84% |
+| EW | +13.74% | 1.572 | **-8.85%** |
+| BLM-LLM (GPT-OSS-20B) | +24.93% | **1.693** | -11.20% |
+| RelViewBL (GPT-OSS-20B) | **+25.77%** | 1.657 | -13.17% |
+
+Per-dataset artifacts:
+
+- [US technology metrics](experiments/nvidia_nim_2025_2026/us_technology/results/method_metrics.csv)
+  and [NAV plot](experiments/nvidia_nim_2025_2026/us_technology/plots/nav_2026.png)
+- [US financials metrics](experiments/nvidia_nim_2025_2026/us_financials/results/method_metrics.csv)
+  and [NAV plot](experiments/nvidia_nim_2025_2026/us_financials/plots/nav_2026.png)
+- [Cross-asset ETF metrics](experiments/nvidia_nim_2025_2026/cross_asset_etfs/results/method_metrics.csv)
+  and [NAV plot](experiments/nvidia_nim_2025_2026/cross_asset_etfs/plots/nav_2026.png)
+- [Aggregate NAV plot](experiments/nvidia_nim_2025_2026/plots/aggregate_nav_2026.png),
+  [full report](experiments/nvidia_nim_2025_2026/REPORT.md), and
+  [data catalog](experiments/nvidia_nim_2025_2026/summary/data_catalog.json)
+
+![NVIDIA NIM equal-dataset aggregate NAV](experiments/nvidia_nim_2025_2026/plots/aggregate_nav_2026.png)
+
 
 
 

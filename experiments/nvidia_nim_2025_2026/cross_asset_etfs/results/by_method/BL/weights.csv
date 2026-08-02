@@ -1,0 +1,16 @@
+Dataset,Method,Asset,Weight
+cross_asset_etfs,BL,SPY,0.15
+cross_asset_etfs,BL,QQQ,0.15
+cross_asset_etfs,BL,IWM,0.15
+cross_asset_etfs,BL,DIA,0.05097624406300055
+cross_asset_etfs,BL,EFA,0.0490237559369999
+cross_asset_etfs,BL,EEM,0.14999999999999988
+cross_asset_etfs,BL,VNQ,0.0
+cross_asset_etfs,BL,TLT,0.0
+cross_asset_etfs,BL,IEF,0.0
+cross_asset_etfs,BL,HYG,0.0
+cross_asset_etfs,BL,LQD,0.0
+cross_asset_etfs,BL,GLD,0.0
+cross_asset_etfs,BL,SLV,0.1499999999999999
+cross_asset_etfs,BL,USO,0.15
+cross_asset_etfs,BL,DBC,1.110939752268279e-17

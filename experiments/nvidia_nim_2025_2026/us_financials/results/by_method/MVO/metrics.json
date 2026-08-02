@@ -1,0 +1,23 @@
+{
+  "Dataset": "us_financials",
+  "Method": "MVO",
+  "Status": "success",
+  "trading_days": 144,
+  "cumulative_return": 0.07549715866500772,
+  "annualized_return": 0.13583753912141572,
+  "annualized_volatility": 0.2503256343535601,
+  "sharpe": 0.6335615470314011,
+  "max_drawdown": -0.1825708659930002,
+  "turnover": 1.0,
+  "transaction_cost_bps": 10.0,
+  "final_nav": 1.0754971586650077,
+  "mean_daily_return": 0.0006293519688994379,
+  "best_day": 0.04577063655340862,
+  "worst_day": -0.050339880865401136,
+  "positive_day_ratio": 0.5555555555555556,
+  "annualized_downside_deviation": 0.1783650545050601,
+  "sortino": 0.8891691065985072,
+  "calmar": 0.7440263723491554,
+  "daily_var_95": -0.027783539498515655,
+  "daily_cvar_95": -0.03558537358944858
+}

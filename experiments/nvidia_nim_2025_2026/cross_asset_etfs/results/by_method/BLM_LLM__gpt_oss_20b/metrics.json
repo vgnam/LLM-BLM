@@ -1,0 +1,23 @@
+{
+  "Dataset": "cross_asset_etfs",
+  "Method": "BLM_LLM__gpt_oss_20b",
+  "Status": "success",
+  "trading_days": 144,
+  "cumulative_return": 0.17200478897750937,
+  "annualized_return": 0.32015956290754377,
+  "annualized_volatility": 0.22476283523756138,
+  "sharpe": 1.3492109253511622,
+  "max_drawdown": -0.12034126340945073,
+  "turnover": 1.0,
+  "transaction_cost_bps": 10.0,
+  "final_nav": 1.1720047889775094,
+  "mean_daily_return": 0.0012033828290294484,
+  "best_day": 0.032066447318326946,
+  "worst_day": -0.06432840841190389,
+  "positive_day_ratio": 0.6041666666666666,
+  "annualized_downside_deviation": 0.1698454870736296,
+  "sortino": 1.7854608805941266,
+  "calmar": 2.6604304611480485,
+  "daily_var_95": -0.0227758388367656,
+  "daily_cvar_95": -0.03587899844202388
+}

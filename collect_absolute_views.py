@@ -11,6 +11,7 @@ import argparse
 import json
 import os
 import re
+import time
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -25,6 +26,7 @@ from collect_relative_views import (
     atomic_checkpoint_json,
     provider_limit_from_errors,
     provider_region_from_errors,
+    thinking_body_supported,
     _load_json_mapping,
     _load_returns,
     _load_universe,
@@ -213,7 +215,9 @@ def collect_absolute_views(
                 if prompt_ensemble else base_system
             )
             completion = client.chat.completions.create(**completion_request_options(
-                model, system, user, temperature, thinking
+                model, system, user, temperature, thinking,
+                thinking_body_supported(model, base_url),
+                4096 if "gpt-oss" in model.lower() else 1024,
             ))
             return {
                 "value": parse_absolute_response(
@@ -285,6 +289,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--temperature", type=float, default=0.3)
     parser.add_argument("--workers", type=int, default=1, help="Concurrent calls within each asset")
     parser.add_argument("--retry-calls", type=int, default=15, help="Extra attempts used to replace invalid responses")
+    parser.add_argument(
+        "--wait-on-rate-limit",
+        action="store_true",
+        help="On a provider 429/usage limit, sleep for the reported delay and resume from the checkpoint",
+    )
     parser.add_argument("--prompt-ensemble", action="store_true", help="Use a unique system prompt for every call")
     parser.add_argument(
         "--prompt-mode", choices=["generic", "paper_v2"], default="generic",
@@ -317,22 +326,35 @@ def main() -> None:
         metadata_frame = pd.read_csv(args.metadata)
     metadata = _metadata_lookup(metadata_frame)
     context = _load_json_mapping(args.context)
-    result = collect_absolute_views(
-        returns,
-        args.model,
-        args.base_url,
-        api_key,
-        metadata,
-        context,
-        args.repeats,
-        args.horizon_days,
-        args.temperature,
-        args.thinking,
-        args.workers,
-        args.retry_calls,
-        args.prompt_ensemble,
-        args.prompt_mode,
-    )
+    while True:
+        try:
+            result = collect_absolute_views(
+                returns,
+                args.model,
+                args.base_url,
+                api_key,
+                metadata,
+                context,
+                args.repeats,
+                args.horizon_days,
+                args.temperature,
+                args.thinking,
+                args.workers,
+                args.retry_calls,
+                args.prompt_ensemble,
+                args.prompt_mode,
+                args.output,
+            )
+            break
+        except ProviderUsageLimitError as error:
+            if not args.wait_on_rate_limit:
+                raise
+            print(
+                "Provider usage limit reached; resuming in "
+                f"{error.retry_after_seconds} seconds: {error}",
+                flush=True,
+            )
+            time.sleep(error.retry_after_seconds)
     successful = sum(bool(item["expected_return"]) for item in result.values())
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8") as handle:

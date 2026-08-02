@@ -1,0 +1,23 @@
+{
+  "Dataset": "us_financials",
+  "Method": "BLM_LLM__gpt_oss_20b",
+  "Status": "success",
+  "trading_days": 144,
+  "cumulative_return": 0.0664902407915644,
+  "annualized_return": 0.11924342018422873,
+  "annualized_volatility": 0.23885936381822995,
+  "sharpe": 0.5908829217253695,
+  "max_drawdown": -0.18802137305651367,
+  "turnover": 1.0,
+  "transaction_cost_bps": 10.0,
+  "final_nav": 1.0664902407915644,
+  "mean_daily_return": 0.0005600711062475345,
+  "best_day": 0.041621062746952604,
+  "worst_day": -0.05409700728089017,
+  "positive_day_ratio": 0.5416666666666666,
+  "annualized_downside_deviation": 0.17362265322474346,
+  "sortino": 0.8129003684310978,
+  "calmar": 0.6342014114979773,
+  "daily_var_95": -0.02644408175415232,
+  "daily_cvar_95": -0.03421490021635375
+}

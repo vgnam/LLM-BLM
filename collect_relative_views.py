@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import re
+import time
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -168,8 +169,10 @@ def make_pairwise_prompt(
     if prompt_mode == "calibrated":
         system = (
             "You generate strictly point-in-time pairwise equity views. Compare only the two supplied assets "
-            "using only the supplied information. Return JSON with preferred_asset, probability, and evidence. "
+            "using only the supplied information. Return a JSON object with EXACTLY the three keys "
+            "preferred_asset, probability, and evidence, and NO other keys and no commentary. "
             "probability is the probability (0.50 to 1.00) that preferred_asset outperforms the other asset. "
+            "evidence is an array of at most two short strings. "
             "If evidence is weak, keep probability near 0.50. Do not predict an absolute return."
         )
     elif prompt_mode in {"decisive_v1", "decisive_v2", "decisive_v3"}:
@@ -252,6 +255,8 @@ def parse_pairwise_response(
     evidence = value.get("evidence", [])
     if isinstance(evidence, str):
         evidence = [evidence]
+    elif isinstance(evidence, dict):
+        evidence = [str(evidence)]
     return {"preferred_asset": preferred, "probability": probability, "evidence": list(evidence)}
 
 
@@ -331,27 +336,42 @@ def aggregate_repeated_predictions(
     }
 
 
+def thinking_body_supported(model: str, base_url: str | None) -> bool:
+    """Whether the provider accepts the DeepSeek ``thinking`` extra body.
+
+    OpenCode Go (DeepSeek) supports it; Mistral and other OpenAI-compatible
+    providers reject unknown extra inputs with a 422.
+    """
+    if base_url and "opencode.ai" in base_url:
+        return True
+    return "deepseek" in model.lower()
+
+
 def completion_request_options(
     model: str,
     system: str,
     user: str,
     temperature: float,
     thinking: str = "disabled",
+    send_thinking_body: bool = True,
+    max_tokens: int = 1024,
 ) -> dict[str, Any]:
     if thinking not in {"enabled", "disabled"}:
         raise ValueError("thinking must be enabled or disabled")
-    return {
+    options = {
         "model": model,
         "messages": [
             {"role": "system", "content": system},
             {"role": "user", "content": user},
         ],
         "temperature": temperature,
-        "max_tokens": 256,
+        "max_tokens": max_tokens,
         "response_format": {"type": "json_object"},
-        # DeepSeek V4 defaults to thinking mode, so this must be explicit.
-        "extra_body": {"thinking": {"type": thinking}},
     }
+    if send_thinking_body:
+        # DeepSeek V4 defaults to thinking mode, so this must be explicit.
+        options["extra_body"] = {"thinking": {"type": thinking}}
+    return options
 
 
 def collect_pairwise_views(
@@ -430,7 +450,9 @@ def collect_pairwise_views(
                 ) if prompt_ensemble else base_system
             )
             completion = client.chat.completions.create(**completion_request_options(
-                model, system, user, temperature, thinking
+                model, system, user, temperature, thinking,
+                thinking_body_supported(model, base_url),
+                4096 if "gpt-oss" in model.lower() else 1024,
             ))
             parsed = parse_pairwise_response(
                 completion.choices[0].message.content,
@@ -550,6 +572,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--temperature", type=float, default=0.3)
     parser.add_argument("--workers", type=int, default=1, help="Concurrent calls within each pair")
     parser.add_argument("--retry-calls", type=int, default=15, help="Extra attempts used to replace invalid responses")
+    parser.add_argument(
+        "--wait-on-rate-limit",
+        action="store_true",
+        help="On a provider 429/usage limit, sleep for the reported delay and resume from the checkpoint",
+    )
     parser.add_argument("--prompt-ensemble", action="store_true", help="Use a unique system prompt for every call")
     parser.add_argument(
         "--prompt-mode", choices=["calibrated", "decisive_v1", "decisive_v2", "decisive_v3"], default="calibrated",
@@ -591,24 +618,37 @@ def main() -> None:
             max_pairs=args.max_pairs,
             min_abs_correlation=args.min_abs_correlation,
         )
-    views = collect_pairwise_views(
-        returns,
-        pairs,
-        args.model,
-        args.base_url,
-        api_key,
-        metadata,
-        context,
-        args.repeats,
-        args.horizon_days,
-        args.temperature,
-        args.probability_estimator,
-        args.thinking,
-        args.workers,
-        args.retry_calls,
-        args.prompt_ensemble,
-        args.prompt_mode,
-    )
+    while True:
+        try:
+            views = collect_pairwise_views(
+                returns,
+                pairs,
+                args.model,
+                args.base_url,
+                api_key,
+                metadata,
+                context,
+                args.repeats,
+                args.horizon_days,
+                args.temperature,
+                args.probability_estimator,
+                args.thinking,
+                args.workers,
+                args.retry_calls,
+                args.prompt_ensemble,
+                args.prompt_mode,
+                args.output,
+            )
+            break
+        except ProviderUsageLimitError as error:
+            if not args.wait_on_rate_limit:
+                raise
+            print(
+                "Provider usage limit reached; resuming in "
+                f"{error.retry_after_seconds} seconds: {error}",
+                flush=True,
+            )
+            time.sleep(error.retry_after_seconds)
     payload = {
         "model": args.model,
         "source_returns": str(args.returns),

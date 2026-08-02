@@ -1,0 +1,238 @@
+{
+  "calibration_method": "none",
+  "accepted_view_count": 7,
+  "rejected_view_count": 8,
+  "accepted_views": [
+    {
+      "asset_a": "QQQ",
+      "asset_b": "SPY",
+      "raw_probability_a": 0.5566666666666666,
+      "calibrated_probability_a": 0.5566666666666666,
+      "uncertainty": 0.5522855805368411,
+      "disagreement": 0.023094010767584924,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Higher average daily return over the 144‑day window",
+        "A notable 12% positive spike in QQQ’s daily return",
+        "QQQ had a larger single-day spike (12.0%) than SPY (10.5%)",
+        "Both ETFs exhibited similar volatility with comparable large daily drops",
+        "QQQ had a 12% spike vs 10% for SPY",
+        "QQQ had a higher average daily return"
+      ],
+      "projected_score_difference": 0.22737288878508366,
+      "consistency_residual": 0.0002717954099175912,
+      "q": 0.0020092783086766413,
+      "omega": 2.465452731387621e-05
+    },
+    {
+      "asset_a": "IEF",
+      "asset_b": "TLT",
+      "raw_probability_a": 0.5933333333333335,
+      "calibrated_probability_a": 0.5933333333333335,
+      "uncertainty": 0.5823918230869131,
+      "disagreement": 0.1501110699893027,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "TLT experienced a -3.0% drop on one day, while IEF stayed positive",
+        "IETF shows more stable daily returns over the 144‑day period",
+        "Shorter duration less sensitive to rate changes",
+        "Lower volatility than TLT",
+        "IEF has lower duration, reducing sensitivity to rate changes",
+        "TLT’s higher volatility can amplify short‑term swings"
+      ],
+      "projected_score_difference": 0.3776548323215252,
+      "consistency_residual": 0.0001076732373040401,
+      "q": 0.0032419437012087796,
+      "omega": 2.7414609703706968e-05
+    },
+    {
+      "asset_a": "LQD",
+      "asset_b": "TLT",
+      "raw_probability_a": 0.55,
+      "calibrated_probability_a": 0.55,
+      "uncertainty": 0.5463872269939042,
+      "disagreement": 0.0,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Average daily return slightly higher for LQD",
+        "TLT shows higher volatility",
+        "Both ETFs have similar average daily returns over the 144‑day horizon",
+        "LQD shows slightly higher upside potential but also larger downside spikes, while TLT is more stable",
+        "LQD has a slightly higher average daily return over the 144‑day period",
+        "LQD exhibits lower volatility compared to TLT"
+      ],
+      "projected_score_difference": 0.20066638302188267,
+      "consistency_residual": 4.312440268744444e-06,
+      "q": 0.0017799019404138585,
+      "omega": 2.4130936209128618e-05
+    },
+    {
+      "asset_a": "DBC",
+      "asset_b": "SLV",
+      "raw_probability_a": 0.43999999999999995,
+      "calibrated_probability_a": 0.43999999999999995,
+      "uncertainty": 0.6056871100015812,
+      "disagreement": 0.20297783130184446,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Higher average daily return over 144 days",
+        "SLV shows more positive extremes",
+        "SLV has more large negative swings",
+        "DBC shows steadier returns",
+        "Higher average daily return in sample",
+        "SLV shows slightly higher mean than DBC"
+      ],
+      "projected_score_difference": -0.2412303855600726,
+      "consistency_residual": 6.832874318435378e-05,
+      "q": -0.0021272421495923655,
+      "omega": 2.9650788074937e-05
+    },
+    {
+      "asset_a": "HYG",
+      "asset_b": "SPY",
+      "raw_probability_a": 0.35,
+      "calibrated_probability_a": 0.35,
+      "uncertainty": 0.5770340276877456,
+      "disagreement": 0.19999999999999996,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "SPY had a 10.5% one‑day spike and overall higher cumulative return than HYG over the 144‑day window",
+        "HYG’s daily returns were modest and more negative on average, limiting its cumulative performance",
+        "Higher average daily return",
+        "Higher volatility but higher return",
+        "SPY’s average daily return exceeds HYG’s in the sample",
+        "SPY’s higher mean return offsets its higher volatility over 144 days"
+      ],
+      "projected_score_difference": -0.6188348925451237,
+      "consistency_residual": -0.00020431586109981303,
+      "q": -0.004946624137935581,
+      "omega": 2.6912703934280386e-05
+    },
+    {
+      "asset_a": "EFA",
+      "asset_b": "SPY",
+      "raw_probability_a": 0.44999999999999996,
+      "calibrated_probability_a": 0.44999999999999996,
+      "uncertainty": 0.5463872269939042,
+      "disagreement": 0.0,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "Both assets have similar average daily returns and volatility over the 144‑day period.",
+        "No clear statistical advantage is evident from the supplied return series.",
+        "SPY shows fewer extreme negative returns than EFA",
+        "EFA experienced a large -6.5% drop during the period",
+        "SPY had a large single-day gain of +10.5%",
+        "EFA experienced a large single-day loss of -6.6%"
+      ],
+      "projected_score_difference": -0.2007056914564771,
+      "consistency_residual": 3.4995994325714985e-05,
+      "q": -0.0017802414150203435,
+      "omega": 2.4130936209128618e-05
+    },
+    {
+      "asset_a": "DBC",
+      "asset_b": "SPY",
+      "raw_probability_a": 0.35,
+      "calibrated_probability_a": 0.35,
+      "uncertainty": 0.5170340276877456,
+      "disagreement": 1.3597399555105182e-16,
+      "calibration_error": 0.25,
+      "weight": 1.0,
+      "evidence": [
+        "SPY higher average daily return",
+        "DBC more volatile",
+        "SPY historically delivers higher average returns than commodity ETFs like DBC",
+        "SPY recorded a 10.5% single‑day gain during the 144‑day window",
+        "SPY had a 10.5% single-day gain early in the period",
+        "DBC experienced several negative swings, including -4% and -3% days"
+      ],
+      "projected_score_difference": -0.6187978288558611,
+      "consistency_residual": -0.00024137955036240832,
+      "q": -0.004946391874144636,
+      "omega": 2.1608885214898894e-05
+    }
+  ],
+  "rejected_views": [
+    {
+      "asset_a": "DIA",
+      "asset_b": "SPY",
+      "raw_probability_a": 0.4833333333333333,
+      "calibrated_probability_a": 0.4833333333333333,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "DBC",
+      "asset_b": "USO",
+      "raw_probability_a": 0.4933333333333333,
+      "calibrated_probability_a": 0.4933333333333333,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "IWM",
+      "asset_b": "SPY",
+      "raw_probability_a": 0.51,
+      "calibrated_probability_a": 0.51,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "EEM",
+      "asset_b": "EFA",
+      "raw_probability_a": 0.5,
+      "calibrated_probability_a": 0.5,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "GLD",
+      "asset_b": "SLV",
+      "raw_probability_a": 0.5333333333333333,
+      "calibrated_probability_a": 0.5333333333333333,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "HYG",
+      "asset_b": "LQD",
+      "raw_probability_a": 0.5433333333333333,
+      "calibrated_probability_a": 0.5433333333333333,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "HYG",
+      "asset_b": "VNQ",
+      "raw_probability_a": 0.5233333333333334,
+      "calibrated_probability_a": 0.5233333333333334,
+      "reason": "low_confidence"
+    },
+    {
+      "asset_a": "DIA",
+      "asset_b": "IWM",
+      "raw_probability_a": 0.45999999999999996,
+      "calibrated_probability_a": 0.45999999999999996,
+      "reason": "low_confidence"
+    }
+  ],
+  "raw_cycle_count": 0,
+  "consistency_rmse": 0.00016697489827105456,
+  "latent_scores": {
+    "SPY": 0.26475549456146125,
+    "QQQ": 0.4921283833465449,
+    "IWM": 8.729332359677888e-14,
+    "DIA": -1.365185273385688e-13,
+    "EFA": 0.06404980310498413,
+    "EEM": -1.1429949140319574e-13,
+    "VNQ": -8.971599167898524e-15,
+    "TLT": -0.19277373844794893,
+    "IEF": 0.18488109387357626,
+    "HYG": -0.35407939798366245,
+    "LQD": 0.007892644573933738,
+    "GLD": 5.309296339736856e-15,
+    "SLV": -0.11281194873432727,
+    "USO": 5.3771801826011745e-15,
+    "DBC": -0.35404233429439985
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "dataset": "cross_asset_etfs",
+  "formation_source": "experiments\\cutoff_2025_12\\cross_asset_etfs\\data\\formation_returns.csv",
+  "formation_sha256": "db8bbaf428dd14aa52f5c50a19d6a753569d6e07c4b6659f6e7b179a09179917",
+  "realized_source": "experiments\\cutoff_2025_12\\cross_asset_etfs\\data\\realized_returns.csv",
+  "realized_sha256": "401b7c05b5a39dea0aa314c5dabb3d18c4698cac54ffdbf28daccaffaabec22a",
+  "formation_rows": 250,
+  "actual_formation_start": "2025-01-02",
+  "actual_formation_end": "2025-12-31",
+  "realized_rows": 144,
+  "actual_test_start": "2026-01-02",
+  "actual_test_end": "2026-07-30"
+}
