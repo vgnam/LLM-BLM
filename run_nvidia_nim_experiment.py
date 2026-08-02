@@ -507,6 +507,71 @@ def display_method_name(method: str) -> str:
     return method
 
 
+def plot_weight_heatmap(weights: pd.DataFrame, title: str, output: Path) -> None:
+    method_order = [
+        "BL", "MVO", "EW", "BLM_LLM__gpt_oss_20b", "RelViewBL__gpt_oss_20b"
+    ]
+    asset_order = weights["Asset"].astype(str).drop_duplicates().tolist()
+    matrix = weights.pivot(index="Method", columns="Asset", values="Weight")
+    missing = [method for method in method_order if method not in matrix.index]
+    if missing:
+        raise ValueError(f"weight heatmap is missing methods: {missing}")
+    matrix = matrix.reindex(index=method_order, columns=asset_order)
+    values = matrix.to_numpy(dtype=float)
+
+    fig, axis = plt.subplots(figsize=(16, 5.5))
+    image = axis.imshow(values, aspect="auto", cmap="YlGnBu", vmin=0.0, vmax=0.15)
+    axis.set_xticks(np.arange(len(asset_order)), labels=asset_order, rotation=45, ha="right")
+    axis.set_yticks(
+        np.arange(len(method_order)),
+        labels=[display_method_name(method) for method in method_order],
+    )
+    axis.set_title(title)
+    axis.set_xlabel("Asset")
+    axis.set_ylabel("Portfolio method")
+    for row in range(values.shape[0]):
+        for column in range(values.shape[1]):
+            value = values[row, column]
+            axis.text(
+                column, row, f"{value:.2f}", ha="center", va="center",
+                fontsize=7, color="white" if value >= 0.09 else "black",
+            )
+    colorbar = fig.colorbar(image, ax=axis, pad=0.01)
+    colorbar.set_label("Portfolio weight")
+    fig.tight_layout()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output, dpi=180)
+    plt.close(fig)
+
+
+def plot_correlation_heatmap(
+    formation_returns: pd.DataFrame, title: str, output: Path
+) -> None:
+    numeric = formation_returns.select_dtypes(include=[np.number])
+    correlation = numeric.corr()
+    assets = correlation.columns.astype(str).tolist()
+    values = correlation.to_numpy(dtype=float)
+
+    fig, axis = plt.subplots(figsize=(12, 10))
+    image = axis.imshow(values, cmap="RdBu_r", vmin=-1.0, vmax=1.0)
+    axis.set_xticks(np.arange(len(assets)), labels=assets, rotation=45, ha="right")
+    axis.set_yticks(np.arange(len(assets)), labels=assets)
+    axis.set_title(title)
+    for row in range(values.shape[0]):
+        for column in range(values.shape[1]):
+            value = values[row, column]
+            axis.text(
+                column, row, f"{value:.2f}", ha="center", va="center",
+                fontsize=6, color="white" if abs(value) >= 0.55 else "black",
+            )
+    colorbar = fig.colorbar(image, ax=axis, pad=0.02)
+    colorbar.set_label("Pearson correlation")
+    fig.tight_layout()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output, dpi=180)
+    plt.close(fig)
+
+
 def save_method_artifacts(
     dataset_root: Path, method: str, daily: pd.DataFrame,
     weights: pd.DataFrame, metrics: Mapping[str, Any],
@@ -539,6 +604,17 @@ def save_per_dataset_summaries(
             dataset_daily,
             f"{dataset_id}: 2026 portfolio NAV",
             dataset_root / "plots" / "nav_2026.png",
+        )
+        plot_weight_heatmap(
+            dataset_weights,
+            f"{dataset_id}: portfolio weights at the 2025 cutoff",
+            dataset_root / "plots" / "portfolio_weights_heatmap.png",
+        )
+        formation = pd.read_csv(dataset_root / "data" / "formation_returns.csv")
+        plot_correlation_heatmap(
+            formation,
+            f"{dataset_id}: 2025 asset-return correlation",
+            dataset_root / "plots" / "asset_correlation_2025.png",
         )
 
 

@@ -39,6 +39,14 @@ evaluation metric for the five reported methods.
 
 ![US technology NAV](experiments/nvidia_nim_2025_2026/us_technology/plots/nav_2026.png)
 
+#### US Technology Portfolio Weights
+
+![US technology portfolio-weight heatmap](experiments/nvidia_nim_2025_2026/us_technology/plots/portfolio_weights_heatmap.png)
+
+#### US Technology 2025 Asset Correlation
+
+![US technology asset-correlation matrix](experiments/nvidia_nim_2025_2026/us_technology/plots/asset_correlation_2025.png)
+
 ### US Financial Equities
 
 | Method | Days | Cumulative return | Annualized return | Annualized volatility | Sharpe | Max drawdown | Sortino | Calmar | Final NAV |
@@ -59,6 +67,14 @@ evaluation metric for the five reported methods.
 
 ![US financial NAV](experiments/nvidia_nim_2025_2026/us_financials/plots/nav_2026.png)
 
+#### US Financial Portfolio Weights
+
+![US financial portfolio-weight heatmap](experiments/nvidia_nim_2025_2026/us_financials/plots/portfolio_weights_heatmap.png)
+
+#### US Financial 2025 Asset Correlation
+
+![US financial asset-correlation matrix](experiments/nvidia_nim_2025_2026/us_financials/plots/asset_correlation_2025.png)
+
 ### Cross-Asset ETFs
 
 | Method | Days | Cumulative return | Annualized return | Annualized volatility | Sharpe | Max drawdown | Sortino | Calmar | Final NAV |
@@ -78,6 +94,14 @@ evaluation metric for the five reported methods.
 | **PairBL (GPT-OSS-20B)** | **0.08%** | **3.61%** | **-4.01%** | **54.86%** | **14.45%** | **-2.53%** | **-2.93%** | **1.00** | **10** |
 
 ![Cross-asset ETF NAV](experiments/nvidia_nim_2025_2026/cross_asset_etfs/plots/nav_2026.png)
+
+#### Cross-Asset ETF Portfolio Weights
+
+![Cross-asset ETF portfolio-weight heatmap](experiments/nvidia_nim_2025_2026/cross_asset_etfs/plots/portfolio_weights_heatmap.png)
+
+#### Cross-Asset ETF 2025 Asset Correlation
+
+![Cross-asset ETF correlation matrix](experiments/nvidia_nim_2025_2026/cross_asset_etfs/plots/asset_correlation_2025.png)
 
 ### Equal-Dataset Aggregate
 
