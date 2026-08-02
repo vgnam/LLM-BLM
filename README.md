@@ -4,58 +4,84 @@
 
 ![model](figure/model.png)
 
-## NVIDIA NIM: 2025 Views and 2026 Backtest
+## PairBL: 2025 Views and 2026 Backtest
 
-The NVIDIA NIM experiment forms each portfolio once using 250 daily return
-observations from 2025 and holds the fixed weights over 144 trading sessions
-from 2 January to 30 July 2026. All methods use the same long-only optimizer,
-15% per-asset cap, and 10 bps entry cost. The three 15-asset universes are US
-technology equities (including NVDA), US financial equities, and cross-asset
-ETFs. Each successful LLM view uses three repeated calls; RelViewBL uses a
-15-pair sparse comparison graph and a 0.55 abstention threshold.
+The experiment forms each portfolio once using 250 daily return observations
+from 2025 and holds the fixed weights over 144 trading sessions from 2 January
+to 30 July 2026. All methods use the same long-only optimizer, 15% per-asset
+cap, and 10 bps entry cost. PairBL uses GPT-OSS-20B through NVIDIA NIM, three
+repeated calls per comparison, a 15-pair sparse comparison graph, and a 0.55
+abstention threshold. The comparison methods are no-view Black--Litterman
+(BL), mean--variance optimization (MVO), and equal weighting (EW).
 
-The hosted NVIDIA NIM endpoint returned HTTP 410 for
-`qwen/qwen3-next-80b-a3b-instruct` and
-`mistralai/mixtral-8x7b-instruct-v0.1`, reporting that both reached end of life
-on 27 July 2026. They remain explicit `unavailable` rows in the saved method
-inventory and metrics rather than being silently replaced. The complete
-LLM-based results below therefore use `openai/gpt-oss-20b`.
+The three 15-asset universes are US technology equities (including NVDA), US
+financial equities, and cross-asset ETFs. The tables below contain every saved
+evaluation metric for the four reported methods.
 
-### Cumulative Return by Dataset
+### US Technology Equities
 
-| Dataset | BL | MVO | EW | BLM-LLM (GPT-OSS-20B) | RelViewBL (GPT-OSS-20B) |
-|---|---:|---:|---:|---:|---:|
-| US technology | +49.55% | +49.66% | +18.98% | +49.55% | **+58.48%** |
-| US financials | +4.99% | +7.55% | +8.08% | +6.65% | **+9.11%** |
-| Cross-asset ETFs | **+20.91%** | +6.61% | +12.67% | +17.20% | +11.19% |
+| Method | Days | Cumulative return | Annualized return | Annualized volatility | Sharpe | Max drawdown | Sortino | Calmar | Final NAV |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| BL | 144 | 49.55% | 102.25% | 47.39% | 1.724 | -25.75% | 2.559 | 3.970 | 1.496 |
+| MVO | 144 | 49.66% | 102.52% | 43.50% | 1.841 | -23.18% | 2.776 | 4.422 | 1.497 |
+| EW | 144 | 18.98% | 35.55% | 26.65% | 1.274 | -15.77% | 1.879 | 2.254 | 1.190 |
+| **PairBL (GPT-OSS-20B)** | **144** | **58.48%** | **123.85%** | **46.62%** | **1.963** | **-25.68%** | **2.934** | **4.824** | **1.585** |
 
-BL and BLM-LLM produce identical optimized weights in the US technology
-universe, so their NAV paths overlap exactly in that plot. BL is rendered as a
-blue dashed line over the red BLM-LLM line to keep both methods visible.
+| Method | Mean daily return | Best day | Worst day | Positive days | Annualized downside deviation | Daily VaR 95% | Daily CVaR 95% | Turnover | Cost (bps) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| BL | 0.32% | 9.04% | -9.73% | 61.11% | 31.93% | -4.30% | -5.94% | 1.00 | 10 |
+| MVO | 0.32% | 8.58% | -8.99% | 60.42% | 28.84% | -3.58% | -5.27% | 1.00 | 10 |
+| EW | 0.13% | 4.01% | -6.48% | 54.17% | 18.07% | -2.38% | -3.32% | 1.00 | 10 |
+| **PairBL (GPT-OSS-20B)** | **0.36%** | **8.75%** | **-9.54%** | **60.42%** | **31.19%** | **-4.35%** | **-5.92%** | **1.00** | **10** |
+
+![US technology NAV](experiments/nvidia_nim_2025_2026/us_technology/plots/nav_2026.png)
+
+### US Financial Equities
+
+| Method | Days | Cumulative return | Annualized return | Annualized volatility | Sharpe | Max drawdown | Sortino | Calmar | Final NAV |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| BL | 144 | 4.99% | 8.90% | 26.03% | 0.458 | -20.10% | 0.626 | 0.443 | 1.050 |
+| MVO | 144 | 7.55% | 13.58% | 25.03% | 0.634 | -18.26% | 0.889 | 0.744 | 1.075 |
+| EW | 144 | 8.08% | 14.57% | 18.77% | 0.818 | -13.16% | 1.165 | 1.107 | 1.081 |
+| **PairBL (GPT-OSS-20B)** | **144** | **9.11%** | **16.48%** | **25.70%** | **0.722** | **-18.13%** | **0.998** | **0.909** | **1.091** |
+
+| Method | Mean daily return | Best day | Worst day | Positive days | Annualized downside deviation | Daily VaR 95% | Daily CVaR 95% | Turnover | Cost (bps) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| BL | 0.05% | 4.46% | -6.24% | 53.47% | 19.03% | -2.86% | -3.81% | 1.00 | 10 |
+| MVO | 0.06% | 4.58% | -5.03% | 55.56% | 17.84% | -2.78% | -3.56% | 1.00 | 10 |
+| EW | 0.06% | 3.25% | -3.77% | 53.47% | 13.18% | -1.96% | -2.59% | 1.00 | 10 |
+| **PairBL (GPT-OSS-20B)** | **0.07%** | **4.39%** | **-6.08%** | **57.64%** | **18.59%** | **-2.85%** | **-3.72%** | **1.00** | **10** |
+
+![US financial NAV](experiments/nvidia_nim_2025_2026/us_financials/plots/nav_2026.png)
+
+### Cross-Asset ETFs
+
+| Method | Days | Cumulative return | Annualized return | Annualized volatility | Sharpe | Max drawdown | Sortino | Calmar | Final NAV |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| BL | 144 | 20.91% | 39.41% | 19.72% | 1.785 | -9.00% | 2.405 | 4.378 | 1.209 |
+| MVO | 144 | 6.61% | 11.86% | 24.62% | 0.578 | -14.49% | 0.774 | 0.819 | 1.066 |
+| EW | 144 | 12.67% | 23.22% | 12.53% | 1.730 | -5.45% | 2.352 | 4.263 | 1.127 |
+| **PairBL (GPT-OSS-20B)** | **144** | **11.19%** | **20.40%** | **20.62%** | **1.003** | **-11.84%** | **1.432** | **1.722** | **1.112** |
+
+| Method | Mean daily return | Best day | Worst day | Positive days | Annualized downside deviation | Daily VaR 95% | Daily CVaR 95% | Turnover | Cost (bps) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| BL | 0.14% | 3.11% | -5.04% | 59.03% | 14.63% | -2.05% | -3.19% | 1.00 | 10 |
+| MVO | 0.06% | 3.90% | -6.54% | 54.86% | 18.40% | -2.95% | -3.78% | 1.00 | 10 |
+| EW | 0.09% | 2.03% | -3.24% | 61.11% | 9.22% | -1.45% | -1.97% | 1.00 | 10 |
+| **PairBL (GPT-OSS-20B)** | **0.08%** | **3.61%** | **-4.01%** | **54.86%** | **14.45%** | **-2.53%** | **-2.93%** | **1.00** | **10** |
+
+![Cross-asset ETF NAV](experiments/nvidia_nim_2025_2026/cross_asset_etfs/plots/nav_2026.png)
 
 ### Equal-Dataset Aggregate
 
 | Method | Cumulative return | Sharpe | Maximum drawdown |
 |---|---:|---:|---:|
-| BL | +25.46% | 1.688 | -11.06% |
+| BL | +25.46% | **1.688** | -11.06% |
 | MVO | +21.08% | 1.439 | -13.84% |
 | EW | +13.74% | 1.572 | **-8.85%** |
-| BLM-LLM (GPT-OSS-20B) | +24.93% | **1.693** | -11.20% |
-| RelViewBL (GPT-OSS-20B) | **+25.77%** | 1.657 | -13.17% |
+| **PairBL (GPT-OSS-20B)** | **+25.77%** | 1.657 | -13.17% |
 
-Per-dataset artifacts:
-
-- [US technology metrics](experiments/nvidia_nim_2025_2026/us_technology/results/method_metrics.csv)
-  and [NAV plot](experiments/nvidia_nim_2025_2026/us_technology/plots/nav_2026.png)
-- [US financials metrics](experiments/nvidia_nim_2025_2026/us_financials/results/method_metrics.csv)
-  and [NAV plot](experiments/nvidia_nim_2025_2026/us_financials/plots/nav_2026.png)
-- [Cross-asset ETF metrics](experiments/nvidia_nim_2025_2026/cross_asset_etfs/results/method_metrics.csv)
-  and [NAV plot](experiments/nvidia_nim_2025_2026/cross_asset_etfs/plots/nav_2026.png)
-- [Aggregate NAV plot](experiments/nvidia_nim_2025_2026/plots/aggregate_nav_2026.png),
-  [full report](experiments/nvidia_nim_2025_2026/REPORT.md), and
-  [data catalog](experiments/nvidia_nim_2025_2026/summary/data_catalog.json)
-
-![NVIDIA NIM equal-dataset aggregate NAV](experiments/nvidia_nim_2025_2026/plots/aggregate_nav_2026.png)
+![PairBL equal-dataset aggregate NAV](experiments/nvidia_nim_2025_2026/plots/aggregate_nav_2026.png)
 
 
 
@@ -66,10 +92,8 @@ Per-dataset artifacts:
 .
 ├── run.py                  # Main file to run LLMs and collect their views
 ├── collect_relative_views.py # Collects sparse pairwise LLM views
-├── collect_absolute_views.py # Collects absolute views with the same LLM/provider
 ├── relview_bl.py           # RelView-BL method implementation
 ├── evaluate_relview.py     # Runs one leak-free RelView-BL period
-├── evaluate_absolute_bl.py # Runs comparable absolute-view LLM-BLM
 ├── portfolio_backtest.py   # Shared realized-return metrics
 ├── baselines.py           # Implementation of baseline portfolio strategies
 ├── calculate_llm_returns.py # Calculates returns for LLM-based portfolios
@@ -111,8 +135,7 @@ The evaluation process is split into two main components:
 
 ### 4. RelView-BL (relative LLM views)
 
-`relview_bl.py` adds the consistency-calibrated relative-view method without
-changing the original absolute-return baseline. The pipeline:
+`relview_bl.py` implements the consistency-calibrated pairwise-view pipeline:
 
 1. selects a sparse set of pairs using return correlation, sector, and market-cap similarity;
 2. asks the LLM which asset is more likely to outperform and repeats each comparison;
@@ -223,22 +246,9 @@ scores, posterior returns, and portfolio weights. A companion weights CSV is
 created automatically. The reusable entry point for experiments and ablations
 is `run_relview_bl()` in `relview_bl.py`.
 
-### Same-model Absolute LLM-BLM comparison
+### RelView-BL realized-period evaluation
 
-For a controlled comparison, collect absolute views with the same DeepSeek V4
-Flash model, 30 calls, universe, information set, and disabled thinking:
-
-```powershell
-py collect_absolute_views.py --returns yfinance/returns_2024-06-01_2024-06-30.csv --universe universe.json --repeats 30 --thinking disabled --horizon-days 10 --temperature 0.3 --output responses/deepseek-v4-flash_2024-06-01_2024-06-30.json
-```
-
-Evaluate Absolute LLM-BLM on July realized returns:
-
-```powershell
-py evaluate_absolute_bl.py --returns yfinance/returns_2024-06-01_2024-06-30.csv --views responses/deepseek-v4-flash_2024-06-01_2024-06-30.json --universe universe.json --market-caps market_caps.json --tau 0.025 --risk-aversion 0.1 --market-risk-aversion 2.5 --max-weight 0.1 --realized-returns yfinance/returns_2024-07-01_2024-07-31.csv --evaluation-days 10 --weights-output results/absolute_deepseek_2024-06_weights.csv --returns-output results/absolute_deepseek_2024-06_returns.csv --output results/absolute_deepseek_2024-06.json
-```
-
-Evaluate RelView-BL on the identical period. The operational default delta is
+Evaluate RelView-BL on a closed realized period. The operational default delta is
 `0.60`; keep it explicit in experiments and select it on a validation period,
 not the final test period:
 

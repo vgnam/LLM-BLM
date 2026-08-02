@@ -437,6 +437,9 @@ def evaluate_method(
 def plot_nav(daily: pd.DataFrame, title: str, output: Path) -> None:
     if daily.empty:
         return
+    daily = daily[
+        ~daily["Method"].astype(str).str.startswith("BLM_LLM__")
+    ].copy()
     fig, axis = plt.subplots(figsize=(12, 7))
     style_by_method: dict[str, dict[str, Any]] = {
         "BL": {
@@ -463,8 +466,12 @@ def plot_nav(daily: pd.DataFrame, title: str, output: Path) -> None:
             style = {"color": "tab:purple", "linewidth": 2.0, "zorder": 4}
         else:
             style = style_by_method.get(method, {})
+        display_label = (
+            "PairBL (GPT-OSS-20B)"
+            if method.startswith("RelViewBL__") else method
+        )
         axis.plot(
-            pd.to_datetime(ordered["Date"]), ordered["NAV"], label=method,
+            pd.to_datetime(ordered["Date"]), ordered["NAV"], label=display_label,
             linewidth=style.get("linewidth", 1.8),
             color=style.get("color"),
             linestyle=style.get("linestyle", "-"),
@@ -537,6 +544,14 @@ def postprocess_existing(output_root: Path, dataset_ids: list[str]) -> None:
     weights = pd.read_csv(summary_root / "weights_long.csv")
     metrics = pd.read_csv(summary_root / "method_metrics.csv")
     save_per_dataset_summaries(output_root, dataset_ids, daily, weights, metrics)
+    aggregate_path = summary_root / "equal_dataset_daily_nav.csv"
+    if aggregate_path.exists():
+        aggregate_daily = pd.read_csv(aggregate_path)
+        plot_nav(
+            aggregate_daily,
+            "Equal-dataset aggregate: 2026 NAV",
+            output_root / "plots" / "aggregate_nav_2026.png",
+        )
     print(f"Regenerated per-dataset metrics, returns, weights, and plots under {output_root}")
 
 
