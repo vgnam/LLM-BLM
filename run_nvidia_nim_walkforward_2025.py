@@ -515,6 +515,51 @@ def chained_nav(daily: pd.DataFrame) -> pd.DataFrame:
     return daily.sort_values("Date").reset_index(drop=True)
 
 
+def drawdown_stats(nav: np.ndarray) -> dict[str, float]:
+    """Drawdown series plus longest episode length and time-to-recovery."""
+    dd = nav / np.maximum.accumulate(nav) - 1.0
+    max_dd = float(np.min(dd)) if len(dd) else 0.0
+    if len(dd) == 0:
+        return {"max_drawdown": 0.0, "avg_drawdown": 0.0, "max_drawdown_days": 0,
+                "drawdown_recovery_days": 0, "drawdown_count": 0}
+    in_dd = dd < 0.0
+    episodes: list[int] = []
+    current = 0
+    for flag in in_dd:
+        if flag:
+            current += 1
+        else:
+            if current:
+                episodes.append(current)
+            current = 0
+    if current:
+        episodes.append(current)
+    episodes = episodes or [0]
+    # time-to-recovery: days from the max-drawdown trough back to a new high
+    trough_idx = int(np.argmin(dd))
+    trough_nav = nav[trough_idx]
+    recovery = 0
+    for idx in range(trough_idx, len(nav)):
+        if nav[idx] >= nav[: trough_idx + 1].max():
+            recovery = idx - trough_idx
+            break
+    return {
+        "max_drawdown": max_dd,
+        "avg_drawdown": float(np.mean(dd[in_dd])) if in_dd.any() else 0.0,
+        "max_drawdown_days": int(max(episodes)),
+        "drawdown_recovery_days": int(recovery),
+        "drawdown_count": int(len(episodes)),
+    }
+
+
+def var_cvar(values: np.ndarray, level: float) -> tuple[float, float]:
+    """Historical VaR and CVaR (expected shortfall) at a probability level."""
+    var = float(np.quantile(values, 1.0 - level))
+    tail = values[values <= var]
+    cvar = float(np.mean(tail)) if len(tail) else var
+    return var, cvar
+
+
 def method_metrics(daily_nav: pd.DataFrame, method: str, annual_rf: float) -> dict[str, Any]:
     col = f"{method}_Return"
     nav_col = f"{method}_NAV"
@@ -530,16 +575,21 @@ def method_metrics(daily_nav: pd.DataFrame, method: str, annual_rf: float) -> di
     downside_dev = float(np.sqrt(np.mean(np.square(downside))) * np.sqrt(252.0))
     excess = float((np.mean(values) - daily_rf) * 252.0)
     std_daily = float(np.std(values, ddof=1)) if days > 1 else 0.0
-    var_95 = float(np.quantile(values, 0.05))
-    tail = values[values <= var_95]
     cumulative = float(nav[-1] - 1.0)
     annualized = float(nav[-1] ** (252.0 / days) - 1.0) if cumulative > -1.0 else -1.0
     vol = float(np.std(values, ddof=1) * np.sqrt(252.0)) if days > 1 else 0.0
-    drawdown = float(np.min(nav / np.maximum.accumulate(nav) - 1.0))
     sharpe = (float(np.mean(values) - daily_rf) / std_daily * np.sqrt(252.0)) if std_daily > 0 else 0.0
     sortino = excess / downside_dev if downside_dev > 0 else 0.0
-    calmar = annualized / abs(drawdown) if drawdown < 0 else 0.0
+    dd_stats = drawdown_stats(nav)
+    calmar = annualized / abs(dd_stats["max_drawdown"]) if dd_stats["max_drawdown"] < 0 else 0.0
+    gains = values[values > 0]
+    losses = values[values < 0]
+    gain_loss_ratio = float(np.mean(gains) / abs(np.mean(losses))) if len(gains) and len(losses) and np.mean(losses) != 0 else 0.0
+    profit_factor = float(np.sum(gains) / abs(np.sum(losses))) if np.sum(losses) != 0 else float("inf")
     n_reb = int(daily_nav["Rebalance"].nunique()) if "Rebalance" in daily_nav.columns else 0
+    var_95, cvar_95 = var_cvar(values, 0.95)
+    var_99, cvar_99 = var_cvar(values, 0.99)
+    worst_5 = float(np.mean(np.sort(values)[: max(int(days * 0.05), 1)]))
     return {
         "Method": method,
         "Display": display_method_name(method),
@@ -550,15 +600,23 @@ def method_metrics(daily_nav: pd.DataFrame, method: str, annual_rf: float) -> di
         "annualized_return": annualized,
         "annualized_volatility": vol,
         "sharpe": sharpe,
-        "max_drawdown": drawdown,
         "sortino": sortino,
         "calmar": calmar,
+        **dd_stats,
+        "max_drawdown_duration_pct": float(dd_stats["max_drawdown_days"] / days) if days else 0.0,
+        "downside_deviation": downside_dev,
+        "ulcer_index": float(np.sqrt(np.mean(np.square(np.minimum(dd_stats["max_drawdown"], 0.0))))) if dd_stats["max_drawdown"] != 0.0 else 0.0,
         "mean_daily_return": float(np.mean(values)),
         "best_day": float(np.max(values)),
         "worst_day": float(np.min(values)),
         "positive_day_ratio": float(np.mean(values > 0.0)),
+        "gain_loss_ratio": gain_loss_ratio,
+        "profit_factor": profit_factor,
         "daily_var_95": var_95,
-        "daily_cvar_95": float(np.mean(tail)) if len(tail) else var_95,
+        "daily_cvar_95": cvar_95,
+        "daily_var_99": var_99,
+        "daily_cvar_99": cvar_99,
+        "worst_5_percent_avg": worst_5,
     }
 
 
@@ -622,10 +680,15 @@ def plot_drawdown(daily_nav: pd.DataFrame, title: str, output: Path, methods: li
 def plot_metrics(metrics: pd.DataFrame, title: str, output: Path) -> None:
     if metrics.empty:
         return
-    metric_names = ["cumulative_return", "annualized_return", "sharpe", "sortino",
-                    "max_drawdown", "annualized_volatility"]
+    metric_names = [
+        "cumulative_return", "annualized_return", "sharpe", "sortino",
+        "max_drawdown", "annualized_volatility",
+        "max_drawdown_days", "drawdown_recovery_days",
+        "downside_deviation", "gain_loss_ratio",
+        "daily_cvar_95", "daily_cvar_99",
+    ]
     palette = method_palette(metrics["Method"].tolist())
-    fig, axes = plt.subplots(2, 3, figsize=(18, 9))
+    fig, axes = plt.subplots(4, 3, figsize=(18, 15))
     axes = axes.ravel()
     for ax, metric in zip(axes, metric_names):
         order = metrics.sort_values(metric, ascending=False)["Method"].tolist()
@@ -635,7 +698,9 @@ def plot_metrics(metrics: pd.DataFrame, title: str, output: Path) -> None:
         ax.set_title(metric.replace("_", " ").title(), fontsize=11, fontweight="bold")
         ax.set_xlabel("")
         ax.tick_params(axis="x", rotation=30)
-        if "return" in metric or "drawdown" in metric or "volatility" in metric:
+        if metric in {"cumulative_return", "annualized_return", "max_drawdown",
+                      "annualized_volatility", "downside_deviation", "daily_cvar_95",
+                      "daily_cvar_99"}:
             ax.yaxis.set_major_formatter(lambda x, _: f"{x:.0%}")
     sns.despine()
     fig.suptitle(title, fontsize=14, fontweight="bold", y=1.02)
