@@ -746,8 +746,35 @@ def set_model_context(config: Mapping[str, Any]) -> None:
         model = dict(models[0])
         _CONFIG_CACHE["slug"] = str(model.get("slug", ""))
         requested = str(model.get("requested_model", ""))
-        label = requested.split("/")[-1].replace("-instruct", "").replace("-", " ").title()
+        label = requested.split("/")[-1].replace("-instruct", "")
+        tokens = label.replace("-", " ").split()
+        parts = [
+            part.upper()
+            if (part.isalpha() and len(part) <= 4) or part[:1].isdigit()
+            else part.capitalize()
+            for part in tokens
+        ]
+        label = "-".join(parts)
         _CONFIG_CACHE["model_label"] = label or "LLM"
+
+
+def pretty_dataset_label(dataset_id: str) -> str:
+    """Human-readable universe label for titles and captions."""
+    labels = {
+        "us_technology": "US Technology Equities",
+        "us_financials": "US Financial Equities",
+        "cross_asset_etfs": "Cross-Asset ETFs",
+    }
+    return labels.get(dataset_id, dataset_id.replace("_", " ").title())
+
+
+def plot_title(kind: str, dataset_id: str, holding_days: int) -> str:
+    """Standard plot title: '<Universe> — <kind>, <N>-Day Rebalance, 2025'."""
+    model_label = _CONFIG_CACHE.get("model_label") or "LLM"
+    return (
+        f"{pretty_dataset_label(dataset_id)} — {kind} | "
+        f"{holding_days}-Day Rebalance | {model_label} | 2025"
+    )
 
 
 def config_max_weight() -> float:
@@ -792,10 +819,11 @@ def save_holding_results(
     })
 
     model_label = _CONFIG_CACHE.get("model_label") or "LLM"
-    title = f"{dataset_root.name}: {holding_days}-day rebalance NAV ({model_label}, 2025)"
+    dataset_label = pretty_dataset_label(dataset_root.name)
+    title = plot_title("Cumulative NAV", dataset_root.name, holding_days)
     plot_nav(daily_nav, title, hp_dir / "nav.png", methods)
-    plot_drawdown(daily_nav, f"{dataset_root.name}: {holding_days}-day rebalance drawdown", hp_dir / "drawdown.png", methods)
-    plot_metrics(metrics, f"{dataset_root.name}: metrics ({holding_days}d rebalance)", hp_dir / "metrics.png")
+    plot_drawdown(daily_nav, plot_title("Drawdown", dataset_root.name, holding_days), hp_dir / "drawdown.png", methods)
+    plot_metrics(metrics, f"{dataset_label}: Metrics ({holding_days}-Day Rebalance, {model_label})", hp_dir / "metrics.png")
 
     assets = result["assets"]
     if not weights.empty:
@@ -806,7 +834,7 @@ def save_holding_results(
         )
         plot_weight_heatmap(
             labeled,
-            f"{dataset_root.name}: weights per rebalance ({holding_days}d)",
+            plot_title("Portfolio Weights", dataset_root.name, holding_days),
             hp_dir / "weights_heatmap.png",
             assets,
         )
