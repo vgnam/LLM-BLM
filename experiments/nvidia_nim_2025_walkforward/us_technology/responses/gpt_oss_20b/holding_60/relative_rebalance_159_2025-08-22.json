@@ -1,0 +1,640 @@
+{
+  "requested_model": "openai/gpt-oss-20b",
+  "model": "openai/gpt-oss-20b",
+  "base_url": "https://integrate.api.nvidia.com/v1",
+  "rebalance_index": 159,
+  "formation_end": "2025-08-22",
+  "formation_days": 252,
+  "horizon_days": 60,
+  "repeats": 2,
+  "probability_estimator": "mean",
+  "temperature": 0.3,
+  "pairs_requested": 15,
+  "views": [
+    {
+      "asset_a": "QCOM",
+      "asset_b": "AMAT",
+      "preferred_asset": "AMAT",
+      "probability": 0.6000000000000001,
+      "probability_a": 0.39999999999999997,
+      "probability_samples_a": [
+        0.35,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.65,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.39999999999999997,
+      "votes": {
+        "QCOM": 0,
+        "AMAT": 2
+      },
+      "reported_probability_samples_a": [
+        0.35,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "AMAT shows several large positive spikes (e.g., +0.161) and a higher average return than QCOM",
+        "QCOM’s returns are more clustered around zero with fewer extreme positives",
+        "AMAT shows a modestly higher average daily return over the 60‑day period than QCOM."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AMD",
+      "asset_b": "QCOM",
+      "preferred_asset": "AMD",
+      "probability": 0.55,
+      "probability_a": 0.55,
+      "probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.55,
+      "votes": {
+        "AMD": 2,
+        "QCOM": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "evidence": [
+        "AMD had a large positive spike of 0.238 in the 60‑day window, while QCOM’s peak was 0.152",
+        "AMD’s daily returns show higher upside potential, though with higher volatility than QCOM",
+        "AMD shows a larger single-day gain (0.238) than QCOM (0.152)",
+        "AMD’s recent returns include a strong positive spike at day 60"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AMAT",
+      "asset_b": "MU",
+      "preferred_asset": "MU",
+      "probability": 0.65,
+      "probability_a": 0.35,
+      "probability_samples_a": [
+        0.35,
+        0.35
+      ],
+      "probability_samples": [
+        0.65,
+        0.65
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.35,
+      "votes": {
+        "AMAT": 0,
+        "MU": 2
+      },
+      "reported_probability_samples_a": [
+        0.35,
+        0.35
+      ],
+      "evidence": [
+        "MU has higher average daily return over the 60‑day period",
+        "AMAT shows more volatility and a lower mean return",
+        "MU has a higher average daily return over the 60‑day period",
+        "AMAT exhibits larger negative swings and lower mean return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "QCOM",
+      "asset_b": "TXN",
+      "preferred_asset": "TXN",
+      "probability": 0.6000000000000001,
+      "probability_a": 0.39999999999999997,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.35
+      ],
+      "probability_samples": [
+        0.55,
+        0.65
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.39999999999999997,
+      "votes": {
+        "QCOM": 0,
+        "TXN": 2
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.35
+      ],
+      "evidence": [
+        "TXN had a larger single-day peak (0.160) than QCOM (0.152)",
+        "Both assets show comparable volatility over the 60‑day period",
+        "TXN shows a large positive return of 0.1608 within the period, whereas QCOM has no comparable spike and many negative daily returns."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "NVDA",
+      "asset_b": "AMD",
+      "preferred_asset": "NVDA",
+      "probability": 0.5,
+      "probability_a": 0.5,
+      "probability_samples_a": [
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.5,
+      "votes": {
+        "NVDA": 1,
+        "AMD": 1
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "NVDA has a more stable return pattern over the 60‑day window",
+        "AMD exhibits larger swings, including a 23.8% gain and a 10.6% drop",
+        "NVDA had a large negative return of -0.169681",
+        "AMD had a positive spike of 0.238205"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "NVDA",
+      "asset_b": "AVGO",
+      "preferred_asset": "NVDA",
+      "probability": 0.55,
+      "probability_a": 0.55,
+      "probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.55,
+      "votes": {
+        "NVDA": 2,
+        "AVGO": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "evidence": [
+        "Mean daily return of NVDA ≈ 0.01, AVGO ≈ 0.01",
+        "Both assets show comparable volatility and large swings",
+        "Both assets show similar volatility and recent extremes in the 60‑day window."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MSFT",
+      "asset_b": "NVDA",
+      "preferred_asset": "NVDA",
+      "probability": 0.75,
+      "probability_a": 0.25,
+      "probability_samples_a": [
+        0.25,
+        0.25
+      ],
+      "probability_samples": [
+        0.75,
+        0.75
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.25,
+      "votes": {
+        "MSFT": 0,
+        "NVDA": 2
+      },
+      "reported_probability_samples_a": [
+        0.25,
+        0.25
+      ],
+      "evidence": [
+        "NVDA shows several large positive daily returns (e.g., 0.08, 0.04)",
+        "MSFT daily returns are generally smaller and more volatile",
+        "NVDA daily returns show higher average magnitude than MSFT",
+        "MSFT has more negative outliers, reducing its mean"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=1: Error code: 502 - {'type': 'about:blank', 'title': 'Bad Gateway', 'status': 502, 'detail': 'Upstream request failed.'}"
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "NVDA",
+      "asset_b": "ORCL",
+      "preferred_asset": "NVDA",
+      "probability": 0.65,
+      "probability_a": 0.65,
+      "probability_samples_a": [
+        0.55,
+        0.75
+      ],
+      "probability_samples": [
+        0.55,
+        0.75
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.65,
+      "votes": {
+        "NVDA": 2,
+        "ORCL": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.75
+      ],
+      "evidence": [
+        "NVDA shows higher volatility but recent positive streak",
+        "ORCL has a large negative spike at day 60",
+        "NVDA’s average daily return over the 60‑day window is higher than Oracle’s",
+        "NVDA shows more frequent positive swings and a higher overall mean return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AAPL",
+      "asset_b": "QCOM",
+      "preferred_asset": "AAPL",
+      "probability": 0.55,
+      "probability_a": 0.55,
+      "probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.55,
+      "votes": {
+        "AAPL": 2,
+        "QCOM": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "evidence": [
+        "AAPL had a large +0.153 return on day 56, boosting its average",
+        "QCOM experienced a -0.095 return on day 66, dragging its average down",
+        "AAPL’s 60‑day series includes a larger positive spike (≈+15.3%) than QCOM’s peak (≈+15.1%)",
+        "QCOM shows two large negative swings (≈‑9.5% and ‑8.5%) that AAPL does not have"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AAPL",
+      "asset_b": "CSCO",
+      "preferred_asset": "CSCO",
+      "probability": 0.65,
+      "probability_a": 0.35,
+      "probability_samples_a": [
+        0.35,
+        0.35
+      ],
+      "probability_samples": [
+        0.65,
+        0.65
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.35,
+      "votes": {
+        "AAPL": 0,
+        "CSCO": 2
+      },
+      "reported_probability_samples_a": [
+        0.35,
+        0.35
+      ],
+      "evidence": [
+        "CSCO shows a strong positive return of 9.3% on day 60, whereas AAPL had a negative return of 9.2% on the same day. The overall trend of CSCO’s daily returns appears more consistently positive compared to AAPL’s mixed performance.",
+        "CSCO shows higher average daily return over the 60‑day period",
+        "AAPL experienced several large negative swings, reducing its cumulative performance"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "CRM",
+      "asset_b": "ADBE",
+      "preferred_asset": "CRM",
+      "probability": 0.635,
+      "probability_a": 0.635,
+      "probability_samples_a": [
+        0.55,
+        0.72
+      ],
+      "probability_samples": [
+        0.55,
+        0.72
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.635,
+      "votes": {
+        "CRM": 2,
+        "ADBE": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.72
+      ],
+      "evidence": [
+        "CRM has a slightly higher average daily return over the 60‑day period",
+        "CRM’s recent performance shows more positive swings than ADBE",
+        "CRM shows several large positive daily returns (e.g., +0.1099, +0.0868) while ADBE has significant negative swings (e.g., -0.0846, -0.1369).",
+        "CRM’s overall trend over the 60‑day window appears more favorable than ADBE’s."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MSFT",
+      "asset_b": "CRM",
+      "preferred_asset": "CRM",
+      "probability": 0.55,
+      "probability_a": 0.44999999999999996,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.44999999999999996,
+      "votes": {
+        "MSFT": 0,
+        "CRM": 2
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "CRM had a 10.99% single‑day gain, higher than MSFT’s 10.13%",
+        "Both assets show similar volatility and no clear trend in the 60‑day sample",
+        "CRM shows occasional large positive spikes, MSFT has more moderate returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "CRM",
+      "asset_b": "INTU",
+      "preferred_asset": "INTU",
+      "probability": 0.575,
+      "probability_a": 0.42500000000000004,
+      "probability_samples_a": [
+        0.42000000000000004,
+        0.43000000000000005
+      ],
+      "probability_samples": [
+        0.58,
+        0.57
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.42500000000000004,
+      "votes": {
+        "CRM": 0,
+        "INTU": 2
+      },
+      "reported_probability_samples_a": [
+        0.42000000000000004,
+        0.43000000000000005
+      ],
+      "evidence": [
+        "INTU shows a higher average daily return over the 60‑day window",
+        "CRM has more frequent negative swings and a lower cumulative return",
+        "INTU shows a recent 12.6% spike versus CRM’s 10.9% within the same period; overall mean daily returns are comparable but INTU has slightly higher volatility, suggesting potential for outperformance in a 60‑day horizon."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "IBM",
+      "asset_b": "CSCO",
+      "preferred_asset": "CSCO",
+      "probability": 0.56,
+      "probability_a": 0.44,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.43000000000000005
+      ],
+      "probability_samples": [
+        0.55,
+        0.57
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.44,
+      "votes": {
+        "IBM": 0,
+        "CSCO": 2
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.43000000000000005
+      ],
+      "evidence": [
+        "CSCO has a notable 9.28% spike and generally higher recent returns; IBM shows larger volatility with several sharp downturns.",
+        "CSCO shows a recent 9.3% spike and generally higher average daily return than IBM",
+        "IBM has several large negative swings (e.g., -6.2% and -6.6%) that reduce its short‑term performance"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AMD",
+      "asset_b": "AMAT",
+      "preferred_asset": "AMD",
+      "probability": 0.57,
+      "probability_a": 0.57,
+      "probability_samples_a": [
+        0.57,
+        0.57
+      ],
+      "probability_samples": [
+        0.57,
+        0.57
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.57,
+      "votes": {
+        "AMD": 2,
+        "AMAT": 0
+      },
+      "reported_probability_samples_a": [
+        0.57,
+        0.57
+      ],
+      "evidence": [
+        "AMD shows a recent large positive return of 23.8%",
+        "AMAT has a significant negative return of -10.7%",
+        "AMD had a higher single-day peak return (≈0.238) than AMAT (≈0.161).",
+        "Both assets show similar overall volatility over the 60‑day period."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    }
+  ]
+}

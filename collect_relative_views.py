@@ -32,7 +32,9 @@ from relview_bl import select_candidate_pairs
 
 OPENCODE_GO_BASE_URL = "https://opencode.ai/zen/go/v1"
 DEFAULT_MODEL = "deepseek-v4-flash"
-REQUEST_TIMEOUT_SECONDS = 45.0
+REQUEST_TIMEOUT_SECONDS = float(
+    os.getenv("LLM_BLM_REQUEST_TIMEOUT", "45.0")
+)
 
 
 class ProviderUsageLimitError(RuntimeError):
@@ -235,6 +237,8 @@ def parse_pairwise_response(
     minimum_probability: float = 0.5,
     maximum_probability: float = 1.0,
 ) -> dict[str, Any]:
+    if not content or not content.strip():
+        raise ValueError("provider returned empty content for pairwise view")
     text = content.strip()
     fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, flags=re.DOTALL | re.IGNORECASE)
     if fenced:
@@ -371,6 +375,12 @@ def completion_request_options(
     if send_thinking_body:
         # DeepSeek V4 defaults to thinking mode, so this must be explicit.
         options["extra_body"] = {"thinking": {"type": thinking}}
+    if "gpt-oss" in model.lower():
+        # NVIDIA NIM serves gpt-oss as a reasoning model; default effort makes
+        # every call spend minutes reasoning and frequently exhausts max_tokens
+        # before emitting the final JSON (content=None). "low" effort returns
+        # the JSON in well under a second.
+        options["extra_body"] = {"reasoning_effort": "low"}
     return options
 
 
@@ -452,7 +462,7 @@ def collect_pairwise_views(
             completion = client.chat.completions.create(**completion_request_options(
                 model, system, user, temperature, thinking,
                 thinking_body_supported(model, base_url),
-                4096 if "gpt-oss" in model.lower() else 1024,
+                8192 if "gpt-oss" in model.lower() else 1024,
             ))
             parsed = parse_pairwise_response(
                 completion.choices[0].message.content,

@@ -106,6 +106,8 @@ def make_absolute_prompt(
 
 
 def parse_absolute_response(content: str, percentage_units: bool = False) -> float:
+    if not content or not content.strip():
+        raise ValueError("provider returned empty content for absolute view")
     text = content.strip()
     fenced = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, flags=re.DOTALL | re.IGNORECASE)
     if fenced:
@@ -217,7 +219,7 @@ def collect_absolute_views(
             completion = client.chat.completions.create(**completion_request_options(
                 model, system, user, temperature, thinking,
                 thinking_body_supported(model, base_url),
-                4096 if "gpt-oss" in model.lower() else 1024,
+                8192 if "gpt-oss" in model.lower() else 1024,
             ))
             return {
                 "value": parse_absolute_response(
