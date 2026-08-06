@@ -1,0 +1,644 @@
+{
+  "requested_model": "openai/gpt-oss-120b",
+  "model": "openai/gpt-oss-120b",
+  "base_url": "https://integrate.api.nvidia.com/v1",
+  "rebalance_index": 69,
+  "formation_end": "2025-04-14",
+  "formation_days": 206,
+  "horizon_days": 30,
+  "repeats": 2,
+  "probability_estimator": "mean",
+  "temperature": 0.3,
+  "pairs_requested": 15,
+  "views": [
+    {
+      "asset_a": "GS",
+      "asset_b": "MS",
+      "preferred_asset": "GS",
+      "probability": 0.5,
+      "probability_a": 0.5,
+      "probability_samples_a": [
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.5,
+      "votes": {
+        "GS": 1,
+        "MS": 1
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "GS shows several large positive daily returns (>0.12) in the sample",
+        "MS exhibits more frequent large negative spikes and higher downside volatility",
+        "Both equities show high volatility, but GS exhibits more extreme negative returns (e.g., -0.0589, -0.0921) than MS.",
+        "MS has slightly fewer large drawdowns and a higher frequency of positive daily returns."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "C",
+      "preferred_asset": "GS",
+      "probability": 0.585,
+      "probability_a": 0.585,
+      "probability_samples_a": [
+        0.55,
+        0.62
+      ],
+      "probability_samples": [
+        0.55,
+        0.62
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.585,
+      "votes": {
+        "GS": 2,
+        "C": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.62
+      ],
+      "evidence": [
+        "GS shows several large positive daily returns (e.g., 0.1309, 0.1182) in the recent period",
+        "C exhibits extreme negative outliers (e.g., -0.1214, -0.0780) and fewer comparable positives",
+        "GS shows fewer extreme negative daily returns than C",
+        "Both are volatile, but C has larger tail losses (e.g., -0.121) indicating higher risk"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "JPM",
+      "asset_b": "GS",
+      "preferred_asset": "JPM",
+      "probability": 0.54,
+      "probability_a": 0.54,
+      "probability_samples_a": [
+        0.55,
+        0.53
+      ],
+      "probability_samples": [
+        0.55,
+        0.53
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.54,
+      "votes": {
+        "JPM": 2,
+        "GS": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.53
+      ],
+      "evidence": [
+        "JPM shows slightly higher average daily return over the period",
+        "GS exhibits larger negative spikes and higher volatility",
+        "JPM shows slightly higher average daily return in the sample",
+        "GS exhibits more extreme negative days"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "PNC",
+      "asset_b": "USB",
+      "preferred_asset": "USB",
+      "probability": 0.55,
+      "probability_a": 0.44999999999999996,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.44999999999999996,
+      "votes": {
+        "PNC": 0,
+        "USB": 2
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "USB shows more frequent large positive daily returns",
+        "PNC exhibits several large negative spikes",
+        "USB shows multiple large positive daily returns (e.g., 0.0767, 0.0455) within the 30‑day horizon",
+        "Both stocks are highly volatile, but USB's recent upside exceeds PNC's"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "PNC",
+      "preferred_asset": "BAC",
+      "probability": 0.55,
+      "probability_a": 0.55,
+      "probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.55,
+      "votes": {
+        "BAC": 2,
+        "PNC": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "evidence": [
+        "BAC shows slightly higher average daily return than PNC over the sample",
+        "BAC's recent large positive spikes (e.g., +0.084) outweigh its negatives",
+        "BAC shows recent large positive daily returns (e.g., +0.084) not matched by PNC",
+        "Both assets are volatile; no clear macro advantage, so confidence is modest"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "AXP",
+      "preferred_asset": "GS",
+      "probability": 0.56,
+      "probability_a": 0.56,
+      "probability_samples_a": [
+        0.57,
+        0.55
+      ],
+      "probability_samples": [
+        0.57,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.56,
+      "votes": {
+        "GS": 2,
+        "AXP": 0
+      },
+      "reported_probability_samples_a": [
+        0.57,
+        0.55
+      ],
+      "evidence": [
+        "GS shows a recent large positive return (0.1309) after a series of moderate negatives.",
+        "AXP's recent extreme moves include a -0.0996 drop and a +0.1338 rise, indicating higher volatility.",
+        "GS shows slightly higher average daily return over the period.",
+        "AXP exhibits more frequent large negative moves."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "C",
+      "preferred_asset": "BAC",
+      "probability": 0.55,
+      "probability_a": 0.55,
+      "probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.55,
+      "votes": {
+        "BAC": 2,
+        "C": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "evidence": [
+        "BAC shows slightly higher recent positive spikes (e.g., +0.084) with comparable downside to C",
+        "Both have extreme volatility, but BAC's recent returns are marginally more favorable",
+        "BAC shows fewer extreme negative daily returns than C",
+        "BAC has multiple large positive returns (e.g., 0.084) while C's largest negative is -0.121"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "WFC",
+      "preferred_asset": "BAC",
+      "probability": 0.55,
+      "probability_a": 0.55,
+      "probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.55,
+      "votes": {
+        "BAC": 2,
+        "WFC": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "evidence": [
+        "BAC shows slightly higher positive tail events",
+        "WFC exhibits more frequent large negative moves",
+        "BAC shows more frequent positive daily returns than WFC",
+        "Both exhibit high volatility, but BAC's large positive spikes offset its negatives"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "COF",
+      "preferred_asset": "COF",
+      "probability": 0.515,
+      "probability_a": 0.485,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.52
+      ],
+      "probability_samples": [
+        0.55,
+        0.48
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.485,
+      "votes": {
+        "GS": 1,
+        "COF": 1
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.52
+      ],
+      "evidence": [
+        "COF shows a recent large positive return (0.150) versus GS's last large positive (0.131)",
+        "Both have high volatility, but COF's recent negative spikes are slightly smaller than GS's",
+        "Both assets show high volatility with large single‑day moves (GS +0.131, COF +0.150).",
+        "Recent returns are mixed for both; no clear trend gives GS a slight edge."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "BLK",
+      "preferred_asset": "BLK",
+      "probability": 0.615,
+      "probability_a": 0.385,
+      "probability_samples_a": [
+        0.33999999999999997,
+        0.43000000000000005
+      ],
+      "probability_samples": [
+        0.66,
+        0.57
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.385,
+      "votes": {
+        "GS": 0,
+        "BLK": 2
+      },
+      "reported_probability_samples_a": [
+        0.33999999999999997,
+        0.43000000000000005
+      ],
+      "evidence": [
+        "BLK shows lower extreme negative returns than GS",
+        "BLK's recent volatility is modest compared to GS",
+        "BLK's daily returns are more consistently positive"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MS",
+      "asset_b": "SCHW",
+      "preferred_asset": "SCHW",
+      "probability": 0.515,
+      "probability_a": 0.485,
+      "probability_samples_a": [
+        0.52,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.48,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.485,
+      "votes": {
+        "MS": 1,
+        "SCHW": 1
+      },
+      "reported_probability_samples_a": [
+        0.52,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "MS shows multiple recent large positive returns (e.g., +0.116, +0.064) outweighing its negatives",
+        "SCHW exhibits similarly large negatives (e.g., -0.101, -0.077) with fewer comparable positives",
+        "SCHW shows several large positive daily returns in recent period",
+        "MS exhibits more frequent extreme negative returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BLK",
+      "asset_b": "ICE",
+      "preferred_asset": "BLK",
+      "probability": 0.5,
+      "probability_a": 0.5,
+      "probability_samples_a": [
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.55,
+        0.44999999999999996
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.5,
+      "votes": {
+        "BLK": 1,
+        "ICE": 1
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "BLK shows frequent large positive daily returns (e.g., +0.0997, +0.0519) offset by negatives, suggesting higher upside potential.",
+        "ICE’s daily returns are more modest in magnitude and include several sizable negatives, indicating slightly lower upside.",
+        "BLK shows larger negative outliers (e.g., -0.077, -0.073) than ICE",
+        "ICE's recent returns are generally less extreme and more consistently positive"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "ICE",
+      "asset_b": "CB",
+      "preferred_asset": "ICE",
+      "probability": 0.5900000000000001,
+      "probability_a": 0.5900000000000001,
+      "probability_samples_a": [
+        0.52,
+        0.66
+      ],
+      "probability_samples": [
+        0.52,
+        0.66
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5900000000000001,
+      "votes": {
+        "ICE": 2,
+        "CB": 0
+      },
+      "reported_probability_samples_a": [
+        0.52,
+        0.66
+      ],
+      "evidence": [
+        "Both series show high volatility with occasional large negative spikes.",
+        "ICE's recent returns include several positive outliers (e.g., +0.043) offset by a few large negatives.",
+        "ICE shows more frequent positive daily returns",
+        "CB has several large negative spikes"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "CME",
+      "asset_b": "CB",
+      "preferred_asset": "CME",
+      "probability": 0.525,
+      "probability_a": 0.525,
+      "probability_samples_a": [
+        0.43000000000000005,
+        0.62
+      ],
+      "probability_samples": [
+        0.43000000000000005,
+        0.62
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.525,
+      "votes": {
+        "CME": 1,
+        "CB": 1
+      },
+      "reported_probability_samples_a": [
+        0.43000000000000005,
+        0.62
+      ],
+      "evidence": [
+        "CB shows several large positive daily returns (e.g., 0.0323, 0.0367) that offset its negatives",
+        "CME has a recent extreme negative return (-0.0518) and more frequent large swings",
+        "CME's daily returns show a generally tighter distribution around zero with fewer extreme drops.",
+        "CB experienced several large negative outliers (e.g., -0.072) that lower its average performance."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MS",
+      "asset_b": "C",
+      "preferred_asset": "MS",
+      "probability": 0.55,
+      "probability_a": 0.55,
+      "probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.55,
+      "votes": {
+        "MS": 2,
+        "C": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "evidence": [
+        "MS shows several large positive daily returns (e.g., 0.116, 0.064) despite volatility",
+        "C has extreme negative spikes (e.g., -0.121) and similar volatility",
+        "Both show high volatility, but recent large negative spikes are slightly larger for C",
+        "MS recent returns include several positive outliers above 0.03"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    }
+  ]
+}

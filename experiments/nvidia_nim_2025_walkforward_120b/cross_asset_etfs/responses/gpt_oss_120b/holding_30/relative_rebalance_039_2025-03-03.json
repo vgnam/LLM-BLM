@@ -1,0 +1,645 @@
+{
+  "requested_model": "openai/gpt-oss-120b",
+  "model": "openai/gpt-oss-120b",
+  "base_url": "https://integrate.api.nvidia.com/v1",
+  "rebalance_index": 39,
+  "formation_end": "2025-03-03",
+  "formation_days": 40,
+  "horizon_days": 30,
+  "repeats": 2,
+  "probability_estimator": "mean",
+  "temperature": 0.3,
+  "pairs_requested": 15,
+  "views": [
+    {
+      "asset_a": "IEF",
+      "asset_b": "LQD",
+      "preferred_asset": "LQD",
+      "probability": 0.51,
+      "probability_a": 0.49000000000000005,
+      "probability_samples_a": [
+        0.43000000000000005,
+        0.55
+      ],
+      "probability_samples": [
+        0.57,
+        0.44999999999999996
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.49000000000000005,
+      "votes": {
+        "IEF": 1,
+        "LQD": 1
+      },
+      "reported_probability_samples_a": [
+        0.43000000000000005,
+        0.55
+      ],
+      "evidence": [
+        "LQD shows slightly higher average daily return than IEF",
+        "Both have similar volatility, giving LQD a modest edge",
+        "IEF shows slightly higher average daily return in the sample",
+        "Both ETFs are fixed income, but IEF's recent positive spikes are marginally larger"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "SPY",
+      "asset_b": "QQQ",
+      "preferred_asset": "SPY",
+      "probability": 0.5,
+      "probability_a": 0.5,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.55
+      ],
+      "probability_samples": [
+        0.44999999999999996,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.5,
+      "votes": {
+        "SPY": 1,
+        "QQQ": 1
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.55
+      ],
+      "evidence": [
+        "QQQ shows larger positive daily returns in several periods (e.g., +0.0230, +0.0169) compared to SPY.",
+        "QQQ exhibits higher volatility, suggesting greater upside potential over the 30‑day horizon.",
+        "SPY shows slightly lower magnitude of extreme daily moves",
+        "Both ETFs are similar, but SPY’s returns are less volatile over the sample"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "TLT",
+      "asset_b": "IEF",
+      "preferred_asset": "TLT",
+      "probability": 0.56,
+      "probability_a": 0.56,
+      "probability_samples_a": [
+        0.55,
+        0.57
+      ],
+      "probability_samples": [
+        0.55,
+        0.57
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.56,
+      "votes": {
+        "TLT": 2,
+        "IEF": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.57
+      ],
+      "evidence": [
+        "TLT shows larger positive daily returns (e.g., 0.0172, 0.0166) than IEF",
+        "TLT’s volatility is higher, suggesting higher upside potential in the 30‑day horizon",
+        "TLT daily returns include several >1% moves (e.g., 0.0172, 0.0166)",
+        "IEF returns are generally smaller in magnitude"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "SPY",
+      "asset_b": "IWM",
+      "preferred_asset": "SPY",
+      "probability": 0.6,
+      "probability_a": 0.6,
+      "probability_samples_a": [
+        0.62,
+        0.58
+      ],
+      "probability_samples": [
+        0.62,
+        0.58
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.6,
+      "votes": {
+        "SPY": 2,
+        "IWM": 0
+      },
+      "reported_probability_samples_a": [
+        0.62,
+        0.58
+      ],
+      "evidence": [
+        "SPY shows more consistent positive daily returns and fewer large negatives",
+        "IWM exhibits higher volatility with several large negative days",
+        "SPY shows lower magnitude daily swings than IWM in the sample.",
+        "IWM experienced multiple large negative returns (e.g., -2.88% and -2.73%)."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "IWM",
+      "asset_b": "DIA",
+      "preferred_asset": "DIA",
+      "probability": 0.64,
+      "probability_a": 0.36,
+      "probability_samples_a": [
+        0.33999999999999997,
+        0.38
+      ],
+      "probability_samples": [
+        0.66,
+        0.62
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.36,
+      "votes": {
+        "IWM": 0,
+        "DIA": 2
+      },
+      "reported_probability_samples_a": [
+        0.33999999999999997,
+        0.38
+      ],
+      "evidence": [
+        "DIA's daily returns contain more positive values and fewer large negatives than IWM.",
+        "IWM shows several sizable drops (e.g., -0.0288, -0.0273) not present in DIA.",
+        "DIA's average daily return is slightly positive while IWM's is near zero with several large negatives",
+        "IWM shows multiple days with >2% drops, indicating higher volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "USO",
+      "asset_b": "DBC",
+      "preferred_asset": "DBC",
+      "probability": 0.595,
+      "probability_a": 0.405,
+      "probability_samples_a": [
+        0.43000000000000005,
+        0.38
+      ],
+      "probability_samples": [
+        0.57,
+        0.62
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.405,
+      "votes": {
+        "USO": 0,
+        "DBC": 2
+      },
+      "reported_probability_samples_a": [
+        0.43000000000000005,
+        0.38
+      ],
+      "evidence": [
+        "DBC shows consistently smaller daily swings than USO",
+        "USO has several large negative days reducing its average return",
+        "DBC shows consistently smaller negative daily returns and more frequent small positives",
+        "USO exhibits larger swings including several >4% moves, indicating higher risk"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "HYG",
+      "asset_b": "LQD",
+      "preferred_asset": "LQD",
+      "probability": 0.565,
+      "probability_a": 0.435,
+      "probability_samples_a": [
+        0.42000000000000004,
+        0.44999999999999996
+      ],
+      "probability_samples": [
+        0.58,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.435,
+      "votes": {
+        "HYG": 0,
+        "LQD": 2
+      },
+      "reported_probability_samples_a": [
+        0.42000000000000004,
+        0.44999999999999996
+      ],
+      "evidence": [
+        "LQD shows several large positive daily returns (e.g., 0.01197, 0.00778) exceeding HYG's peaks.",
+        "Average magnitude of returns appears higher for LQD, suggesting stronger short‑term performance.",
+        "LQD shows higher magnitude positive daily returns in the sample",
+        "Both series are volatile, but LQD's larger spikes suggest higher upside potential"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GLD",
+      "asset_b": "SLV",
+      "preferred_asset": "SLV",
+      "probability": 0.62,
+      "probability_a": 0.38,
+      "probability_samples_a": [
+        0.38,
+        0.38
+      ],
+      "probability_samples": [
+        0.62,
+        0.62
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.38,
+      "votes": {
+        "GLD": 0,
+        "SLV": 2
+      },
+      "reported_probability_samples_a": [
+        0.38,
+        0.38
+      ],
+      "evidence": [
+        "SLV shows higher average daily returns than GLD in the sample.",
+        "SLV exhibits stronger positive spikes despite higher volatility.",
+        "SLV shows higher average daily return than GLD",
+        "SLV exhibits larger positive spikes despite higher volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "EFA",
+      "asset_b": "EEM",
+      "preferred_asset": "EFA",
+      "probability": 0.66,
+      "probability_a": 0.66,
+      "probability_samples_a": [
+        0.66,
+        0.66
+      ],
+      "probability_samples": [
+        0.66,
+        0.66
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.66,
+      "votes": {
+        "EFA": 2,
+        "EEM": 0
+      },
+      "reported_probability_samples_a": [
+        0.66,
+        0.66
+      ],
+      "evidence": [
+        "EFA shows more positive daily returns and fewer large negatives than EEM",
+        "EEM has multiple drops >1% (e.g., -0.0195) while EFA's biggest drop is around -0.015",
+        "EFA's recent daily returns show more positive days and smaller drawdowns than EEM",
+        "EEM experienced several large negative returns (e.g., -0.0195, -0.0182) not seen in EFA"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GLD",
+      "asset_b": "DBC",
+      "preferred_asset": "GLD",
+      "probability": 0.565,
+      "probability_a": 0.565,
+      "probability_samples_a": [
+        0.55,
+        0.58
+      ],
+      "probability_samples": [
+        0.55,
+        0.58
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.565,
+      "votes": {
+        "GLD": 2,
+        "DBC": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.58
+      ],
+      "evidence": [
+        "GLD shows slightly higher average daily return over the sample",
+        "GLD volatility appears marginally lower than DBC",
+        "GLD shows more frequent positive daily returns in the sample",
+        "DBC has several larger negative days reducing its average"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "IWM",
+      "asset_b": "HYG",
+      "preferred_asset": "HYG",
+      "probability": 0.655,
+      "probability_a": 0.345,
+      "probability_samples_a": [
+        0.33999999999999997,
+        0.35
+      ],
+      "probability_samples": [
+        0.66,
+        0.65
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.345,
+      "votes": {
+        "IWM": 0,
+        "HYG": 2
+      },
+      "reported_probability_samples_a": [
+        0.33999999999999997,
+        0.35
+      ],
+      "evidence": [
+        "Average daily return of IWM is negative due to several large drops.",
+        "HYG shows consistently small positive returns with lower volatility.",
+        "IWM shows larger negative daily returns and higher volatility",
+        "HYG maintains mostly small positive returns with lower volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "QQQ",
+      "asset_b": "EEM",
+      "preferred_asset": "QQQ",
+      "probability": 0.5,
+      "probability_a": 0.5,
+      "probability_samples_a": [
+        0.44999999999999996,
+        0.55
+      ],
+      "probability_samples": [
+        0.44999999999999996,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.5,
+      "votes": {
+        "QQQ": 1,
+        "EEM": 1
+      },
+      "reported_probability_samples_a": [
+        0.44999999999999996,
+        0.55
+      ],
+      "evidence": [
+        "EEM shows slightly higher average of its daily returns",
+        "Both ETFs have similar volatility, but EEM recent positives outweigh negatives",
+        "QQQ shows slightly higher average daily return over the period",
+        "EEM exhibits larger negative spikes and comparable volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "DIA",
+      "asset_b": "VNQ",
+      "preferred_asset": "DIA",
+      "probability": 0.55,
+      "probability_a": 0.55,
+      "probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "probability_samples": [
+        0.55,
+        0.55
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.55,
+      "votes": {
+        "DIA": 2,
+        "VNQ": 0
+      },
+      "reported_probability_samples_a": [
+        0.55,
+        0.55
+      ],
+      "evidence": [
+        "DIA shows slightly lower daily volatility than VNQ",
+        "Both have mixed returns, but DIA's recent drawdowns are less severe",
+        "DIA shows fewer extreme negative daily returns than VNQ",
+        "Both have similar average returns, but DIA's downside volatility is slightly lower"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "EEM",
+      "asset_b": "SLV",
+      "preferred_asset": "SLV",
+      "probability": 0.615,
+      "probability_a": 0.385,
+      "probability_samples_a": [
+        0.43000000000000005,
+        0.33999999999999997
+      ],
+      "probability_samples": [
+        0.57,
+        0.66
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.385,
+      "votes": {
+        "EEM": 0,
+        "SLV": 2
+      },
+      "reported_probability_samples_a": [
+        0.43000000000000005,
+        0.33999999999999997
+      ],
+      "evidence": [
+        "SLV shows higher average daily return than EEM",
+        "SLV exhibits greater volatility, indicating risk but potential outperformance",
+        "SLV shows more frequent positive daily returns than EEM in the sample",
+        "EEM includes several large negative returns (e.g., -0.0195, -0.0182) reducing its short‑term outlook"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "TLT",
+      "asset_b": "LQD",
+      "preferred_asset": "TLT",
+      "probability": 0.615,
+      "probability_a": 0.615,
+      "probability_samples_a": [
+        0.57,
+        0.66
+      ],
+      "probability_samples": [
+        0.57,
+        0.66
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.615,
+      "votes": {
+        "TLT": 2,
+        "LQD": 0
+      },
+      "reported_probability_samples_a": [
+        0.57,
+        0.66
+      ],
+      "evidence": [
+        "TLT shows higher positive daily returns on several large moves (e.g., +0.0172, +0.0166) compared to LQD.",
+        "Both assets have similar average returns, but TLT's upside spikes suggest a modest edge over the 30‑day horizon.",
+        "TLT's average daily return is higher than LQD's in the sample.",
+        "TLT shows stronger upside days despite higher volatility."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    }
+  ]
+}

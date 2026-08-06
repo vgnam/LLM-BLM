@@ -1,0 +1,7 @@
+{
+  "dataset": "us_financials",
+  "holding_days": 30,
+  "rebalances_attempted": 7,
+  "rebalances_run": 7,
+  "errors": []
+}

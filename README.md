@@ -1,8 +1,26 @@
-# LLM-BLM / PairBL portfolio research with GPT-OSS-20B
+# LLM-BLM / PairBL portfolio research with GPT-OSS
 
-Walk-forward rebalance backtest chạy **hoàn toàn trong năm 2025**, dùng **GPT-OSS-20B** (qua NVIDIA NIM) để tạo absolute views (LLM-BLM) và relative pairwise views (PairBL / RelView-BL). Tại mỗi rebalance, LLM và optimizer được chạy lại với cửa sổ formation là **~252 phiên gần nhất (khoảng 1 năm, gồm 2024-H2 và 2025)**, rồi giữ nguyên bộ trọng số cho N phiên kế tiếp. Kết quả là một đường NAV liên tục cho mỗi method ở mỗi chu kỳ holding period.
+Walk-forward rebalance backtest chạy **hoàn toàn trong năm 2025**, dùng các model
+qua NVIDIA NIM để tạo absolute views (LLM-BLM) và relative pairwise views
+(PairBL / RelView-BL). Tại mỗi rebalance, LLM và optimizer được chạy lại với cửa
+sổ formation là **~252 phiên gần nhất (khoảng 1 năm, gồm 2024-H2 và 2025)**, rồi
+giữ nguyên bộ trọng số cho N phiên kế tiếp. Kết quả là một đường NAV liên tục cho
+mỗi method ở mỗi chu kỳ holding period.
 
-Trong các bảng, **in đậm** là giá trị tốt nhất cho metric đó và <u>gạch chân</u> là tốt thứ hai (với drawdown/recovery, giá trị thấp hơn là tốt hơn).
+Trong các bảng, **in đậm** là giá trị tốt nhất cho metric đó và <u>gạch chân</u>
+là tốt thứ hai (với drawdown/recovery, giá trị thấp hơn là tốt hơn).
+
+## So sánh PairBL giữa các model
+
+| Model | Trạng thái | Ghi chú |
+|---|---|---|
+| **GPT-OSS-20B** | ✅ Chạy xong | Bảng kết quả chi tiết bên dưới |
+| **GPT-OSS-120B** | ✅ Chạy xong | So sánh PairBL chi tiết: `experiments/nvidia_nim_2025_walkforward_120b/PAIRBL_COMPARISON.md` |
+| Llama-3.3-70B | ⚠️ Quá chậm | ~80-300s/call, không khả thi (~1-3 ngày) |
+| Qwen3-Next-80B | ❌ Không tồn tại | 404 Gone trên NVIDIA NIM |
+
+Điểm nổi bật của **GPT-OSS-120B**: PairBL đạt **Sharpe 3.09** ở Cross-Asset ETFs
+30 ngày (GPT-OSS-20B: 2.13) và **Sharpe 2.27** ở US Technology 60 ngày.
 
 ## Kết quả backtest 2025 (holding 30 ngày)
 
