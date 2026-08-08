@@ -55,6 +55,7 @@ def nav_columns(slug: str) -> tuple[str, str]:
 
 def plot_dataset_holding(
     dataset: str, holding_days: int, output_dir: Path,
+    include_llm_blm: bool = True,
 ) -> list[tuple[str, pd.DataFrame]]:
     fig, ax = plt.subplots(figsize=(14, 7))
     loaded: list[tuple[str, pd.DataFrame]] = []
@@ -68,7 +69,7 @@ def plot_dataset_holding(
         if pair_col in daily.columns:
             ax.plot(daily["Date"], daily[pair_col], color=color, linewidth=2.2,
                     label=f"PairBL ({label})")
-        if llm_col in daily.columns:
+        if include_llm_blm and llm_col in daily.columns:
             ax.plot(daily["Date"], daily[llm_col], color=color, linewidth=1.4,
                     linestyle=(0, (4, 2)), label=f"LLM-BLM ({label})")
     # BL baseline is model-independent; plot from the first loaded frame if any.
@@ -79,9 +80,10 @@ def plot_dataset_holding(
                     linestyle=(0, (1, 1)), label="BL baseline")
 
     ax.axhline(1.0, color=BL_COLOR, linewidth=0.7, alpha=0.5)
+    comparison = "PairBL & LLM-BLM" if include_llm_blm else "PairBL"
     ax.set_title(
         f"{DATASET_LABELS.get(dataset, dataset)} — NAV 2025 | "
-        f"{holding_days}-Day Rebalance | 4-Model Comparison",
+        f"{holding_days}-Day Rebalance | {comparison} 4-Model Comparison",
         fontsize=14, fontweight="bold", color=INK,
     )
     ax.set_xlabel("Date", color=MUTED)
@@ -101,15 +103,19 @@ def plot_dataset_holding(
 
 
 def write_combined_csv(loaded: list[tuple[str, pd.DataFrame]], dataset: str,
-                       holding_days: int, output_dir: Path) -> None:
+                       holding_days: int, output_dir: Path,
+                       include_llm_blm: bool = True) -> None:
     if not loaded:
         return
     slug_by_label = {label: slug for label, _, slug in MODELS}
     combined = None
     for index, (label, daily) in enumerate(loaded):
         pair_col, llm_col = nav_columns(slug_by_label[label])
-        columns = [pair_col, llm_col]
-        new_names = [f"PairBL_{label}", f"LLM_BLM_{label}"]
+        columns = [pair_col]
+        new_names = [f"PairBL_{label}"]
+        if include_llm_blm and llm_col in daily.columns:
+            columns.append(llm_col)
+            new_names.append(f"LLM_BLM_{label}")
         # BL is model-independent; carry it from the first loaded frame only.
         if index == 0 and "BL_NAV" in daily.columns:
             columns.append("BL_NAV")
@@ -129,12 +135,17 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, default=Path("results/nav_4models_2025"))
     parser.add_argument("--datasets", nargs="+", default=DATASETS)
     parser.add_argument("--holding-periods", nargs="+", type=int, default=HOLDING_PERIODS)
+    parser.add_argument("--no-llm-blm", action="store_true",
+                        help="Plot only PairBL (skip the dashed LLM-BLM lines).")
     args = parser.parse_args()
+    include_llm_blm = not args.no_llm_blm
     args.output_dir.mkdir(parents=True, exist_ok=True)
     for dataset in args.datasets:
         for holding_days in args.holding_periods:
-            loaded = plot_dataset_holding(dataset, holding_days, args.output_dir)
-            write_combined_csv(loaded, dataset, holding_days, args.output_dir)
+            loaded = plot_dataset_holding(dataset, holding_days, args.output_dir,
+                                          include_llm_blm)
+            write_combined_csv(loaded, dataset, holding_days, args.output_dir,
+                               include_llm_blm)
     print(f"All NAV plots under {args.output_dir}")
 
 

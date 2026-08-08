@@ -28,9 +28,9 @@ là tốt thứ hai (với drawdown/recovery, giá trị thấp hơn là tốt h
 dẫn đầu cumulative return PairBL ở US Technology 30 ngày (81.6%) và US Financials
 30 ngày (36.2%).
 
-## NAV 2025 — so sánh 4 model (holding 30 ngày)
+## NAV 2025 — so sánh PairBL giữa 4 model (holding 30 ngày)
 
-PairBL (nét liền) và LLM-BLM (nét đứt) của 4 model, cùng BL baseline (xám):
+Đường NAV PairBL (RelView-BL) của 4 model, cùng BL baseline (xám):
 GPT-OSS-20B (xanh dương), GPT-OSS-120B (cam), Llama-3.1-8B (xanh ngọc),
 Llama-3.1-70B (hồng). Dữ liệu tổng hợp tại `results/nav_4models_2025/`.
 
