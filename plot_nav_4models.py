@@ -53,11 +53,10 @@ def nav_columns(slug: str) -> tuple[str, str]:
     return f"RelViewBL__{slug}_NAV", f"BLM_LLM__{slug}_NAV"
 
 
-def plot_dataset_holding(
-    dataset: str, holding_days: int, output_dir: Path,
-    include_llm_blm: bool = True,
+def draw_dataset_axis(
+    ax: plt.Axes, dataset: str, holding_days: int, include_llm_blm: bool,
 ) -> list[tuple[str, pd.DataFrame]]:
-    fig, ax = plt.subplots(figsize=(14, 7))
+    """Draw one dataset's NAV curves onto *ax*; returns the loaded series."""
     loaded: list[tuple[str, pd.DataFrame]] = []
     for index, (label, root, slug) in enumerate(MODELS):
         daily = load_daily(Path(root), dataset, holding_days)
@@ -78,21 +77,33 @@ def plot_dataset_holding(
         if "BL_NAV" in first.columns:
             ax.plot(first["Date"], first["BL_NAV"], color=BL_COLOR, linewidth=1.2,
                     linestyle=(0, (1, 1)), label="BL baseline")
-
     if include_llm_blm:
         ax.axhline(1.0, color=BL_COLOR, linewidth=0.7, alpha=0.5)
-    comparison = "PairBL & LLM-BLM" if include_llm_blm else "PairBL"
-    ax.set_title(
-        f"{DATASET_LABELS.get(dataset, dataset)} — NAV 2025 | "
-        f"{holding_days}-Day Rebalance | {comparison} 4-Model Comparison",
-        fontsize=14, fontweight="bold", color=INK,
-    )
     ax.set_xlabel("Date", color=MUTED)
-    ax.set_ylabel("NAV (initial capital = 1)", color=MUTED)
     ax.grid(alpha=0.25, color="#e1e0d9")
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.tick_params(colors=MUTED)
+    return loaded
+
+
+def _comparison_label(include_llm_blm: bool) -> str:
+    return "PairBL & LLM-BLM" if include_llm_blm else "PairBL"
+
+
+def plot_dataset_holding(
+    dataset: str, holding_days: int, output_dir: Path,
+    include_llm_blm: bool = True,
+) -> list[tuple[str, pd.DataFrame]]:
+    fig, ax = plt.subplots(figsize=(14, 7))
+    loaded = draw_dataset_axis(ax, dataset, holding_days, include_llm_blm)
+    ax.set_title(
+        f"{DATASET_LABELS.get(dataset, dataset)} — NAV 2025 | "
+        f"{holding_days}-Day Rebalance | {_comparison_label(include_llm_blm)} "
+        f"4-Model Comparison",
+        fontsize=14, fontweight="bold", color=INK,
+    )
+    ax.set_ylabel("NAV (initial capital = 1)", color=MUTED)
     ax.legend(frameon=False, fontsize=9, ncol=2, loc="upper left", bbox_to_anchor=(0.0, 1.02))
     fig.tight_layout()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -101,6 +112,33 @@ def plot_dataset_holding(
     plt.close(fig)
     print(f"Saved {output}")
     return loaded
+
+
+def plot_combined_holding(
+    holding_days: int, output_dir: Path, include_llm_blm: bool = True,
+) -> None:
+    """Combine all datasets into one figure with one subplot per dataset."""
+    fig, axes = plt.subplots(1, len(DATASETS), figsize=(26, 6.5))
+    for index, (ax, dataset) in enumerate(zip(axes, DATASETS)):
+        draw_dataset_axis(ax, dataset, holding_days, include_llm_blm)
+        ax.set_title(DATASET_LABELS.get(dataset, dataset),
+                     fontsize=13, fontweight="bold", color=INK)
+        if index == 0:
+            ax.set_ylabel("NAV (initial capital = 1)", color=MUTED)
+    fig.suptitle(
+        f"NAV 2025 — {_comparison_label(include_llm_blm)} 4-Model Comparison | "
+        f"{holding_days}-Day Rebalance",
+        fontsize=15, fontweight="bold", color=INK,
+    )
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", frameon=False, fontsize=10,
+               ncol=len(labels))
+    fig.tight_layout(rect=[0, 0.06, 1, 0.94])
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output = output_dir / f"combined_{holding_days}_nav.png"
+    fig.savefig(output, dpi=180, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Saved {output}")
 
 
 def write_combined_csv(loaded: list[tuple[str, pd.DataFrame]], dataset: str,
@@ -138,6 +176,8 @@ def main() -> None:
     parser.add_argument("--holding-periods", nargs="+", type=int, default=HOLDING_PERIODS)
     parser.add_argument("--no-llm-blm", action="store_true",
                         help="Plot only the four PairBL lines (skip LLM-BLM and the BL baseline).")
+    parser.add_argument("--combined", action="store_true",
+                        help="Also render one image combining all datasets per holding period.")
     args = parser.parse_args()
     include_llm_blm = not args.no_llm_blm
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -147,6 +187,9 @@ def main() -> None:
                                           include_llm_blm)
             write_combined_csv(loaded, dataset, holding_days, args.output_dir,
                                include_llm_blm)
+    if args.combined:
+        for holding_days in args.holding_periods:
+            plot_combined_holding(holding_days, args.output_dir, include_llm_blm)
     print(f"All NAV plots under {args.output_dir}")
 
 

@@ -34,11 +34,7 @@ dẫn đầu cumulative return PairBL ở US Technology 30 ngày (81.6%) và US 
 GPT-OSS-20B (xanh dương), GPT-OSS-120B (cam), Llama-3.1-8B (xanh ngọc),
 Llama-3.1-70B (hồng). Dữ liệu tổng hợp tại `results/nav_4models_2025/`.
 
-![us_technology 30d NAV 4 model](results/nav_4models_2025/us_technology_holding_30_nav.png)
-
-![us_financials 30d NAV 4 model](results/nav_4models_2025/us_financials_holding_30_nav.png)
-
-![cross_asset_etfs 30d NAV 4 model](results/nav_4models_2025/cross_asset_etfs_holding_30_nav.png)
+![NAV 2025 — PairBL 4 model, holding 30](results/nav_4models_2025/combined_30_nav.png)
 
 ## Kết quả backtest 2025 (holding 30 ngày)
 
