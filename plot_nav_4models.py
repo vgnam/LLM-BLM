@@ -73,13 +73,14 @@ def plot_dataset_holding(
             ax.plot(daily["Date"], daily[llm_col], color=color, linewidth=1.4,
                     linestyle=(0, (4, 2)), label=f"LLM-BLM ({label})")
     # BL baseline is model-independent; plot from the first loaded frame if any.
-    if loaded:
+    if include_llm_blm and loaded:
         _, first = loaded[0]
         if "BL_NAV" in first.columns:
             ax.plot(first["Date"], first["BL_NAV"], color=BL_COLOR, linewidth=1.2,
                     linestyle=(0, (1, 1)), label="BL baseline")
 
-    ax.axhline(1.0, color=BL_COLOR, linewidth=0.7, alpha=0.5)
+    if include_llm_blm:
+        ax.axhline(1.0, color=BL_COLOR, linewidth=0.7, alpha=0.5)
     comparison = "PairBL & LLM-BLM" if include_llm_blm else "PairBL"
     ax.set_title(
         f"{DATASET_LABELS.get(dataset, dataset)} — NAV 2025 | "
@@ -136,7 +137,7 @@ def main() -> None:
     parser.add_argument("--datasets", nargs="+", default=DATASETS)
     parser.add_argument("--holding-periods", nargs="+", type=int, default=HOLDING_PERIODS)
     parser.add_argument("--no-llm-blm", action="store_true",
-                        help="Plot only PairBL (skip the dashed LLM-BLM lines).")
+                        help="Plot only the four PairBL lines (skip LLM-BLM and the BL baseline).")
     args = parser.parse_args()
     include_llm_blm = not args.no_llm_blm
     args.output_dir.mkdir(parents=True, exist_ok=True)
