@@ -1,0 +1,652 @@
+{
+  "requested_model": "meta/llama-3.1-70b-instruct",
+  "model": "meta/llama-3.1-70b-instruct",
+  "base_url": "https://integrate.api.nvidia.com/v1",
+  "rebalance_index": 189,
+  "formation_end": "2025-10-06",
+  "formation_days": 252,
+  "horizon_days": 30,
+  "repeats": 2,
+  "probability_estimator": "mean",
+  "temperature": 0.3,
+  "pairs_requested": 15,
+  "views": [
+    {
+      "asset_a": "AMAT",
+      "asset_b": "MU",
+      "preferred_asset": "MU",
+      "probability": 0.53,
+      "probability_a": 0.47,
+      "probability_samples_a": [
+        0.46199999999999997,
+        0.478
+      ],
+      "probability_samples": [
+        0.538,
+        0.522
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.47,
+      "votes": {
+        "AMAT": 0,
+        "MU": 2
+      },
+      "reported_probability_samples_a": [
+        0.46199999999999997,
+        0.478
+      ],
+      "evidence": [
+        "MU has higher average daily return",
+        "MU has higher standard deviation of daily returns",
+        "MU has slightly higher average daily returns",
+        "MU has slightly higher volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=0: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "QCOM",
+      "asset_b": "AMAT",
+      "preferred_asset": "QCOM",
+      "probability": 0.5275000000000001,
+      "probability_a": 0.5275000000000001,
+      "probability_samples_a": [
+        0.538,
+        0.517
+      ],
+      "probability_samples": [
+        0.538,
+        0.517
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5275000000000001,
+      "votes": {
+        "QCOM": 2,
+        "AMAT": 0
+      },
+      "reported_probability_samples_a": [
+        0.538,
+        0.517
+      ],
+      "evidence": [
+        "Similar sector performance",
+        "Slightly higher average daily return",
+        "Comparable return volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "QCOM",
+      "asset_b": "TXN",
+      "preferred_asset": "QCOM",
+      "probability": 0.5175000000000001,
+      "probability_a": 0.5175000000000001,
+      "probability_samples_a": [
+        0.523,
+        0.512
+      ],
+      "probability_samples": [
+        0.523,
+        0.512
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5175000000000001,
+      "votes": {
+        "QCOM": 2,
+        "TXN": 0
+      },
+      "reported_probability_samples_a": [
+        0.523,
+        0.512
+      ],
+      "evidence": [
+        "Similar sector and asset type",
+        "Slightly higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MSFT",
+      "asset_b": "NVDA",
+      "preferred_asset": "NVDA",
+      "probability": 0.533,
+      "probability_a": 0.46699999999999997,
+      "probability_samples_a": [
+        0.46699999999999997,
+        0.46699999999999997
+      ],
+      "probability_samples": [
+        0.533,
+        0.533
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.46699999999999997,
+      "votes": {
+        "MSFT": 0,
+        "NVDA": 2
+      },
+      "reported_probability_samples_a": [
+        0.46699999999999997,
+        0.46699999999999997
+      ],
+      "evidence": [
+        "NVDA has a higher average daily return",
+        "NVDA has a higher standard deviation of daily returns",
+        "NVDA has higher average daily return",
+        "NVDA has higher volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "NVDA",
+      "asset_b": "AVGO",
+      "preferred_asset": "NVDA",
+      "probability": 0.527,
+      "probability_a": 0.527,
+      "probability_samples_a": [
+        0.523,
+        0.531
+      ],
+      "probability_samples": [
+        0.523,
+        0.531
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.527,
+      "votes": {
+        "NVDA": 2,
+        "AVGO": 0
+      },
+      "reported_probability_samples_a": [
+        0.523,
+        0.531
+      ],
+      "evidence": [
+        "NVDA has slightly higher average daily returns",
+        "NVDA has slightly higher volatility",
+        "NVDA has higher average daily returns",
+        "NVDA has higher volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=1: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "NVDA",
+      "asset_b": "AMAT",
+      "preferred_asset": "NVDA",
+      "probability": 0.5375000000000001,
+      "probability_a": 0.5375000000000001,
+      "probability_samples_a": [
+        0.542,
+        0.533
+      ],
+      "probability_samples": [
+        0.542,
+        0.533
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5375000000000001,
+      "votes": {
+        "NVDA": 2,
+        "AMAT": 0
+      },
+      "reported_probability_samples_a": [
+        0.542,
+        0.533
+      ],
+      "evidence": [
+        "NVDA has a higher average daily return",
+        "NVDA has a higher standard deviation of daily returns",
+        "Similar sector, NVDA has higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AMD",
+      "asset_b": "AMAT",
+      "preferred_asset": "AMD",
+      "probability": 0.538,
+      "probability_a": 0.538,
+      "probability_samples_a": [
+        0.538,
+        0.538
+      ],
+      "probability_samples": [
+        0.538,
+        0.538
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.538,
+      "votes": {
+        "AMD": 2,
+        "AMAT": 0
+      },
+      "reported_probability_samples_a": [
+        0.538,
+        0.538
+      ],
+      "evidence": [
+        "AMD has slightly higher average daily returns",
+        "AMD has slightly higher volatility",
+        "AMD has a slightly higher average daily return",
+        "AMD has a slightly higher standard deviation of daily returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 4,
+      "errors": [
+        "prompt_call_id=1: Request timed out.",
+        "prompt_call_id=2: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AAPL",
+      "asset_b": "QCOM",
+      "preferred_asset": "AAPL",
+      "probability": 0.5225,
+      "probability_a": 0.5225,
+      "probability_samples_a": [
+        0.517,
+        0.528
+      ],
+      "probability_samples": [
+        0.517,
+        0.528
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5225,
+      "votes": {
+        "AAPL": 2,
+        "QCOM": 0
+      },
+      "reported_probability_samples_a": [
+        0.517,
+        0.528
+      ],
+      "evidence": [
+        "Similar sector",
+        "Slightly higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "NVDA",
+      "asset_b": "CSCO",
+      "preferred_asset": "NVDA",
+      "probability": 0.5315000000000001,
+      "probability_a": 0.5315000000000001,
+      "probability_samples_a": [
+        0.531,
+        0.532
+      ],
+      "probability_samples": [
+        0.531,
+        0.532
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5315000000000001,
+      "votes": {
+        "NVDA": 2,
+        "CSCO": 0
+      },
+      "reported_probability_samples_a": [
+        0.531,
+        0.532
+      ],
+      "evidence": [
+        "NVDA has higher average daily returns",
+        "NVDA has higher standard deviation of daily returns",
+        "NVDA has a higher average daily return",
+        "NVDA has a higher standard deviation of daily returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 4,
+      "errors": [
+        "prompt_call_id=0: Request timed out.",
+        "prompt_call_id=2: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "CRM",
+      "asset_b": "ADBE",
+      "preferred_asset": "CRM",
+      "probability": 0.5295000000000001,
+      "probability_a": 0.5295000000000001,
+      "probability_samples_a": [
+        0.531,
+        0.528
+      ],
+      "probability_samples": [
+        0.531,
+        0.528
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5295000000000001,
+      "votes": {
+        "CRM": 2,
+        "ADBE": 0
+      },
+      "reported_probability_samples_a": [
+        0.531,
+        0.528
+      ],
+      "evidence": [
+        "CRM has a slightly higher average daily return",
+        "CRM has a slightly higher standard deviation of daily returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "NVDA",
+      "asset_b": "ORCL",
+      "preferred_asset": "NVDA",
+      "probability": 0.535,
+      "probability_a": 0.535,
+      "probability_samples_a": [
+        0.537,
+        0.533
+      ],
+      "probability_samples": [
+        0.537,
+        0.533
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.535,
+      "votes": {
+        "NVDA": 2,
+        "ORCL": 0
+      },
+      "reported_probability_samples_a": [
+        0.537,
+        0.533
+      ],
+      "evidence": [
+        "NVDA has higher average daily returns",
+        "NVDA has higher volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=0: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "CRM",
+      "asset_b": "INTU",
+      "preferred_asset": "CRM",
+      "probability": 0.5225,
+      "probability_a": 0.5225,
+      "probability_samples_a": [
+        0.512,
+        0.533
+      ],
+      "probability_samples": [
+        0.512,
+        0.533
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5225,
+      "votes": {
+        "CRM": 2,
+        "INTU": 0
+      },
+      "reported_probability_samples_a": [
+        0.512,
+        0.533
+      ],
+      "evidence": [
+        "Similar sector",
+        "Slightly higher average daily return",
+        "Similar sector and asset type"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=1: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MSFT",
+      "asset_b": "CRM",
+      "preferred_asset": "CRM",
+      "probability": 0.522,
+      "probability_a": 0.478,
+      "probability_samples_a": [
+        0.478,
+        0.478
+      ],
+      "probability_samples": [
+        0.522,
+        0.522
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.478,
+      "votes": {
+        "MSFT": 0,
+        "CRM": 2
+      },
+      "reported_probability_samples_a": [
+        0.478,
+        0.478
+      ],
+      "evidence": [
+        "CRM has a slightly higher average daily return",
+        "CRM has a slightly higher standard deviation of daily returns",
+        "CRM has slightly higher average daily returns",
+        "CRM has slightly higher standard deviation of daily returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "IBM",
+      "asset_b": "CSCO",
+      "preferred_asset": "CSCO",
+      "probability": 0.503,
+      "probability_a": 0.497,
+      "probability_samples_a": [
+        0.517,
+        0.477
+      ],
+      "probability_samples": [
+        0.483,
+        0.523
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.497,
+      "votes": {
+        "IBM": 1,
+        "CSCO": 1
+      },
+      "reported_probability_samples_a": [
+        0.517,
+        0.477
+      ],
+      "evidence": [
+        "IBM has a slightly higher average daily return",
+        "IBM has a slightly lower standard deviation of daily returns",
+        "IBM has higher volatility",
+        "CSCO has slightly higher average returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=1: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "QCOM",
+      "asset_b": "MU",
+      "preferred_asset": "MU",
+      "probability": 0.5275000000000001,
+      "probability_a": 0.4725,
+      "probability_samples_a": [
+        0.487,
+        0.45799999999999996
+      ],
+      "probability_samples": [
+        0.513,
+        0.542
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.4725,
+      "votes": {
+        "QCOM": 0,
+        "MU": 2
+      },
+      "reported_probability_samples_a": [
+        0.487,
+        0.45799999999999996
+      ],
+      "evidence": [
+        "MU has higher average daily returns",
+        "MU has higher volatility",
+        "MU has a higher average return over the given period",
+        "MU has a higher standard deviation of returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=0: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    }
+  ]
+}

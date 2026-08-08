@@ -1,0 +1,44 @@
+{
+  "experiment_id": "nvidia_nim_walkforward_2025_llama_31_8b",
+  "description": "Llama-3.1-8B walk-forward rebalance backtest entirely within calendar 2025. Every N trading days (N in {30, 60}) the deterministic baselines (BL / MVO / EW) and the two LLM Black-Litterman methods (Absolute LLM-BLM and Pairwise RelView-BL) are re-formed from the most recent ~252 trading sessions before the rebalance cutoff, then held unchanged for the next N sessions. Knowledge cutoff (Dec 2023) precedes the backtest window to avoid leakage.",
+  "source_experiment_root": "experiments/cutoff_2025_12",
+  "yfinance_dir": "yfinance",
+  "yfinance_start_month": "2024-06",
+  "yfinance_end_month": "2025-12",
+  "formation_lookback_days": 252,
+  "dataset_manifest": "experiments/post_release_2026/datasets.json",
+  "datasets": [
+    "us_technology",
+    "us_financials",
+    "cross_asset_etfs"
+  ],
+  "formation_year": 2025,
+  "holding_periods": [
+    30,
+    60
+  ],
+  "min_formation_days": 40,
+  "base_url": "https://integrate.api.nvidia.com/v1",
+  "api_key_env": "NVIDIA_API_KEY",
+  "models": [
+    {
+      "requested_model": "meta/llama-3.1-8b-instruct",
+      "api_model": "meta/llama-3.1-8b-instruct",
+      "slug": "llama_31_8b"
+    }
+  ],
+  "repeats": 2,
+  "minimum_successful_calls": 2,
+  "max_pairs": 15,
+  "probability_estimator": "mean",
+  "temperature": 0.3,
+  "calibration": "none",
+  "abstention_threshold": 0.55,
+  "tau": 0.025,
+  "risk_aversion": 0.1,
+  "market_risk_aversion": 2.5,
+  "max_weight": 0.15,
+  "transaction_cost_bps": 10.0,
+  "annual_risk_free_rate": 0.0,
+  "portfolio_policy": "rebalance_every_N_days_within_2025_llama_31_8b"
+}

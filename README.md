@@ -16,11 +16,29 @@ là tốt thứ hai (với drawdown/recovery, giá trị thấp hơn là tốt h
 |---|---|---|
 | **GPT-OSS-20B** | ✅ Chạy xong | Bảng kết quả chi tiết bên dưới |
 | **GPT-OSS-120B** | ✅ Chạy xong | So sánh PairBL chi tiết: `experiments/nvidia_nim_2025_walkforward_120b/PAIRBL_COMPARISON.md` |
+| **Llama-3.1-8B** | ✅ Chạy xong | Knowledge cutoff Dec 2023 (trước 2025, tránh leakage) |
+| **Llama-3.1-70B** | ✅ Chạy xong | Knowledge cutoff Dec 2023 (trước 2025, tránh leakage) |
 | Llama-3.3-70B | ⚠️ Quá chậm | ~80-300s/call, không khả thi (~1-3 ngày) |
 | Qwen3-Next-80B | ❌ Không tồn tại | 404 Gone trên NVIDIA NIM |
+| Mistral Medium 3.5-128B | ❌ Hết hạn | EOL 2026-08-07 (410 Gone) |
+| Mixtral 8x7B | ❌ Hết hạn | EOL 2026-07-27 (410 Gone) |
 
 Điểm nổi bật của **GPT-OSS-120B**: PairBL đạt **Sharpe 3.09** ở Cross-Asset ETFs
-30 ngày (GPT-OSS-20B: 2.13) và **Sharpe 2.27** ở US Technology 60 ngày.
+30 ngày (GPT-OSS-20B: 2.13) và **Sharpe 2.27** ở US Technology 60 ngày. **Llama-3.1-70B**
+dẫn đầu cumulative return PairBL ở US Technology 30 ngày (81.6%) và US Financials
+30 ngày (36.2%).
+
+## NAV 2025 — so sánh 4 model (holding 30 ngày)
+
+PairBL (nét liền) và LLM-BLM (nét đứt) của 4 model, cùng BL baseline (xám):
+GPT-OSS-20B (xanh dương), GPT-OSS-120B (cam), Llama-3.1-8B (xanh ngọc),
+Llama-3.1-70B (hồng). Dữ liệu tổng hợp tại `results/nav_4models_2025/`.
+
+![us_technology 30d NAV 4 model](results/nav_4models_2025/us_technology_holding_30_nav.png)
+
+![us_financials 30d NAV 4 model](results/nav_4models_2025/us_financials_holding_30_nav.png)
+
+![cross_asset_etfs 30d NAV 4 model](results/nav_4models_2025/cross_asset_etfs_holding_30_nav.png)
 
 ## Kết quả backtest 2025 (holding 30 ngày)
 

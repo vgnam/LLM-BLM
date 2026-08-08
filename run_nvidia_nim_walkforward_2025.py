@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import time
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -38,7 +39,11 @@ import seaborn as sns
 
 from backtest_compare import absolute_weights
 from collect_absolute_views import collect_absolute_views
-from collect_relative_views import _metadata_lookup, collect_pairwise_views
+from collect_relative_views import (
+    ProviderUsageLimitError,
+    _metadata_lookup,
+    collect_pairwise_views,
+)
 from portfolio_backtest import evaluate_realized_portfolio
 from relview_bl import (
     RelViewConfig,
@@ -54,6 +59,10 @@ METHOD_PLOT_ORDER = ["BL", "MVO", "EW"]
 DEFAULT_CONFIG = Path("experiments/nvidia_nim_2025_walkforward/config.json")
 DEFAULT_OUTPUT = Path("experiments/nvidia_nim_2025_walkforward")
 _CONFIG_CACHE = {"max_weight": 0.15, "slug": "", "model_label": ""}
+# Provider 429 rate limits abort an otherwise-finished rebalance; wait out the
+# reported delay and retry from the checkpoint (only incomplete assets/pairs are
+# re-collected) before falling back to the BL baseline.
+RATE_LIMIT_RETRIES = 4
 
 
 def parse_args() -> argparse.Namespace:
@@ -424,11 +433,31 @@ def run_holding_period(
             method_weights[abs_method] = previous[abs_method] if previous[abs_method] is not None else baselines["BL"]
             method_weights[rel_method] = previous[rel_method] if previous[rel_method] is not None else baselines["BL"]
         else:
-            try:
-                absolute, views = collect_rebalance_views(
-                    dataset_root, holding_days, rebalance_idx, formation, metadata,
-                    model, config, workers, retry_calls, force_views,
-                )
+            absolute: dict[str, Any] | None = None
+            views: list[dict[str, Any]] | None = None
+            view_error: Exception | None = None
+            for attempt in range(RATE_LIMIT_RETRIES + 1):
+                try:
+                    absolute, views = collect_rebalance_views(
+                        dataset_root, holding_days, rebalance_idx, formation, metadata,
+                        model, config, workers, retry_calls, force_views,
+                    )
+                    break
+                except ProviderUsageLimitError as limit_error:
+                    view_error = limit_error
+                    if attempt >= RATE_LIMIT_RETRIES:
+                        break
+                    print(
+                        f"[{holding_days}d rb#{position} {cutoff_date.date()}] "
+                        f"rate limited (429); waiting {limit_error.retry_after_seconds}s "
+                        f"before retry {attempt + 2}/{RATE_LIMIT_RETRIES + 1}",
+                        flush=True,
+                    )
+                    time.sleep(limit_error.retry_after_seconds)
+                except Exception as error:
+                    view_error = error
+                    break
+            if absolute is not None and views is not None:
                 abs_portfolio, rel_portfolio, diagnostics = llm_weights(
                     formation, absolute, views, prior, covariance, config
                 )
@@ -444,8 +473,8 @@ def run_holding_period(
                     "Rejected_Views": diagnostics["rejected_view_count"],
                     "Calibration": diagnostics["calibration_method"],
                 })
-            except Exception as error:
-                detail = str(error)[:1000]
+            else:
+                detail = str(view_error)[:1000] if view_error is not None else "unknown"
                 print(
                     f"[{holding_days}d rb#{position} {cutoff_date.date()}] "
                     f"LLM views failed: {detail}",

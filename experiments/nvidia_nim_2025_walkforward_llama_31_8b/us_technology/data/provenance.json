@@ -1,0 +1,27 @@
+{
+  "dataset": "us_technology",
+  "source": "experiments\\cutoff_2025_12\\us_technology\\data\\formation_returns.csv",
+  "trailing_first": "2024-06-04",
+  "trailing_last": "2025-12-31",
+  "trailing_days": 386,
+  "first_2025": "2025-01-02",
+  "last_2025": "2025-12-31",
+  "panel_2025_days": 250,
+  "assets": [
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "AMD",
+    "AVGO",
+    "ORCL",
+    "CRM",
+    "ADBE",
+    "QCOM",
+    "TXN",
+    "AMAT",
+    "MU",
+    "IBM",
+    "CSCO",
+    "INTU"
+  ]
+}

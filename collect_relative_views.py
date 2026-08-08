@@ -173,7 +173,10 @@ def make_pairwise_prompt(
             "You generate strictly point-in-time pairwise equity views. Compare only the two supplied assets "
             "using only the supplied information. Return a JSON object with EXACTLY the three keys "
             "preferred_asset, probability, and evidence, and NO other keys and no commentary. "
-            "probability is the probability (0.50 to 1.00) that preferred_asset outperforms the other asset. "
+            "preferred_asset must be the exact ticker string of one of the two supplied assets, never the "
+            "placeholder names asset_a or asset_b. "
+            "probability is the probability (0.50 to 1.00) that preferred_asset outperforms the other asset, "
+            "rounded to at most 3 decimal places. "
             "evidence is an array of at most two short strings. "
             "If evidence is weak, keep probability near 0.50. Do not predict an absolute return."
         )

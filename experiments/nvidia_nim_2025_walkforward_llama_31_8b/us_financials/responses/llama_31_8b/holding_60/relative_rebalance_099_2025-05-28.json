@@ -1,0 +1,643 @@
+{
+  "requested_model": "meta/llama-3.1-8b-instruct",
+  "model": "meta/llama-3.1-8b-instruct",
+  "base_url": "https://integrate.api.nvidia.com/v1",
+  "rebalance_index": 99,
+  "formation_end": "2025-05-28",
+  "formation_days": 236,
+  "horizon_days": 60,
+  "repeats": 2,
+  "probability_estimator": "mean",
+  "temperature": 0.3,
+  "pairs_requested": 15,
+  "views": [
+    {
+      "asset_a": "GS",
+      "asset_b": "MS",
+      "preferred_asset": "GS",
+      "probability": 0.663,
+      "probability_a": 0.663,
+      "probability_samples_a": [
+        0.653,
+        0.673
+      ],
+      "probability_samples": [
+        0.653,
+        0.673
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.663,
+      "votes": {
+        "GS": 2,
+        "MS": 0
+      },
+      "reported_probability_samples_a": [
+        0.653,
+        0.673
+      ],
+      "evidence": [
+        "GS has a slightly higher average return than MS",
+        "GS has a slightly higher standard deviation than MS",
+        "GS has a higher standard deviation of daily returns",
+        "GS has a higher maximum daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "JPM",
+      "asset_b": "GS",
+      "preferred_asset": "JPM",
+      "probability": 0.5195000000000001,
+      "probability_a": 0.5195000000000001,
+      "probability_samples_a": [
+        0.673,
+        0.366
+      ],
+      "probability_samples": [
+        0.673,
+        0.366
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.5195000000000001,
+      "votes": {
+        "JPM": 1,
+        "GS": 1
+      },
+      "reported_probability_samples_a": [
+        0.673,
+        0.366
+      ],
+      "evidence": [
+        "GS has a higher standard deviation of daily returns",
+        "GS has a higher maximum daily return",
+        "GS has historically outperformed JPM in the given time period",
+        "GS has shown a higher average return compared to JPM"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "C",
+      "preferred_asset": "GS",
+      "probability": 0.7025,
+      "probability_a": 0.7025,
+      "probability_samples_a": [
+        0.673,
+        0.732
+      ],
+      "probability_samples": [
+        0.673,
+        0.732
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.7025,
+      "votes": {
+        "GS": 2,
+        "C": 0
+      },
+      "reported_probability_samples_a": [
+        0.673,
+        0.732
+      ],
+      "evidence": [
+        "GS has higher average return",
+        "GS has higher standard deviation of return",
+        "GS has a higher standard deviation of daily returns (0.0145) compared to C (0.0112)",
+        "GS has a higher average daily return (0.0012) compared to C (-0.0031)"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "PNC",
+      "asset_b": "USB",
+      "preferred_asset": "PNC",
+      "probability": 0.613,
+      "probability_a": 0.613,
+      "probability_samples_a": [
+        0.673,
+        0.553
+      ],
+      "probability_samples": [
+        0.673,
+        0.553
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.613,
+      "votes": {
+        "PNC": 2,
+        "USB": 0
+      },
+      "reported_probability_samples_a": [
+        0.673,
+        0.553
+      ],
+      "evidence": [
+        "PNC has a slightly higher average return than USB",
+        "PNC has a slightly higher standard deviation than USB",
+        "PNC has a slightly higher average return compared to USB",
+        "PNC has a slightly higher standard deviation compared to USB"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "PNC",
+      "preferred_asset": "BAC",
+      "probability": 0.5815,
+      "probability_a": 0.5815,
+      "probability_samples_a": [
+        0.532,
+        0.631
+      ],
+      "probability_samples": [
+        0.532,
+        0.631
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5815,
+      "votes": {
+        "BAC": 2,
+        "PNC": 0
+      },
+      "reported_probability_samples_a": [
+        0.532,
+        0.631
+      ],
+      "evidence": [
+        "BAC has a slightly higher average daily return",
+        "BAC has a slightly higher maximum daily return",
+        "BAC has a slightly higher average return compared to PNC",
+        "BAC has a slightly higher standard deviation compared to PNC"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "C",
+      "preferred_asset": "BAC",
+      "probability": 0.627,
+      "probability_a": 0.627,
+      "probability_samples_a": [
+        0.571,
+        0.683
+      ],
+      "probability_samples": [
+        0.571,
+        0.683
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.627,
+      "votes": {
+        "BAC": 2,
+        "C": 0
+      },
+      "reported_probability_samples_a": [
+        0.571,
+        0.683
+      ],
+      "evidence": [
+        "BAC has a slightly higher average return over the given horizon",
+        "BAC has a slightly lower standard deviation of returns over the given horizon",
+        "BAC has outperformed C in 43 out of 60 days",
+        "BAC's daily returns have been more volatile than C's"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "AXP",
+      "preferred_asset": "GS",
+      "probability": 0.675,
+      "probability_a": 0.675,
+      "probability_samples_a": [
+        0.667,
+        0.683
+      ],
+      "probability_samples": [
+        0.667,
+        0.683
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.675,
+      "votes": {
+        "GS": 2,
+        "AXP": 0
+      },
+      "reported_probability_samples_a": [
+        0.667,
+        0.683
+      ],
+      "evidence": [
+        "GS has a slightly higher average return compared to AXP",
+        "GS has a slightly higher standard deviation of returns compared to AXP",
+        "GS has outperformed AXP over the past 60 days with a higher average return",
+        "GS has shown more volatility than AXP, indicating a potentially higher risk and reward"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "WFC",
+      "preferred_asset": "BAC",
+      "probability": 0.627,
+      "probability_a": 0.627,
+      "probability_samples_a": [
+        0.563,
+        0.691
+      ],
+      "probability_samples": [
+        0.563,
+        0.691
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.627,
+      "votes": {
+        "BAC": 2,
+        "WFC": 0
+      },
+      "reported_probability_samples_a": [
+        0.563,
+        0.691
+      ],
+      "evidence": [
+        "BAC has historically outperformed WFC in the given time period",
+        "BAC has a slightly higher average return compared to WFC",
+        "BAC has a higher average return than WFC",
+        "BAC has a lower standard deviation than WFC"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AXP",
+      "asset_b": "COF",
+      "preferred_asset": "AXP",
+      "probability": 0.6575,
+      "probability_a": 0.6575,
+      "probability_samples_a": [
+        0.638,
+        0.677
+      ],
+      "probability_samples": [
+        0.638,
+        0.677
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.6575,
+      "votes": {
+        "AXP": 2,
+        "COF": 0
+      },
+      "reported_probability_samples_a": [
+        0.638,
+        0.677
+      ],
+      "evidence": [
+        "AXP has outperformed COF in 37 out of 60 days",
+        "AXP's daily returns have been more volatile than COF's",
+        "AXP has outperformed COF in 35 out of 60 days",
+        "AXP has a higher average daily return than COF"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "BLK",
+      "preferred_asset": "BLK",
+      "probability": 0.507,
+      "probability_a": 0.493,
+      "probability_samples_a": [
+        0.653,
+        0.33299999999999996
+      ],
+      "probability_samples": [
+        0.347,
+        0.667
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.493,
+      "votes": {
+        "GS": 1,
+        "BLK": 1
+      },
+      "reported_probability_samples_a": [
+        0.653,
+        0.33299999999999996
+      ],
+      "evidence": [
+        "GS has a higher standard deviation of daily returns (0.015) compared to BLK (0.012)",
+        "GS has a higher average daily return (0.001) compared to BLK (-0.001)",
+        "BLK has outperformed GS in 34 of 60 days",
+        "GS has a higher standard deviation of daily returns than BLK"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MS",
+      "asset_b": "SCHW",
+      "preferred_asset": "SCHW",
+      "probability": 0.55,
+      "probability_a": 0.44999999999999996,
+      "probability_samples_a": [
+        0.32899999999999996,
+        0.571
+      ],
+      "probability_samples": [
+        0.671,
+        0.42900000000000005
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.44999999999999996,
+      "votes": {
+        "MS": 1,
+        "SCHW": 1
+      },
+      "reported_probability_samples_a": [
+        0.32899999999999996,
+        0.571
+      ],
+      "evidence": [
+        "SCHW has a higher average return than MS",
+        "SCHW has a higher standard deviation than MS",
+        "MS has a slightly higher average return than SCHW",
+        "MS has a slightly higher standard deviation than SCHW"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BLK",
+      "asset_b": "ICE",
+      "preferred_asset": "ICE",
+      "probability": 0.6945,
+      "probability_a": 0.3055,
+      "probability_samples_a": [
+        0.266,
+        0.345
+      ],
+      "probability_samples": [
+        0.734,
+        0.655
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.3055,
+      "votes": {
+        "BLK": 0,
+        "ICE": 2
+      },
+      "reported_probability_samples_a": [
+        0.266,
+        0.345
+      ],
+      "evidence": [
+        "ICE has a higher average return than BLK",
+        "ICE has a higher standard deviation than BLK",
+        "ICE has higher returns in the long term"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "ICE",
+      "asset_b": "CB",
+      "preferred_asset": "ICE",
+      "probability": 0.692,
+      "probability_a": 0.692,
+      "probability_samples_a": [
+        0.713,
+        0.671
+      ],
+      "probability_samples": [
+        0.713,
+        0.671
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.692,
+      "votes": {
+        "ICE": 2,
+        "CB": 0
+      },
+      "reported_probability_samples_a": [
+        0.713,
+        0.671
+      ],
+      "evidence": [
+        "ICE has a higher average return than CB",
+        "ICE has a lower volatility than CB",
+        "ICE has outperformed CB in 34 out of 60 days",
+        "ICE has a higher average daily return than CB"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "CME",
+      "asset_b": "ICE",
+      "preferred_asset": "CME",
+      "probability": 0.667,
+      "probability_a": 0.667,
+      "probability_samples_a": [
+        0.631,
+        0.703
+      ],
+      "probability_samples": [
+        0.631,
+        0.703
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.667,
+      "votes": {
+        "CME": 2,
+        "ICE": 0
+      },
+      "reported_probability_samples_a": [
+        0.631,
+        0.703
+      ],
+      "evidence": [
+        "CME has a slightly higher average return compared to ICE",
+        "CME has a slightly higher standard deviation compared to ICE",
+        "CME has outperformed ICE in 55.56% of the days",
+        "CME has a higher standard deviation of daily returns (0.0122) compared to ICE (0.0102)"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MS",
+      "asset_b": "C",
+      "preferred_asset": "MS",
+      "probability": 0.651,
+      "probability_a": 0.651,
+      "probability_samples_a": [
+        0.673,
+        0.629
+      ],
+      "probability_samples": [
+        0.673,
+        0.629
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.651,
+      "votes": {
+        "MS": 2,
+        "C": 0
+      },
+      "reported_probability_samples_a": [
+        0.673,
+        0.629
+      ],
+      "evidence": [
+        "MS has higher volatility",
+        "MS has a higher correlation with the overall market",
+        "Asset MS has had a higher return than asset C in 55 out of 120 days."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 60,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    }
+  ]
+}

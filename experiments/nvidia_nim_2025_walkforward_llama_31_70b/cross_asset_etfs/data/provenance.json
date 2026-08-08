@@ -1,0 +1,27 @@
+{
+  "dataset": "cross_asset_etfs",
+  "source": "experiments\\cutoff_2025_12\\cross_asset_etfs\\data\\formation_returns.csv",
+  "trailing_first": "2025-01-02",
+  "trailing_last": "2025-12-31",
+  "trailing_days": 250,
+  "first_2025": "2025-01-02",
+  "last_2025": "2025-12-31",
+  "panel_2025_days": 250,
+  "assets": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "DIA",
+    "EFA",
+    "EEM",
+    "VNQ",
+    "TLT",
+    "IEF",
+    "HYG",
+    "LQD",
+    "GLD",
+    "SLV",
+    "USO",
+    "DBC"
+  ]
+}

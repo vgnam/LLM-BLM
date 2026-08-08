@@ -1,0 +1,642 @@
+{
+  "requested_model": "meta/llama-3.1-8b-instruct",
+  "model": "meta/llama-3.1-8b-instruct",
+  "base_url": "https://integrate.api.nvidia.com/v1",
+  "rebalance_index": 189,
+  "formation_end": "2025-10-06",
+  "formation_days": 190,
+  "horizon_days": 30,
+  "repeats": 2,
+  "probability_estimator": "mean",
+  "temperature": 0.3,
+  "pairs_requested": 15,
+  "views": [
+    {
+      "asset_a": "SPY",
+      "asset_b": "QQQ",
+      "preferred_asset": "SPY",
+      "probability": 0.5115000000000001,
+      "probability_a": 0.5115000000000001,
+      "probability_samples_a": [
+        0.654,
+        0.369
+      ],
+      "probability_samples": [
+        0.654,
+        0.369
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.5115000000000001,
+      "votes": {
+        "SPY": 1,
+        "QQQ": 1
+      },
+      "reported_probability_samples_a": [
+        0.654,
+        0.369
+      ],
+      "evidence": [
+        "SPY has a slightly higher average return than QQQ",
+        "SPY has a lower standard deviation of returns than QQQ",
+        "QQQ has historically outperformed SPY in 63.1% of the 30-day periods considered.",
+        "The difference in returns between QQQ and SPY is statistically significant at the 95% confidence level."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "SPY",
+      "asset_b": "DIA",
+      "preferred_asset": "SPY",
+      "probability": 0.5055000000000001,
+      "probability_a": 0.5055000000000001,
+      "probability_samples_a": [
+        0.46799999999999997,
+        0.543
+      ],
+      "probability_samples": [
+        0.46799999999999997,
+        0.543
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.5055000000000001,
+      "votes": {
+        "SPY": 1,
+        "DIA": 1
+      },
+      "reported_probability_samples_a": [
+        0.46799999999999997,
+        0.543
+      ],
+      "evidence": [
+        "DIA has historically outperformed SPY in 53.2% of the 30-day periods considered",
+        "The outperformance of DIA is likely due to its focus on the Dow Jones Industrial Average, which has historically been less volatile than the S&P 500",
+        "SPY has a slightly higher average return than DIA",
+        "The standard deviation of SPY's returns is slightly lower than DIA's"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "USO",
+      "asset_b": "DBC",
+      "preferred_asset": "USO",
+      "probability": 0.6799999999999999,
+      "probability_a": 0.6799999999999999,
+      "probability_samples_a": [
+        0.733,
+        0.627
+      ],
+      "probability_samples": [
+        0.733,
+        0.627
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.6799999999999999,
+      "votes": {
+        "USO": 2,
+        "DBC": 0
+      },
+      "reported_probability_samples_a": [
+        0.733,
+        0.627
+      ],
+      "evidence": [
+        "USO has historically outperformed DBC in the commodities sector",
+        "USO has a higher standard deviation in daily returns compared to DBC",
+        "USO has historically outperformed DBC in periods of high oil price volatility",
+        "USO has a slightly higher average daily return than DBC"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "TLT",
+      "asset_b": "LQD",
+      "preferred_asset": "TLT",
+      "probability": 0.5885,
+      "probability_a": 0.5885,
+      "probability_samples_a": [
+        0.531,
+        0.646
+      ],
+      "probability_samples": [
+        0.531,
+        0.646
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5885,
+      "votes": {
+        "TLT": 2,
+        "LQD": 0
+      },
+      "reported_probability_samples_a": [
+        0.531,
+        0.646
+      ],
+      "evidence": [
+        "TLT has historically been less volatile than LQD",
+        "Both assets are fixed income, but TLT is a long-term bond ETF while LQD is an investment-grade corporate bond ETF",
+        "TLT has a slightly higher average return compared to LQD",
+        "The standard deviation of TLT's returns is slightly lower than LQD's"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "IWM",
+      "asset_b": "DIA",
+      "preferred_asset": "IWM",
+      "probability": 0.6545000000000001,
+      "probability_a": 0.6545000000000001,
+      "probability_samples_a": [
+        0.637,
+        0.672
+      ],
+      "probability_samples": [
+        0.637,
+        0.672
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.6545000000000001,
+      "votes": {
+        "IWM": 2,
+        "DIA": 0
+      },
+      "reported_probability_samples_a": [
+        0.637,
+        0.672
+      ],
+      "evidence": [
+        "IWM has outperformed DIA in 16 of the last 30 days",
+        "IWM has a slightly higher average daily return than DIA",
+        "IWM has outperformed DIA in 17 out of 30 days",
+        "IWM has a higher standard deviation of daily returns (0.0127) compared to DIA (0.0095)"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "TLT",
+      "asset_b": "IEF",
+      "preferred_asset": "TLT",
+      "probability": 0.641,
+      "probability_a": 0.641,
+      "probability_samples_a": [
+        0.654,
+        0.628
+      ],
+      "probability_samples": [
+        0.654,
+        0.628
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.641,
+      "votes": {
+        "TLT": 2,
+        "IEF": 0
+      },
+      "reported_probability_samples_a": [
+        0.654,
+        0.628
+      ],
+      "evidence": [
+        "TLT has historically been more volatile than IEF",
+        "TLT has a slightly higher return in the given time period",
+        "TLT has a longer duration than IEF"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "EFA",
+      "asset_b": "EEM",
+      "preferred_asset": "EFA",
+      "probability": 0.5525,
+      "probability_a": 0.5525,
+      "probability_samples_a": [
+        0.372,
+        0.733
+      ],
+      "probability_samples": [
+        0.372,
+        0.733
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.5525,
+      "votes": {
+        "EFA": 1,
+        "EEM": 1
+      },
+      "reported_probability_samples_a": [
+        0.372,
+        0.733
+      ],
+      "evidence": [
+        "EEM has historically outperformed EFA in the long term",
+        "EEM has a higher beta than EFA, indicating a higher volatility",
+        "EFA has a higher average return than EEM over the given period",
+        "EEM has a higher standard deviation than EFA over the given period"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "HYG",
+      "asset_b": "LQD",
+      "preferred_asset": "HYG",
+      "probability": 0.6565000000000001,
+      "probability_a": 0.6565000000000001,
+      "probability_samples_a": [
+        0.657,
+        0.656
+      ],
+      "probability_samples": [
+        0.657,
+        0.656
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.6565000000000001,
+      "votes": {
+        "HYG": 2,
+        "LQD": 0
+      },
+      "reported_probability_samples_a": [
+        0.657,
+        0.656
+      ],
+      "evidence": [
+        "HYG has historically outperformed LQD in 57% of the 30-day periods considered.",
+        "HYG's returns have been more volatile than LQD's returns.",
+        "HYG has historically outperformed LQD in 65.6% of the 30-day horizons",
+        "HYG has a slightly higher average daily return than LQD"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GLD",
+      "asset_b": "SLV",
+      "preferred_asset": "GLD",
+      "probability": 0.6375,
+      "probability_a": 0.6375,
+      "probability_samples_a": [
+        0.643,
+        0.632
+      ],
+      "probability_samples": [
+        0.643,
+        0.632
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.6375,
+      "votes": {
+        "GLD": 2,
+        "SLV": 0
+      },
+      "reported_probability_samples_a": [
+        0.643,
+        0.632
+      ],
+      "evidence": [
+        "GLD and SLV have similar historical returns",
+        "GLD has a slightly higher return in the last 30 days",
+        "GLD has historically been less volatile than SLV",
+        "GLD has a slightly higher correlation with the overall market"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "SLV",
+      "asset_b": "DBC",
+      "preferred_asset": "SLV",
+      "probability": 0.5940000000000001,
+      "probability_a": 0.5940000000000001,
+      "probability_samples_a": [
+        0.635,
+        0.553
+      ],
+      "probability_samples": [
+        0.635,
+        0.553
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5940000000000001,
+      "votes": {
+        "SLV": 2,
+        "DBC": 0
+      },
+      "reported_probability_samples_a": [
+        0.635,
+        0.553
+      ],
+      "evidence": [
+        "SLV has historically outperformed DBC in periods of high commodity prices",
+        "DBC's commodity index tracking methodology may lead to lower returns compared to SLV's silver price exposure",
+        "SLV has historically outperformed DBC in commodity price movements",
+        "SLV has a slightly higher average daily return than DBC"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "SPY",
+      "asset_b": "HYG",
+      "preferred_asset": "SPY",
+      "probability": 0.668,
+      "probability_a": 0.668,
+      "probability_samples_a": [
+        0.683,
+        0.653
+      ],
+      "probability_samples": [
+        0.683,
+        0.653
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.668,
+      "votes": {
+        "SPY": 2,
+        "HYG": 0
+      },
+      "reported_probability_samples_a": [
+        0.683,
+        0.653
+      ],
+      "evidence": [
+        "SPY has outperformed HYG in 17 out of 30 days",
+        "SPY has a higher average daily return than HYG",
+        "SPY has historically outperformed HYG in 65.3% of the 30-day horizons"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "SPY",
+      "asset_b": "EFA",
+      "preferred_asset": "SPY",
+      "probability": 0.662,
+      "probability_a": 0.662,
+      "probability_samples_a": [
+        0.652,
+        0.672
+      ],
+      "probability_samples": [
+        0.652,
+        0.672
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.662,
+      "votes": {
+        "SPY": 2,
+        "EFA": 0
+      },
+      "reported_probability_samples_a": [
+        0.652,
+        0.672
+      ],
+      "evidence": [
+        "SPY has historically outperformed EFA in the long term",
+        "SPY has a higher probability of outperforming EFA in the next 30 days",
+        "SPY has outperformed EFA in 17 out of 30 days",
+        "SPY has a higher average daily return than EFA"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "DIA",
+      "asset_b": "VNQ",
+      "preferred_asset": "DIA",
+      "probability": 0.562,
+      "probability_a": 0.562,
+      "probability_samples_a": [
+        0.593,
+        0.531
+      ],
+      "probability_samples": [
+        0.593,
+        0.531
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.562,
+      "votes": {
+        "DIA": 2,
+        "VNQ": 0
+      },
+      "reported_probability_samples_a": [
+        0.593,
+        0.531
+      ],
+      "evidence": [
+        "DIA has a slightly higher average return than VNQ",
+        "DIA has a lower standard deviation of returns than VNQ",
+        "DIA has a slightly lower volatility than VNQ"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "EEM",
+      "asset_b": "SLV",
+      "preferred_asset": "SLV",
+      "probability": 0.723,
+      "probability_a": 0.277,
+      "probability_samples_a": [
+        0.28600000000000003,
+        0.268
+      ],
+      "probability_samples": [
+        0.714,
+        0.732
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.277,
+      "votes": {
+        "EEM": 0,
+        "SLV": 2
+      },
+      "reported_probability_samples_a": [
+        0.28600000000000003,
+        0.268
+      ],
+      "evidence": [
+        "SLV has historically outperformed EEM in periods of market stress",
+        "SLV has a higher correlation with precious metals, which have historically performed well during times of economic uncertainty",
+        "SLV has historically outperformed EEM in the long term",
+        "SLV has a higher beta compared to EEM"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "SPY",
+      "asset_b": "IWM",
+      "preferred_asset": "IWM",
+      "probability": 0.5925,
+      "probability_a": 0.4075,
+      "probability_samples_a": [
+        0.469,
+        0.346
+      ],
+      "probability_samples": [
+        0.531,
+        0.654
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.4075,
+      "votes": {
+        "SPY": 0,
+        "IWM": 2
+      },
+      "reported_probability_samples_a": [
+        0.469,
+        0.346
+      ],
+      "evidence": [
+        "IWM has historically outperformed SPY in 53.1% of the periods considered.",
+        "IWM has a slightly higher average return than SPY.",
+        "IWM has historically outperformed SPY in 65.4% of the given 30-day periods.",
+        "The returns of IWM have been more volatile than those of SPY, indicating a higher potential for growth."
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    }
+  ]
+}

@@ -1,0 +1,650 @@
+{
+  "requested_model": "meta/llama-3.1-70b-instruct",
+  "model": "meta/llama-3.1-70b-instruct",
+  "base_url": "https://integrate.api.nvidia.com/v1",
+  "rebalance_index": 219,
+  "formation_end": "2025-11-17",
+  "formation_days": 252,
+  "horizon_days": 30,
+  "repeats": 2,
+  "probability_estimator": "mean",
+  "temperature": 0.3,
+  "pairs_requested": 15,
+  "views": [
+    {
+      "asset_a": "GS",
+      "asset_b": "MS",
+      "preferred_asset": "GS",
+      "probability": 0.5095000000000001,
+      "probability_a": 0.5095000000000001,
+      "probability_samples_a": [
+        0.513,
+        0.506
+      ],
+      "probability_samples": [
+        0.513,
+        0.506
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5095000000000001,
+      "votes": {
+        "GS": 2,
+        "MS": 0
+      },
+      "reported_probability_samples_a": [
+        0.513,
+        0.506
+      ],
+      "evidence": [
+        "GS has a slightly higher average daily return",
+        "GS has a slightly lower standard deviation of daily returns",
+        "Similar sector performance",
+        "GS has slightly higher average returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "PNC",
+      "asset_b": "USB",
+      "preferred_asset": "PNC",
+      "probability": 0.533,
+      "probability_a": 0.533,
+      "probability_samples_a": [
+        0.533,
+        0.533
+      ],
+      "probability_samples": [
+        0.533,
+        0.533
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.533,
+      "votes": {
+        "PNC": 2,
+        "USB": 0
+      },
+      "reported_probability_samples_a": [
+        0.533,
+        0.533
+      ],
+      "evidence": [
+        "Similar sector and asset type",
+        "Slightly higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "JPM",
+      "asset_b": "GS",
+      "preferred_asset": "JPM",
+      "probability": 0.525,
+      "probability_a": 0.525,
+      "probability_samples_a": [
+        0.517,
+        0.533
+      ],
+      "probability_samples": [
+        0.517,
+        0.533
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.525,
+      "votes": {
+        "JPM": 2,
+        "GS": 0
+      },
+      "reported_probability_samples_a": [
+        0.517,
+        0.533
+      ],
+      "evidence": [
+        "Similar sector and asset type",
+        "Slightly higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AXP",
+      "asset_b": "COF",
+      "preferred_asset": "AXP",
+      "probability": 0.5295000000000001,
+      "probability_a": 0.5295000000000001,
+      "probability_samples_a": [
+        0.542,
+        0.517
+      ],
+      "probability_samples": [
+        0.542,
+        0.517
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5295000000000001,
+      "votes": {
+        "AXP": 2,
+        "COF": 0
+      },
+      "reported_probability_samples_a": [
+        0.542,
+        0.517
+      ],
+      "evidence": [
+        "Similar sector performance",
+        "Slightly higher average daily returns for AXP",
+        "AXP has a slightly higher average return",
+        "AXP has a slightly lower volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "MS",
+      "asset_b": "C",
+      "preferred_asset": "MS",
+      "probability": 0.5185,
+      "probability_a": 0.5185,
+      "probability_samples_a": [
+        0.523,
+        0.514
+      ],
+      "probability_samples": [
+        0.523,
+        0.514
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5185,
+      "votes": {
+        "MS": 2,
+        "C": 0
+      },
+      "reported_probability_samples_a": [
+        0.523,
+        0.514
+      ],
+      "evidence": [
+        "MS has slightly higher average daily returns over the given period",
+        "Both assets are in the same sector (Financials) and have similar asset types (Equity)",
+        "Similar sector and asset type",
+        "Slightly higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=1: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "WFC",
+      "preferred_asset": "BAC",
+      "probability": 0.526,
+      "probability_a": 0.526,
+      "probability_samples_a": [
+        0.529,
+        0.523
+      ],
+      "probability_samples": [
+        0.529,
+        0.523
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.526,
+      "votes": {
+        "BAC": 2,
+        "WFC": 0
+      },
+      "reported_probability_samples_a": [
+        0.529,
+        0.523
+      ],
+      "evidence": [
+        "Similar sector and asset type",
+        "Comparable return patterns",
+        "Similar sector performance",
+        "Slightly higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "BAC",
+      "asset_b": "C",
+      "preferred_asset": "BAC",
+      "probability": 0.526,
+      "probability_a": 0.526,
+      "probability_samples_a": [
+        0.538,
+        0.514
+      ],
+      "probability_samples": [
+        0.538,
+        0.514
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.526,
+      "votes": {
+        "BAC": 2,
+        "C": 0
+      },
+      "reported_probability_samples_a": [
+        0.538,
+        0.514
+      ],
+      "evidence": [
+        "Similar sector performance",
+        "Mixed return trends",
+        "Similar sector and asset type",
+        "Slightly higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=0: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "AXP",
+      "asset_b": "PNC",
+      "preferred_asset": "AXP",
+      "probability": 0.52,
+      "probability_a": 0.52,
+      "probability_samples_a": [
+        0.523,
+        0.517
+      ],
+      "probability_samples": [
+        0.523,
+        0.517
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.52,
+      "votes": {
+        "AXP": 2,
+        "PNC": 0
+      },
+      "reported_probability_samples_a": [
+        0.523,
+        0.517
+      ],
+      "evidence": [
+        "AXP has a slightly higher average return",
+        "AXP has a slightly lower standard deviation",
+        "AXP has slightly higher average daily returns",
+        "AXP has slightly lower volatility in daily returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "AXP",
+      "preferred_asset": "AXP",
+      "probability": 0.523,
+      "probability_a": 0.477,
+      "probability_samples_a": [
+        0.487,
+        0.46699999999999997
+      ],
+      "probability_samples": [
+        0.513,
+        0.533
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.477,
+      "votes": {
+        "GS": 0,
+        "AXP": 2
+      },
+      "reported_probability_samples_a": [
+        0.487,
+        0.46699999999999997
+      ],
+      "evidence": [
+        "Similar sector",
+        "Mixed return history",
+        "Similar sector and asset type",
+        "AXP has slightly higher average daily returns"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "GS",
+      "asset_b": "BLK",
+      "preferred_asset": "BLK",
+      "probability": 0.5155000000000001,
+      "probability_a": 0.4845,
+      "probability_samples_a": [
+        0.486,
+        0.483
+      ],
+      "probability_samples": [
+        0.514,
+        0.517
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.0,
+      "mean_reported_probability_a": 0.4845,
+      "votes": {
+        "GS": 0,
+        "BLK": 2
+      },
+      "reported_probability_samples_a": [
+        0.486,
+        0.483
+      ],
+      "evidence": [
+        "GS has slightly lower average daily returns",
+        "BLK has slightly lower volatility",
+        "Similar sector",
+        "Comparable volatility"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "JPM",
+      "asset_b": "SCHW",
+      "preferred_asset": "SCHW",
+      "probability": 0.51,
+      "probability_a": 0.49,
+      "probability_samples_a": [
+        0.513,
+        0.46699999999999997
+      ],
+      "probability_samples": [
+        0.487,
+        0.533
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 0.5,
+      "mean_reported_probability_a": 0.49,
+      "votes": {
+        "JPM": 1,
+        "SCHW": 1
+      },
+      "reported_probability_samples_a": [
+        0.513,
+        0.46699999999999997
+      ],
+      "evidence": [
+        "Similar sector performance",
+        "Comparable volatility",
+        "Similar sector",
+        "Higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "SCHW",
+      "asset_b": "ICE",
+      "preferred_asset": "SCHW",
+      "probability": 0.5305,
+      "probability_a": 0.5305,
+      "probability_samples_a": [
+        0.523,
+        0.538
+      ],
+      "probability_samples": [
+        0.523,
+        0.538
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5305,
+      "votes": {
+        "SCHW": 2,
+        "ICE": 0
+      },
+      "reported_probability_samples_a": [
+        0.523,
+        0.538
+      ],
+      "evidence": [
+        "SCHW has slightly higher average daily returns",
+        "SCHW has slightly higher volatility",
+        "SCHW has slightly higher average returns over the given period",
+        "SCHW has slightly lower volatility compared to ICE"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 4,
+      "errors": [
+        "prompt_call_id=0: Request timed out.",
+        "prompt_call_id=2: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "ICE",
+      "asset_b": "CB",
+      "preferred_asset": "ICE",
+      "probability": 0.5125,
+      "probability_a": 0.5125,
+      "probability_samples_a": [
+        0.513,
+        0.512
+      ],
+      "probability_samples": [
+        0.513,
+        0.512
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5125,
+      "votes": {
+        "ICE": 2,
+        "CB": 0
+      },
+      "reported_probability_samples_a": [
+        0.513,
+        0.512
+      ],
+      "evidence": [
+        "Similar sector and asset type",
+        "Slightly higher average daily return",
+        "Similar sector",
+        "Slightly higher average return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 4,
+      "errors": [
+        "prompt_call_id=0: Request timed out.",
+        "prompt_call_id=1: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "CME",
+      "asset_b": "ICE",
+      "preferred_asset": "CME",
+      "probability": 0.5175000000000001,
+      "probability_a": 0.5175000000000001,
+      "probability_samples_a": [
+        0.512,
+        0.523
+      ],
+      "probability_samples": [
+        0.512,
+        0.523
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.5175000000000001,
+      "votes": {
+        "CME": 2,
+        "ICE": 0
+      },
+      "reported_probability_samples_a": [
+        0.512,
+        0.523
+      ],
+      "evidence": [
+        "Similar sector and asset type",
+        "Slightly higher average daily return",
+        "Similar sector"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 3,
+      "errors": [
+        "prompt_call_id=1: Request timed out."
+      ],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    },
+    {
+      "asset_a": "JPM",
+      "asset_b": "MS",
+      "preferred_asset": "JPM",
+      "probability": 0.522,
+      "probability_a": 0.522,
+      "probability_samples_a": [
+        0.522,
+        0.522
+      ],
+      "probability_samples": [
+        0.522,
+        0.522
+      ],
+      "probability_estimator": "mean",
+      "vote_probability_a": 1.0,
+      "mean_reported_probability_a": 0.522,
+      "votes": {
+        "JPM": 2,
+        "MS": 0
+      },
+      "reported_probability_samples_a": [
+        0.522,
+        0.522
+      ],
+      "evidence": [
+        "Similar sector and asset type",
+        "Slightly higher average daily return"
+      ],
+      "successful_repeats": 2,
+      "prompt_variant_ids": [],
+      "system_prompt_sha256": [],
+      "horizon_days": 30,
+      "attempted_calls": 2,
+      "errors": [],
+      "status": "ok",
+      "temperature": 0.3,
+      "prompt_ensemble": "single_prompt",
+      "prompt_mode": "calibrated"
+    }
+  ]
+}

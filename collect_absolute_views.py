@@ -92,8 +92,8 @@ def make_absolute_prompt(
         "You generate a strictly point-in-time absolute equity return view using only supplied information. "
         "Predict the asset's average daily arithmetic return over the requested future horizon. Return JSON "
         "with exactly one numeric field named expected_return. Express it as a decimal daily return: for "
-        "example, 0.002 means +0.2% per day and -0.001 means -0.1% per day. Do not output a percentage, "
-        "annualized return, explanation, markdown, or reasoning."
+        "example, 0.002 means +0.2% per day and -0.001 means -0.1% per day. Round expected_return to at "
+        "most 6 decimal places. Do not output a percentage, annualized return, explanation, markdown, or reasoning."
     )
     user = json.dumps({
         "ticker": ticker,
